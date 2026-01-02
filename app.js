@@ -33,13 +33,17 @@ let userId = null;
 window.onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
+
     loginDiv.style.display = "none";
     appDiv.style.display = "block";
+
     cargarVentas();
   } else {
     userId = null;
+
     loginDiv.style.display = "block";
     appDiv.style.display = "none";
+
     lista.innerHTML = "";
   }
 });
@@ -47,48 +51,72 @@ window.onAuthStateChanged(auth, user => {
 // ===============================
 // EVENTOS
 // ===============================
-btnRegister.addEventListener("click", () => {
-  window.createUserWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  ).then(() => console.log("✅ Usuario creado"))
-   .catch(err => alert(err.message));
+btnRegister.addEventListener("click", async () => {
+  try {
+    await window.createUserWithEmailAndPassword(
+      auth,
+      emailInput.value,
+      passwordInput.value
+    );
+    console.log("✅ Usuario creado");
+  } catch (err) {
+    alert(err.message);
+  }
 });
 
-btnLogin.addEventListener("click", () => {
-  window.signInWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  ).then(() => console.log("✅ Sesión iniciada"))
-   .catch(err => alert(err.message));
+btnLogin.addEventListener("click", async () => {
+  try {
+    await window.signInWithEmailAndPassword(
+      auth,
+      emailInput.value,
+      passwordInput.value
+    );
+    console.log("✅ Sesión iniciada");
+  } catch (err) {
+    alert(err.message);
+  }
 });
 
 btnLogout.addEventListener("click", () => {
   window.signOut(auth);
 });
 
-btnGuardar.addEventListener("click", () => guardar());
+btnGuardar.addEventListener("click", guardar);
 
 // ===============================
 // FIRESTORE
 // ===============================
-function guardar() {
-  if (!userId) return alert("Inicia sesión");
+async function guardar() {
+  if (!userId) {
+    alert("Inicia sesión");
+    return;
+  }
+
+  const cliente = clienteInput.value.trim();
+  const producto = productoInput.value.trim();
+
+  if (!cliente || !producto) {
+    alert("Completa todos los campos");
+    return;
+  }
 
   const venta = {
-    cliente: clienteInput.value,
-    producto: productoInput.value,
+    cliente,
+    producto,
     fecha: new Date()
   };
 
-  window.addDoc(
-    window.collection(db, `usuarios/${userId}/ventas`),
-    venta
-  );
+  try {
+    await window.addDoc(
+      window.collection(db, `usuarios/${userId}/ventas`),
+      venta
+    );
 
-  mostrar(venta);
+    console.log("☁️ Venta guardada en Firebase");
+    mostrar(venta);
+  } catch (err) {
+    console.error("❌ Error Firebase:", err);
+  }
 
   clienteInput.value = "";
   productoInput.value = "";
@@ -100,10 +128,17 @@ function mostrar(venta) {
   lista.appendChild(li);
 }
 
+// ===============================
+// CARGAR HISTORIAL
+// ===============================
 async function cargarVentas() {
   lista.innerHTML = "";
+
   const snap = await window.getDocs(
     window.collection(db, `usuarios/${userId}/ventas`)
   );
-  snap.forEach(doc => mostrar(doc.data()));
+
+  snap.forEach(doc => {
+    mostrar(doc.data());
+  });
 }
