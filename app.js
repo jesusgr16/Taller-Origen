@@ -1,3 +1,5 @@
+console.log("AUTH:", window.auth);
+console.log("DB:", window.db);
 // ===============================
 // VARIABLES
 // ===============================
@@ -137,3 +139,4 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker activo"))
     .catch(err => console.error("❌ SW error", err));
 }
+
