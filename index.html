@@ -3,23 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <title>App de Ventas</title>
+
   <link rel="manifest" href="manifest.json">
-  
+  <!-- Si no tienes style.css, puedes borrar esta línea -->
+  <!-- <link rel="stylesheet" href="style.css"> -->
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<h2>Registro de Ventas</h2>
+<!-- ===================== -->
+<!-- LOGIN -->
+<!-- ===================== -->
+<div id="login">
+  <h2>Iniciar sesión</h2>
 
-<input type="text" id="cliente" placeholder="Cliente">
-<input type="text" id="producto" placeholder="Producto">
+  <input type="email" id="email" placeholder="Correo">
+  <input type="password" id="password" placeholder="Contraseña">
 
-<button onclick="guardar()">Guardar</button>
+  <button onclick="registrar()">Registrarse</button>
+  <button onclick="login()">Entrar</button>
+</div>
 
-<ul id="lista"></ul>
-<script src="firebase.js" type="module"></script>
+<!-- ===================== -->
+<!-- APP (OCULTA HASTA LOGIN) -->
+<!-- ===================== -->
+<div id="app" style="display:none">
+
+  <button onclick="logout()">Cerrar sesión</button>
+
+  <h2>Registro de Ventas</h2>
+
+  <input type="text" id="cliente" placeholder="Cliente">
+  <input type="text" id="producto" placeholder="Producto">
+
+  <button onclick="guardar()">Guardar</button>
+
+  <ul id="lista"></ul>
+</div>
+
+<!-- ===================== -->
+<!-- SCRIPTS -->
+<!-- ===================== -->
+<script type="module" src="firebase.js"></script>
 <script src="app.js"></script>
 
 </body>
 </html>
-
