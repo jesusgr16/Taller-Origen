@@ -1,7 +1,27 @@
+// ===============================
+// DEBUG (verificar que Firebase ya existe)
+// ===============================
 console.log("AUTH:", window.auth);
 console.log("DB:", window.db);
+
 // ===============================
-// VARIABLES
+// REFERENCIAS A FIREBASE
+// ===============================
+const auth = window.auth;
+const db = window.db;
+
+const {
+  collection,
+  addDoc,
+  getDocs,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} = window;
+
+// ===============================
+// VARIABLES DOM
 // ===============================
 const lista = document.getElementById("lista");
 const clienteInput = document.getElementById("cliente");
@@ -12,7 +32,7 @@ const passwordInput = document.getElementById("password");
 let userId = null;
 
 // ===============================
-// AUTH: detectar sesión
+// AUTH – detectar sesión
 // ===============================
 onAuthStateChanged(auth, user => {
   if (user) {
@@ -33,9 +53,9 @@ onAuthStateChanged(auth, user => {
 });
 
 // ===============================
-// REGISTRO
+// REGISTRAR
 // ===============================
-function registrar() {
+window.registrar = function () {
   const email = emailInput.value;
   const password = passwordInput.value;
 
@@ -47,12 +67,12 @@ function registrar() {
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => console.log("✅ Usuario creado"))
     .catch(err => alert(err.message));
-}
+};
 
 // ===============================
 // LOGIN
 // ===============================
-function login() {
+window.login = function () {
   const email = emailInput.value;
   const password = passwordInput.value;
 
@@ -64,19 +84,19 @@ function login() {
   signInWithEmailAndPassword(auth, email, password)
     .then(() => console.log("✅ Sesión iniciada"))
     .catch(err => alert(err.message));
-}
+};
 
 // ===============================
 // LOGOUT
 // ===============================
-function logout() {
+window.logout = function () {
   signOut(auth);
-}
+};
 
 // ===============================
 // GUARDAR VENTA (POR USUARIO)
 // ===============================
-function guardar() {
+window.guardar = function () {
   if (!userId) {
     alert("Debes iniciar sesión");
     return;
@@ -96,19 +116,18 @@ function guardar() {
     fecha: new Date()
   };
 
-  // 🔥 Guardar en Firestore por usuario
   addDoc(collection(db, `usuarios/${userId}/ventas`), venta)
-    .then(() => console.log("☁️ Venta guardada en Firebase"))
-    .catch(err => console.error("❌ Error Firebase:", err));
+    .then(() => console.log("☁️ Venta guardada"))
+    .catch(err => console.error("❌ Firebase:", err));
 
   mostrar(venta);
 
   clienteInput.value = "";
   productoInput.value = "";
-}
+};
 
 // ===============================
-// MOSTRAR EN PANTALLA
+// MOSTRAR
 // ===============================
 function mostrar(venta) {
   const li = document.createElement("li");
@@ -117,7 +136,7 @@ function mostrar(venta) {
 }
 
 // ===============================
-// CARGAR HISTORIAL DESDE FIREBASE
+// CARGAR HISTORIAL
 // ===============================
 async function cargarVentas() {
   lista.innerHTML = "";
@@ -126,9 +145,7 @@ async function cargarVentas() {
     collection(db, `usuarios/${userId}/ventas`)
   );
 
-  snapshot.forEach(doc => {
-    mostrar(doc.data());
-  });
+  snapshot.forEach(doc => mostrar(doc.data()));
 }
 
 // ===============================
@@ -137,6 +154,5 @@ async function cargarVentas() {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("./service-worker.js")
     .then(() => console.log("✅ Service Worker activo"))
-    .catch(err => console.error("❌ SW error", err));
+    .catch(err => console.error("❌ SW:", err));
 }
-
