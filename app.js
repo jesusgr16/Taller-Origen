@@ -11,15 +11,18 @@ function guardar() {
 
   const venta = { cliente, producto, fecha: new Date() };
 
-  // 🔹 Guardar local (respaldo rápido)
+  // 🔹 Guardar local
   let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
   ventas.push(venta);
   localStorage.setItem("ventas", JSON.stringify(ventas));
 
-  // 🔹 Guardar en Firebase (respaldo nube)
-  addDoc(collection(db, "ventas"), venta)
-    .then(() => console.log("Guardado en la nube"))
-    .catch(err => console.error(err));
+  // 🔥 Guardar en Firestore (FORMA CORRECTA)
+  window.addDoc(
+    window.collection(window.db, "ventas"),
+    venta
+  )
+  .then(() => console.log("🔥 Guardado en Firestore"))
+  .catch(err => console.error("❌ Error Firestore:", err));
 
   mostrar(venta);
 
@@ -33,15 +36,14 @@ function mostrar(venta) {
   lista.appendChild(li);
 }
 
-// 🔹 Cargar respaldo local
 window.onload = () => {
   let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
   ventas.forEach(mostrar);
 };
 
+// 🔥 SERVICE WORKER (para GitHub Pages)
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js')
+  navigator.serviceWorker.register('./service-worker.js')
     .then(() => console.log("✅ Service Worker activo"))
     .catch(err => console.error("❌ SW error", err));
 }
-
