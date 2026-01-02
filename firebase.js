@@ -9,12 +9,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
+  apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
   authDomain: "taller-origen.firebaseapp.com",
   projectId: "taller-origen",
-  storageBucket: "taller-origen.appspot.com",
+  storageBucket: "taller-origen.firebasestorage.app",
   messagingSenderId: "563693867578",
-  appId: "1:563693867578:web:141c4c1afa09eeebfc5b03"
+  appId: "1:563693867578:web:141c4c1afa09eeebfc5b03",
+  measurementId: "G-Z7KFY640XD"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -31,3 +32,4 @@ window.onAuthStateChanged = onAuthStateChanged;
 window.signOut = signOut;
 
 console.log("🔥 Firebase + Auth listo");
+
