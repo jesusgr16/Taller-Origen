@@ -1,7 +1,8 @@
 {
   "name": "App de Ventas",
   "short_name": "Ventas",
-  "start_url": "/",
+  "start_url": "/Taller-Origen/",
+  "scope": "/Taller-Origen/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1976d2",
