@@ -4,34 +4,65 @@
   <meta charset="UTF-8">
   <title>App de Ventas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1976d2">
+
+  <!-- ESTILOS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOGIN -->
+<!-- ===============================
+     LOGIN
+================================ -->
 <div id="login">
-  <h3>Login</h3>
+  <h2>🔐 Iniciar sesión</h2>
+
   <input type="email" id="email" placeholder="Correo">
   <input type="password" id="password" placeholder="Contraseña">
+
   <button id="btnLogin">Entrar</button>
   <button id="btnRegister">Registrarse</button>
 </div>
 
-<!-- APP -->
+<!-- ===============================
+     APP
+================================ -->
 <div id="app" style="display:none">
-  <h2>Registro de Ventas</h2>
+  <h2>📦 Registro de Ventas</h2>
 
+  <!-- RESUMEN -->
+  <div id="resumen">
+    <p>📅 Hoy: <b id="totalHoy">0</b></p>
+    <p>🗓️ Mes: <b id="totalMes">0</b></p>
+  </div>
+
+  <!-- BUSQUEDA -->
+  <input
+    type="text"
+    id="busqueda"
+    placeholder="🔍 Buscar cliente"
+  >
+
+  <!-- FORMULARIO -->
   <input type="text" id="cliente" placeholder="Cliente">
   <input type="text" id="producto" placeholder="Producto">
 
-  <button id="btnGuardar">Guardar</button>
-  <button id="btnLogout">Cerrar sesión</button>
+  <button id="btnGuardar">Guardar venta</button>
 
+  <!-- LISTA -->
   <ul id="lista"></ul>
+
+  <button id="btnLogout" class="logout">Cerrar sesión</button>
 </div>
 
-<!-- 🔥 TODO COMO MÓDULO -->
+<!-- ===============================
+     SCRIPTS
+================================ -->
 <script type="module" src="firebase.js"></script>
-<script type="module" src="app.js"></script>
+<script src="app.js"></script>
 
 </body>
 </html>
