@@ -1,158 +1,109 @@
 // ===============================
-// DEBUG (verificar que Firebase ya existe)
-// ===============================
-console.log("AUTH:", window.auth);
-console.log("DB:", window.db);
-
-// ===============================
-// REFERENCIAS A FIREBASE
+// ESPERAR A FIREBASE
 // ===============================
 const auth = window.auth;
 const db = window.db;
 
-const {
-  collection,
-  addDoc,
-  getDocs,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} = window;
+console.log("AUTH:", auth);
+console.log("DB:", db);
 
 // ===============================
-// VARIABLES DOM
+// ELEMENTOS
 // ===============================
-const lista = document.getElementById("lista");
-const clienteInput = document.getElementById("cliente");
-const productoInput = document.getElementById("producto");
+const loginDiv = document.getElementById("login");
+const appDiv = document.getElementById("app");
+
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
+
+const clienteInput = document.getElementById("cliente");
+const productoInput = document.getElementById("producto");
+const lista = document.getElementById("lista");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+const btnGuardar = document.getElementById("btnGuardar");
+const btnLogout = document.getElementById("btnLogout");
 
 let userId = null;
 
 // ===============================
-// AUTH – detectar sesión
+// AUTH STATE
 // ===============================
-onAuthStateChanged(auth, user => {
+window.onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
-
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
+    loginDiv.style.display = "none";
+    appDiv.style.display = "block";
     cargarVentas();
   } else {
     userId = null;
-
-    document.getElementById("login").style.display = "block";
-    document.getElementById("app").style.display = "none";
-
+    loginDiv.style.display = "block";
+    appDiv.style.display = "none";
     lista.innerHTML = "";
   }
 });
 
 // ===============================
-// REGISTRAR
+// EVENTOS
 // ===============================
-window.registrar = function () {
-  const email = emailInput.value;
-  const password = passwordInput.value;
+btnRegister.addEventListener("click", () => {
+  window.createUserWithEmailAndPassword(
+    auth,
+    emailInput.value,
+    passwordInput.value
+  ).then(() => console.log("✅ Usuario creado"))
+   .catch(err => alert(err.message));
+});
 
-  if (!email || !password) {
-    alert("Completa correo y contraseña");
-    return;
-  }
+btnLogin.addEventListener("click", () => {
+  window.signInWithEmailAndPassword(
+    auth,
+    emailInput.value,
+    passwordInput.value
+  ).then(() => console.log("✅ Sesión iniciada"))
+   .catch(err => alert(err.message));
+});
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => console.log("✅ Usuario creado"))
-    .catch(err => alert(err.message));
-};
+btnLogout.addEventListener("click", () => {
+  window.signOut(auth);
+});
 
-// ===============================
-// LOGIN
-// ===============================
-window.login = function () {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  if (!email || !password) {
-    alert("Completa correo y contraseña");
-    return;
-  }
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => console.log("✅ Sesión iniciada"))
-    .catch(err => alert(err.message));
-};
+btnGuardar.addEventListener("click", () => guardar());
 
 // ===============================
-// LOGOUT
+// FIRESTORE
 // ===============================
-window.logout = function () {
-  signOut(auth);
-};
-
-// ===============================
-// GUARDAR VENTA (POR USUARIO)
-// ===============================
-window.guardar = function () {
-  if (!userId) {
-    alert("Debes iniciar sesión");
-    return;
-  }
-
-  const cliente = clienteInput.value;
-  const producto = productoInput.value;
-
-  if (!cliente || !producto) {
-    alert("Completa todos los campos");
-    return;
-  }
+function guardar() {
+  if (!userId) return alert("Inicia sesión");
 
   const venta = {
-    cliente,
-    producto,
+    cliente: clienteInput.value,
+    producto: productoInput.value,
     fecha: new Date()
   };
 
-  addDoc(collection(db, `usuarios/${userId}/ventas`), venta)
-    .then(() => console.log("☁️ Venta guardada"))
-    .catch(err => console.error("❌ Firebase:", err));
+  window.addDoc(
+    window.collection(db, `usuarios/${userId}/ventas`),
+    venta
+  );
 
   mostrar(venta);
 
   clienteInput.value = "";
   productoInput.value = "";
-};
+}
 
-// ===============================
-// MOSTRAR
-// ===============================
 function mostrar(venta) {
   const li = document.createElement("li");
   li.textContent = `${venta.cliente} - ${venta.producto}`;
   lista.appendChild(li);
 }
 
-// ===============================
-// CARGAR HISTORIAL
-// ===============================
 async function cargarVentas() {
   lista.innerHTML = "";
-
-  const snapshot = await getDocs(
-    collection(db, `usuarios/${userId}/ventas`)
+  const snap = await window.getDocs(
+    window.collection(db, `usuarios/${userId}/ventas`)
   );
-
-  snapshot.forEach(doc => mostrar(doc.data()));
-}
-
-// ===============================
-// SERVICE WORKER
-// ===============================
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js")
-    .then(() => console.log("✅ Service Worker activo"))
-    .catch(err => console.error("❌ SW:", err));
+  snap.forEach(doc => mostrar(doc.data()));
 }
