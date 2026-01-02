@@ -142,3 +142,33 @@ async function cargarVentas() {
     mostrar(doc.data());
   });
 }
+
+async function calcularTotales() {
+  let hoy = 0;
+  let mes = 0;
+
+  const ahora = new Date();
+  const diaActual = ahora.toDateString();
+  const mesActual = ahora.getMonth();
+  const añoActual = ahora.getFullYear();
+
+  const snap = await window.getDocs(
+    window.collection(db, `usuarios/${userId}/ventas`)
+  );
+
+  snap.forEach(doc => {
+    const fecha = doc.data().fecha.toDate
+      ? doc.data().fecha.toDate()
+      : new Date(doc.data().fecha);
+
+    if (fecha.toDateString() === diaActual) hoy++;
+
+    if (
+      fecha.getMonth() === mesActual &&
+      fecha.getFullYear() === añoActual
+    ) mes++;
+  });
+
+  document.getElementById("totalHoy").textContent = hoy;
+  document.getElementById("totalMes").textContent = mes;
+}
