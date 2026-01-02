@@ -7,26 +7,33 @@
 </head>
 <body>
 
-<h2>Registro de Ventas</h2>
-
+<!-- LOGIN -->
 <div id="login">
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <button onclick="registrar()">Registrar</button>
+  <h3>Login</h3>
+  <input type="email" id="email" placeholder="Correo">
+  <input type="password" id="password" placeholder="Contraseña">
+  <button onclick="login()">Entrar</button>
+  <button onclick="registrar()">Registrarse</button>
 </div>
 
-<div id="app" style="display:none;">
+<!-- APP -->
+<div id="app" style="display:none">
+  <h2>Registro de Ventas</h2>
+
   <input type="text" id="cliente" placeholder="Cliente">
   <input type="text" id="producto" placeholder="Producto">
+
   <button onclick="guardar()">Guardar</button>
+  <button onclick="logout()">Cerrar sesión</button>
+
   <ul id="lista"></ul>
-  <button onclick="logout()">Salir</button>
 </div>
 
-<!-- 🔥 IMPORTANTE -->
-<script type="module" src="./firebase.js"></script>
-<script type="module" src="./app.js"></script>
+<!-- 🔥 IMPORTANTE: firebase.js PRIMERO -->
+<script type="module" src="firebase.js"></script>
+
+<!-- 🔥 app.js DESPUÉS (SIN module) -->
+<script src="app.js"></script>
 
 </body>
 </html>
