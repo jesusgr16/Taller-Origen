@@ -47,3 +47,40 @@ if ('serviceWorker' in navigator) {
     .then(() => console.log("✅ Service Worker activo"))
     .catch(err => console.error("❌ SW error", err));
 }
+
+let userId = null;
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    userId = user.uid;
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    cargarVentas();
+  } else {
+    document.getElementById("login").style.display = "block";
+    document.getElementById("app").style.display = "none";
+  }
+});
+
+function registrar() {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => console.log("Usuario creado"))
+    .catch(err => alert(err.message));
+}
+
+function login() {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => console.log("Sesión iniciada"))
+    .catch(err => alert(err.message));
+}
+
+function logout() {
+  signOut(auth);
+}
+
