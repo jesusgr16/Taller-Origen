@@ -1,9 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import {
-  getFirestore,
-  collection,
-  addDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "TU_API_KEY",
@@ -15,11 +18,16 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-console.log("🔥 Firebase cargado correctamente");
-
-// Exponer para app.js
+// Exponer
 window.db = db;
-window.collection = collection;
-window.addDoc = addDoc;
+window.auth = auth;
+window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+window.onAuthStateChanged = onAuthStateChanged;
+window.signOut = signOut;
+
+console.log("🔥 Firebase + Auth listo");
