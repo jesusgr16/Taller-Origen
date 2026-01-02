@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>App de Ventas</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<h2>Registro de Ventas</h2>
+
+<input type="text" id="cliente" placeholder="Cliente">
+<input type="text" id="producto" placeholder="Producto">
+
+<button onclick="guardar()">Guardar</button>
+
+<ul id="lista"></ul>
+<script src="firebase.js" type="module"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
