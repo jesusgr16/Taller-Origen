@@ -12,8 +12,8 @@
   <h3>Login</h3>
   <input type="email" id="email" placeholder="Correo">
   <input type="password" id="password" placeholder="Contraseña">
-  <button onclick="login()">Entrar</button>
-  <button onclick="registrar()">Registrarse</button>
+  <button id="btnLogin">Entrar</button>
+  <button id="btnRegister">Registrarse</button>
 </div>
 
 <!-- APP -->
@@ -23,17 +23,15 @@
   <input type="text" id="cliente" placeholder="Cliente">
   <input type="text" id="producto" placeholder="Producto">
 
-  <button onclick="guardar()">Guardar</button>
-  <button onclick="logout()">Cerrar sesión</button>
+  <button id="btnGuardar">Guardar</button>
+  <button id="btnLogout">Cerrar sesión</button>
 
   <ul id="lista"></ul>
 </div>
 
-<!-- 🔥 IMPORTANTE: firebase.js PRIMERO -->
+<!-- 🔥 TODO COMO MÓDULO -->
 <script type="module" src="firebase.js"></script>
-
-<!-- 🔥 app.js DESPUÉS (SIN module) -->
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 
 </body>
 </html>
