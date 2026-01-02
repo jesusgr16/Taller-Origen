@@ -1,5 +1,5 @@
 {
-  "name": "App de Ventas",
+  "name": "Taller Origen",
   "short_name": "Ventas",
   "start_url": "/Taller-Origen/",
   "scope": "/Taller-Origen/",
@@ -19,3 +19,4 @@
     }
   ]
 }
+
