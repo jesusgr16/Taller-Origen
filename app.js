@@ -1,94 +1,83 @@
 // ===============================
-// ESPERAR A FIREBASE
+// VARIABLES
 // ===============================
-const auth = window.auth;
-const db = window.db;
-
-console.log("AUTH:", auth);
-console.log("DB:", db);
-
-// ===============================
-// ELEMENTOS
-// ===============================
-const loginDiv = document.getElementById("login");
-const appDiv = document.getElementById("app");
-
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-
+const lista = document.getElementById("lista");
 const clienteInput = document.getElementById("cliente");
 const productoInput = document.getElementById("producto");
-const lista = document.getElementById("lista");
-
-const btnLogin = document.getElementById("btnLogin");
-const btnRegister = document.getElementById("btnRegister");
-const btnGuardar = document.getElementById("btnGuardar");
-const btnLogout = document.getElementById("btnLogout");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const busquedaInput = document.getElementById("busqueda");
 
 let userId = null;
 
 // ===============================
-// AUTH STATE
+// AUTH: detectar sesión
 // ===============================
-window.onAuthStateChanged(auth, user => {
+onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
 
-    loginDiv.style.display = "none";
-    appDiv.style.display = "block";
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "block";
 
     cargarVentas();
   } else {
     userId = null;
 
-    loginDiv.style.display = "block";
-    appDiv.style.display = "none";
+    document.getElementById("login").style.display = "block";
+    document.getElementById("app").style.display = "none";
 
     lista.innerHTML = "";
   }
 });
 
 // ===============================
-// EVENTOS
+// REGISTRO
 // ===============================
-btnRegister.addEventListener("click", async () => {
-  try {
-    await window.createUserWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      passwordInput.value
-    );
-    console.log("✅ Usuario creado");
-  } catch (err) {
-    alert(err.message);
+function registrar() {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  if (!email || !password) {
+    alert("Completa correo y contraseña");
+    return;
   }
-});
 
-btnLogin.addEventListener("click", async () => {
-  try {
-    await window.signInWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      passwordInput.value
-    );
-    console.log("✅ Sesión iniciada");
-  } catch (err) {
-    alert(err.message);
-  }
-});
-
-btnLogout.addEventListener("click", () => {
-  window.signOut(auth);
-});
-
-btnGuardar.addEventListener("click", guardar);
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(() => console.log("✅ Usuario creado"))
+    .catch(err => alert(err.message));
+}
 
 // ===============================
-// FIRESTORE
+// LOGIN
+// ===============================
+function login() {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  if (!email || !password) {
+    alert("Completa correo y contraseña");
+    return;
+  }
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => console.log("✅ Sesión iniciada"))
+    .catch(err => alert(err.message));
+}
+
+// ===============================
+// LOGOUT
+// ===============================
+function logout() {
+  signOut(auth);
+}
+
+// ===============================
+// GUARDAR VENTA
 // ===============================
 async function guardar() {
   if (!userId) {
-    alert("Inicia sesión");
+    alert("Debes iniciar sesión");
     return;
   }
 
@@ -107,13 +96,13 @@ async function guardar() {
   };
 
   try {
-    await window.addDoc(
-      window.collection(db, `usuarios/${userId}/ventas`),
+    await addDoc(
+      collection(db, `usuarios/${userId}/ventas`),
       venta
     );
 
-    console.log("☁️ Venta guardada en Firebase");
     mostrar(venta);
+    calcularTotales();
   } catch (err) {
     console.error("❌ Error Firebase:", err);
   }
@@ -122,6 +111,9 @@ async function guardar() {
   productoInput.value = "";
 }
 
+// ===============================
+// MOSTRAR EN PANTALLA
+// ===============================
 function mostrar(venta) {
   const li = document.createElement("li");
   li.textContent = `${venta.cliente} - ${venta.producto}`;
@@ -134,15 +126,18 @@ function mostrar(venta) {
 async function cargarVentas() {
   lista.innerHTML = "";
 
-  const snap = await window.getDocs(
-    window.collection(db, `usuarios/${userId}/ventas`)
+  const snapshot = await getDocs(
+    collection(db, `usuarios/${userId}/ventas`)
   );
 
-  snap.forEach(doc => {
-    mostrar(doc.data());
-  });
+  snapshot.forEach(doc => mostrar(doc.data()));
+
+  calcularTotales();
 }
 
+// ===============================
+// TOTALES POR DÍA / MES
+// ===============================
 async function calcularTotales() {
   let hoy = 0;
   let mes = 0;
@@ -152,11 +147,11 @@ async function calcularTotales() {
   const mesActual = ahora.getMonth();
   const añoActual = ahora.getFullYear();
 
-  const snap = await window.getDocs(
-    window.collection(db, `usuarios/${userId}/ventas`)
+  const snapshot = await getDocs(
+    collection(db, `usuarios/${userId}/ventas`)
   );
 
-  snap.forEach(doc => {
+  snapshot.forEach(doc => {
     const fecha = doc.data().fecha.toDate
       ? doc.data().fecha.toDate()
       : new Date(doc.data().fecha);
@@ -171,4 +166,34 @@ async function calcularTotales() {
 
   document.getElementById("totalHoy").textContent = hoy;
   document.getElementById("totalMes").textContent = mes;
+}
+
+// ===============================
+// BÚSQUEDA DE CLIENTES
+// ===============================
+if (busquedaInput) {
+  busquedaInput.addEventListener("input", async () => {
+    const texto = busquedaInput.value.toLowerCase();
+    lista.innerHTML = "";
+
+    const snapshot = await getDocs(
+      collection(db, `usuarios/${userId}/ventas`)
+    );
+
+    snapshot.forEach(doc => {
+      const venta = doc.data();
+      if (venta.cliente.toLowerCase().includes(texto)) {
+        mostrar(venta);
+      }
+    });
+  });
+}
+
+// ===============================
+// SERVICE WORKER
+// ===============================
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js")
+    .then(() => console.log("✅ Service Worker activo"))
+    .catch(err => console.error("❌ SW error", err));
 }
