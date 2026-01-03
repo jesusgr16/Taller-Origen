@@ -182,10 +182,13 @@ if ("serviceWorker" in navigator) {
 // ===============================
 // EVENTOS BOTONES
 // ===============================
-document.getElementById("btnLogin")?.addEventListener("click", login);
-document.getElementById("btnRegister")?.addEventListener("click", registrar);
-document.getElementById("btnGuardar")?.addEventListener("click", guardar);
-document.getElementById("btnLogout")?.addEventListener("click", logout);
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("btnLogin")?.addEventListener("click", login);
+  document.getElementById("btnRegister")?.addEventListener("click", registrar);
+  document.getElementById("btnGuardar")?.addEventListener("click", guardar);
+  document.getElementById("btnLogout")?.addEventListener("click", logout);
+});
+
 
 if (busquedaInput) {
   busquedaInput.addEventListener("input", async () => {
@@ -204,3 +207,4 @@ if (busquedaInput) {
     });
   });
 }
+
