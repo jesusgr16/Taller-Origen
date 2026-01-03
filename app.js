@@ -34,9 +34,9 @@ const firebaseConfig = {
 // ===============================
 // INIT
 // ===============================
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
 
 // ===============================
 // DOM
@@ -44,68 +44,29 @@ const db = getFirestore(app);
 const loginView = document.getElementById("login");
 const appView = document.getElementById("app");
 
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+const btnLogout = document.getElementById("btnLogout");
+
+const btnMenu = document.getElementById("btnMenu");
+const menuOverlay = document.getElementById("menuOverlay");
+
 const listaVentas = document.getElementById("listaVentas");
 const listaHistorial = document.getElementById("listaHistorial");
 
 const clienteInput = document.getElementById("cliente");
 const productoInput = document.getElementById("producto");
 const precioInput = document.getElementById("precio");
-
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
 const busquedaInput = document.getElementById("busqueda");
-
-const btnLogin = document.getElementById("btnLogin");
-const btnRegister = document.getElementById("btnRegister");
-const btnGuardar = document.getElementById("btnGuardar");
-const btnLogout = document.getElementById("btnLogout");
-
-const btnMenu = document.getElementById("btnMenu");
-const menuOverlay = document.getElementById("menuOverlay");
 
 let userId = null;
 let chart = null;
 
 // ===============================
-// AUTH STATE
-// ===============================
-
-
-// ===============================
-// AUTH
-// ===============================
-btnRegister.addEventListener("click", async () => {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa los campos");
-    return;
-  }
-  await createUserWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  );
-});
-
-btnLogin.addEventListener("click", async () => {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa los campos");
-    return;
-  }
-  await signInWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  );
-});
-
-btnLogout.addEventListener("click", () => {
-  if (confirm("¿Cerrar sesión?")) {
-    signOut(auth);
-  }
-});
-
-// ===============================
-// GUARDAR VENTA
+// AUTH STATE (CLAVE)
 // ===============================
 onAuthStateChanged(auth, user => {
   if (user) {
@@ -113,8 +74,6 @@ onAuthStateChanged(auth, user => {
 
     loginView.style.display = "none";
     appView.style.display = "block";
-
-    // 🔥 MOSTRAR MENÚ SOLO CUANDO HAY SESIÓN
     btnMenu.style.display = "block";
 
     mostrarVista("ventas");
@@ -124,29 +83,78 @@ onAuthStateChanged(auth, user => {
 
     loginView.style.display = "block";
     appView.style.display = "none";
-
-    // 🔒 OCULTAR MENÚ EN LOGIN
     btnMenu.style.display = "none";
   }
 });
 
+// ===============================
+// AUTH ACTIONS
+// ===============================
+btnRegister.addEventListener("click", async () => {
+  if (!emailInput.value || !passwordInput.value) {
+    alert("Completa los campos");
+    return;
+  }
+  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+});
+
+btnLogin.addEventListener("click", async () => {
+  if (!emailInput.value || !passwordInput.value) {
+    alert("Completa los campos");
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+  } catch (e) {
+    alert(e.message);
+  }
+});
+
+btnLogout.addEventListener("click", () => {
+  signOut(auth);
+});
+
+// ===============================
+// GUARDAR VENTA
+// ===============================
+document.getElementById("btnGuardar").addEventListener("click", async () => {
+  if (!userId) return;
+
+  if (!clienteInput.value || !productoInput.value || !precioInput.value) {
+    alert("Completa todos los campos");
+    return;
+  }
+
+  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+    cliente: clienteInput.value,
+    producto: productoInput.value,
+    precio: Number(precioInput.value),
+    pagado: false,
+    fecha: new Date()
+  });
+
+  clienteInput.value = "";
+  productoInput.value = "";
+  precioInput.value = "";
+
+  cargarVentas();
+});
 
 // ===============================
 // CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
+  if (!userId) return;
+
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
 
   snap.forEach(d => {
-    const venta = d.data();
-    if (venta.pagado) {
-      pintarHistorial(venta);
-    } else {
-      pintarVenta(d.id, venta);
-    }
+    const v = d.data();
+    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
   });
 
   calcularTotales();
@@ -155,28 +163,26 @@ async function cargarVentas() {
 // ===============================
 // PINTAR
 // ===============================
-function pintarVenta(id, venta) {
+function pintarVenta(id, v) {
   const li = document.createElement("li");
   li.innerHTML = `
-    <b>${venta.cliente}</b><br>
-    ${venta.producto}<br>
-    $${venta.precio}<br>
-    <button class="pagar">Marcar pagado</button>
+    <b>${v.cliente}</b><br>
+    ${v.producto}<br>
+    $${v.precio}<br>
+    <button>Marcar pagado</button>
   `;
 
-  li.querySelector(".pagar").addEventListener("click", async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-      pagado: true
-    });
+  li.querySelector("button").onclick = async () => {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), { pagado: true });
     cargarVentas();
-  });
+  };
 
   listaVentas.appendChild(li);
 }
 
-function pintarHistorial(venta) {
+function pintarHistorial(v) {
   const li = document.createElement("li");
-  li.textContent = `${venta.cliente} - ${venta.producto} ($${venta.precio})`;
+  li.textContent = `${v.cliente} - ${v.producto} ($${v.precio})`;
   listaHistorial.appendChild(li);
 }
 
@@ -184,6 +190,8 @@ function pintarHistorial(venta) {
 // BUSQUEDA
 // ===============================
 busquedaInput.addEventListener("input", async () => {
+  if (!userId) return;
+
   listaVentas.innerHTML = "";
   const texto = busquedaInput.value.toLowerCase();
 
@@ -200,18 +208,14 @@ busquedaInput.addEventListener("input", async () => {
 // TOTALES
 // ===============================
 async function calcularTotales() {
-  let hoy = 0;
-  let mes = 0;
+  let hoy = 0, mes = 0;
   const ahora = new Date();
 
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
   snap.forEach(d => {
     const f = d.data().fecha.toDate();
     if (f.toDateString() === ahora.toDateString()) hoy++;
-    if (
-      f.getMonth() === ahora.getMonth() &&
-      f.getFullYear() === ahora.getFullYear()
-    ) mes++;
+    if (f.getMonth() === ahora.getMonth()) mes++;
   });
 
   document.getElementById("totalHoy").textContent = hoy;
@@ -222,22 +226,14 @@ async function calcularTotales() {
 // VISTAS
 // ===============================
 function mostrarVista(vista) {
-  document.getElementById("vistaVentas").style.display = "none";
-  document.getElementById("vistaHistorial").style.display = "none";
-  document.getElementById("vistaGrafica").style.display = "none";
+  ["vistaVentas", "vistaHistorial", "vistaGrafica"].forEach(id => {
+    document.getElementById(id).style.display = "none";
+  });
 
-  if (vista === "ventas") {
-    document.getElementById("vistaVentas").style.display = "block";
-  }
+  document.getElementById("vista" + vista.charAt(0).toUpperCase() + vista.slice(1))
+    .style.display = "block";
 
-  if (vista === "historial") {
-    document.getElementById("vistaHistorial").style.display = "block";
-  }
-
-  if (vista === "grafica") {
-    document.getElementById("vistaGrafica").style.display = "block";
-    cargarGrafica();
-  }
+  if (vista === "grafica") cargarGrafica();
 }
 
 // ===============================
@@ -250,32 +246,18 @@ async function cargarGrafica() {
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
   snap.forEach(d => {
     const v = d.data();
-    if (!v.pagado) return;
-    const f = v.fecha.toDate();
-    if (f.getFullYear() === año) {
-      datos[f.getMonth()] += v.precio;
+    if (v.pagado && v.fecha.toDate().getFullYear() === año) {
+      datos[v.fecha.toDate().getMonth()] += v.precio;
     }
   });
 
-  const ctx = document.getElementById("graficaVentas");
   if (chart) chart.destroy();
 
-  chart = new Chart(ctx, {
+  chart = new Chart(document.getElementById("graficaVentas"), {
     type: "line",
     data: {
       labels: ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
-      datasets: [{
-        label: "Ventas ($)",
-        data: datos,
-        fill: true,
-        tension: 0.35
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true }
-      }
+      datasets: [{ label: "Ventas", data: datos, fill: true, tension: 0.3 }]
     }
   });
 }
@@ -283,37 +265,14 @@ async function cargarGrafica() {
 // ===============================
 // MENU FLOTANTE
 // ===============================
-btnMenu.addEventListener("click", () => {
-  menuOverlay.classList.add("active");
-});
+btnMenu.onclick = () => menuOverlay.classList.add("active");
+menuOverlay.onclick = e => {
+  if (e.target === menuOverlay) menuOverlay.classList.remove("active");
+};
 
-menuOverlay.addEventListener("click", e => {
-  if (e.target === menuOverlay) {
+document.querySelectorAll(".menu-item[data-vista]").forEach(b => {
+  b.onclick = () => {
+    mostrarVista(b.dataset.vista);
     menuOverlay.classList.remove("active");
-  }
+  };
 });
-
-document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    mostrarVista(btn.dataset.vista);
-    menuOverlay.classList.remove("active");
-  });
-});
-
-btnLogin.addEventListener("click", async () => {
-  console.log("Intentando login...");
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      passwordInput.value
-    );
-    console.log("Login OK");
-  } catch (e) {
-    console.error("ERROR LOGIN:", e.code, e.message);
-    alert(e.message);
-  }
-});
-
-
-
