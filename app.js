@@ -72,14 +72,19 @@ let chart = null;
 onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
+
     loginView.style.display = "none";
     appView.style.display = "block";
+    btnMenu.style.display = "block"; // ✅ mostrar menú
+
     mostrarVista("ventas");
     cargarVentas();
   } else {
     userId = null;
+
     loginView.style.display = "block";
     appView.style.display = "none";
+    btnMenu.style.display = "none"; // ❌ ocultar menú
   }
 });
 
@@ -91,7 +96,11 @@ btnRegister.addEventListener("click", async () => {
     alert("Completa los campos");
     return;
   }
-  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+  await createUserWithEmailAndPassword(
+    auth,
+    emailInput.value,
+    passwordInput.value
+  );
 });
 
 btnLogin.addEventListener("click", async () => {
@@ -99,7 +108,11 @@ btnLogin.addEventListener("click", async () => {
     alert("Completa los campos");
     return;
   }
-  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+  await signInWithEmailAndPassword(
+    auth,
+    emailInput.value,
+    passwordInput.value
+  );
 });
 
 btnLogout.addEventListener("click", () => {
@@ -211,7 +224,10 @@ async function calcularTotales() {
   snap.forEach(d => {
     const f = d.data().fecha.toDate();
     if (f.toDateString() === ahora.toDateString()) hoy++;
-    if (f.getMonth() === ahora.getMonth() && f.getFullYear() === ahora.getFullYear()) mes++;
+    if (
+      f.getMonth() === ahora.getMonth() &&
+      f.getFullYear() === ahora.getFullYear()
+    ) mes++;
   });
 
   document.getElementById("totalHoy").textContent = hoy;
