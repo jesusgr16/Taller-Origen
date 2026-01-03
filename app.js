@@ -1,4 +1,26 @@
 // ===============================
+// IMPORTS FIREBASE
+// ===============================
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import {
+  collection,
+  addDoc,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+// ===============================
+// FIREBASE INSTANCIAS
+// ===============================
+const auth = window.auth;
+const db = window.db;
+
+// ===============================
 // VARIABLES
 // ===============================
 const lista = document.getElementById("lista");
@@ -34,35 +56,43 @@ onAuthStateChanged(auth, user => {
 // ===============================
 // REGISTRO
 // ===============================
-function registrar() {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  if (!email || !password) {
+async function registrar() {
+  if (!emailInput.value || !passwordInput.value) {
     alert("Completa correo y contraseña");
     return;
   }
 
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => console.log("✅ Usuario creado"))
-    .catch(err => alert(err.message));
+  try {
+    await createUserWithEmailAndPassword(
+      auth,
+      emailInput.value,
+      passwordInput.value
+    );
+    console.log("✅ Usuario creado");
+  } catch (err) {
+    alert(err.message);
+  }
 }
 
 // ===============================
 // LOGIN
 // ===============================
-function login() {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  if (!email || !password) {
+async function login() {
+  if (!emailInput.value || !passwordInput.value) {
     alert("Completa correo y contraseña");
     return;
   }
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => console.log("✅ Sesión iniciada"))
-    .catch(err => alert(err.message));
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      emailInput.value,
+      passwordInput.value
+    );
+    console.log("✅ Sesión iniciada");
+  } catch (err) {
+    alert(err.message);
+  }
 }
 
 // ===============================
@@ -193,7 +223,8 @@ if (busquedaInput) {
 // SERVICE WORKER
 // ===============================
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./service-worker.js")
+  navigator.serviceWorker
+    .register("./service-worker.js")
     .then(() => console.log("✅ Service Worker activo"))
     .catch(err => console.error("❌ SW error", err));
 }
