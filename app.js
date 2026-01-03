@@ -2,6 +2,7 @@
 // IMPORTS FIREBASE
 // ===============================
 import {
+  getAuth,
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -9,22 +10,35 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 import {
+  getFirestore,
   collection,
   addDoc,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// ===============================
-// ESPERAR A FIREBASE
-// ===============================
-const auth = window.auth;
-const db = window.db;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-if (!auth || !db) {
-  console.error("❌ Firebase no cargó");
-}
 // ===============================
-// VARIABLES
+// CONFIG
+// ===============================
+const firebaseConfig = {
+  apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
+  authDomain: "taller-origen.firebaseapp.com",
+  projectId: "taller-origen",
+  storageBucket: "taller-origen.firebasestorage.app",
+  messagingSenderId: "563693867578",
+  appId: "1:563693867578:web:141c4c1afa09eeebfc5b03"
+};
+
+// ===============================
+// INIT
+// ===============================
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ===============================
+// VARIABLES DOM
 // ===============================
 const lista = document.getElementById("lista");
 const clienteInput = document.getElementById("cliente");
@@ -36,22 +50,18 @@ const busquedaInput = document.getElementById("busqueda");
 let userId = null;
 
 // ===============================
-// AUTH: detectar sesión
+// AUTH STATE
 // ===============================
 onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
-
     document.getElementById("login").style.display = "none";
     document.getElementById("app").style.display = "block";
-
     cargarVentas();
   } else {
     userId = null;
-
     document.getElementById("login").style.display = "block";
     document.getElementById("app").style.display = "none";
-
     lista.innerHTML = "";
   }
 });
@@ -64,17 +74,7 @@ async function registrar() {
     alert("Completa correo y contraseña");
     return;
   }
-
-  try {
-    await createUserWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      passwordInput.value
-    );
-    console.log("✅ Usuario creado");
-  } catch (err) {
-    alert(err.message);
-  }
+  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 }
 
 // ===============================
@@ -85,17 +85,7 @@ async function login() {
     alert("Completa correo y contraseña");
     return;
   }
-
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      passwordInput.value
-    );
-    console.log("✅ Sesión iniciada");
-  } catch (err) {
-    alert(err.message);
-  }
+  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 }
 
 // ===============================
@@ -109,43 +99,25 @@ function logout() {
 // GUARDAR VENTA
 // ===============================
 async function guardar() {
-  if (!userId) {
-    alert("Debes iniciar sesión");
-    return;
-  }
+  if (!userId) return alert("Inicia sesión");
 
   const cliente = clienteInput.value.trim();
   const producto = productoInput.value.trim();
+  if (!cliente || !producto) return alert("Campos vacíos");
 
-  if (!cliente || !producto) {
-    alert("Completa todos los campos");
-    return;
-  }
-
-  const venta = {
+  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
     cliente,
     producto,
     fecha: new Date()
-  };
-
-  try {
-    await addDoc(
-      collection(db, `usuarios/${userId}/ventas`),
-      venta
-    );
-
-    mostrar(venta);
-    calcularTotales();
-  } catch (err) {
-    console.error("❌ Error Firebase:", err);
-  }
+  });
 
   clienteInput.value = "";
   productoInput.value = "";
+  cargarVentas();
 }
 
 // ===============================
-// MOSTRAR EN PANTALLA
+// MOSTRAR
 // ===============================
 function mostrar(venta) {
   const li = document.createElement("li");
@@ -154,47 +126,28 @@ function mostrar(venta) {
 }
 
 // ===============================
-// CARGAR HISTORIAL
+// CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
   lista.innerHTML = "";
-
-  const snapshot = await getDocs(
-    collection(db, `usuarios/${userId}/ventas`)
-  );
-
-  snapshot.forEach(doc => mostrar(doc.data()));
-
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+  snap.forEach(doc => mostrar(doc.data()));
   calcularTotales();
 }
 
 // ===============================
-// TOTALES POR DÍA / MES
+// TOTALES
 // ===============================
 async function calcularTotales() {
-  let hoy = 0;
-  let mes = 0;
-
+  let hoy = 0, mes = 0;
   const ahora = new Date();
-  const diaActual = ahora.toDateString();
-  const mesActual = ahora.getMonth();
-  const añoActual = ahora.getFullYear();
 
-  const snapshot = await getDocs(
-    collection(db, `usuarios/${userId}/ventas`)
-  );
-
-  snapshot.forEach(doc => {
-    const fecha = doc.data().fecha.toDate
-      ? doc.data().fecha.toDate()
-      : new Date(doc.data().fecha);
-
-    if (fecha.toDateString() === diaActual) hoy++;
-
-    if (
-      fecha.getMonth() === mesActual &&
-      fecha.getFullYear() === añoActual
-    ) mes++;
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+  snap.forEach(doc => {
+    const fecha = doc.data().fecha.toDate();
+    if (fecha.toDateString() === ahora.toDateString()) hoy++;
+    if (fecha.getMonth() === ahora.getMonth() &&
+        fecha.getFullYear() === ahora.getFullYear()) mes++;
   });
 
   document.getElementById("totalHoy").textContent = hoy;
@@ -202,33 +155,22 @@ async function calcularTotales() {
 }
 
 // ===============================
-// BÚSQUEDA DE CLIENTES
+// BUSQUEDA
 // ===============================
-if (busquedaInput) {
-  busquedaInput.addEventListener("input", async () => {
-    const texto = busquedaInput.value.toLowerCase();
-    lista.innerHTML = "";
+busquedaInput.addEventListener("input", async () => {
+  lista.innerHTML = "";
+  const texto = busquedaInput.value.toLowerCase();
 
-    const snapshot = await getDocs(
-      collection(db, `usuarios/${userId}/ventas`)
-    );
-
-    snapshot.forEach(doc => {
-      const venta = doc.data();
-      if (venta.cliente.toLowerCase().includes(texto)) {
-        mostrar(venta);
-      }
-    });
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+  snap.forEach(doc => {
+    const v = doc.data();
+    if (v.cliente.toLowerCase().includes(texto)) mostrar(v);
   });
-}
+});
 
 // ===============================
 // SERVICE WORKER
 // ===============================
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("./service-worker.js")
-    .then(() => console.log("✅ Service Worker activo"))
-    .catch(err => console.error("❌ SW error", err));
+  navigator.serviceWorker.register("service-worker.js");
 }
-
