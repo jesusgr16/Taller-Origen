@@ -7,7 +7,7 @@
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1976d2">
+  <meta name="theme-color" content="#2563eb">
 
   <!-- ESTILOS -->
   <link rel="stylesheet" href="style.css">
@@ -26,8 +26,14 @@
   <input type="email" id="email" placeholder="Correo">
   <input type="password" id="password" placeholder="Contraseña">
 
-  <button id="btnLogin" class="primary">Entrar</button>
-  <button id="btnRegister" class="secondary">Registrarse</button>
+  <!-- type="button" evita recarga -->
+  <button id="btnLogin" type="button" class="primary">
+    Entrar
+  </button>
+
+  <button id="btnRegister" type="button" class="secondary">
+    Registrarse
+  </button>
 </div>
 
 <!-- ===============================
@@ -35,7 +41,6 @@
 ================================ -->
 <div id="app" style="display:none">
 
-  <!-- CONTENIDO PRINCIPAL -->
   <main class="contenido">
 
     <!-- ===============================
@@ -49,13 +54,24 @@
         <p>Mes: <b id="totalMes">0</b></p>
       </div>
 
-      <input type="text" id="busqueda" placeholder="Buscar cliente">
+      <input
+        type="text"
+        id="busqueda"
+        placeholder="Buscar cliente"
+      >
 
       <div class="formulario">
         <input type="text" id="cliente" placeholder="Cliente">
         <input type="text" id="producto" placeholder="Producto">
         <input type="number" id="precio" placeholder="Precio">
-        <button id="btnGuardar" class="primary">Guardar venta</button>
+
+        <button
+          id="btnGuardar"
+          type="button"
+          class="primary"
+        >
+          Guardar venta
+        </button>
       </div>
 
       <ul id="listaVentas"></ul>
@@ -64,7 +80,11 @@
     <!-- ===============================
          VISTA HISTORIAL
     ================================ -->
-    <section id="vistaHistorial" class="vista" style="display:none">
+    <section
+      id="vistaHistorial"
+      class="vista"
+      style="display:none"
+    >
       <h2>Ventas pagadas</h2>
       <ul id="listaHistorial"></ul>
     </section>
@@ -72,7 +92,11 @@
     <!-- ===============================
          VISTA GRAFICA
     ================================ -->
-    <section id="vistaGrafica" class="vista" style="display:none">
+    <section
+      id="vistaGrafica"
+      class="vista"
+      style="display:none"
+    >
       <h2>Gráfica mensual</h2>
       <canvas id="graficaVentas"></canvas>
     </section>
@@ -83,7 +107,9 @@
 <!-- ===============================
      BOTÓN MENÚ FLOTANTE
 ================================ -->
-<button id="btnMenu" class="menu-btn">Menú</button>
+<button id="btnMenu" type="button" class="menu-btn">
+  Menú
+</button>
 
 <!-- ===============================
      OVERLAY MENÚ
@@ -93,11 +119,35 @@
   <div class="menu-panel">
     <h3>Navegación</h3>
 
-    <button class="menu-item" data-vista="ventas">Ventas</button>
-    <button class="menu-item" data-vista="historial">Historial</button>
-    <button class="menu-item" data-vista="grafica">Gráfica</button>
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="ventas"
+    >
+      Ventas
+    </button>
 
-    <button id="btnLogout" class="menu-item danger">
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="historial"
+    >
+      Historial
+    </button>
+
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="grafica"
+    >
+      Gráfica
+    </button>
+
+    <button
+      id="btnLogout"
+      type="button"
+      class="menu-item danger"
+    >
       Cerrar sesión
     </button>
   </div>
@@ -105,7 +155,7 @@
 </div>
 
 <!-- ===============================
-     SCRIPT
+     SCRIPT PRINCIPAL
 ================================ -->
 <script type="module" src="app.js"></script>
 
