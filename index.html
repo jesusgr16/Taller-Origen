@@ -26,7 +26,6 @@
   <input type="email" id="email" placeholder="Correo">
   <input type="password" id="password" placeholder="Contraseña">
 
-  <!-- type="button" evita recarga -->
   <button id="btnLogin" type="button" class="primary">
     Entrar
   </button>
@@ -59,25 +58,38 @@
         id="busqueda"
         placeholder="Buscar cliente"
       >
-<div class="formulario">
 
-  <input type="text" id="cliente" placeholder="Cliente">
+      <div class="formulario">
 
-  <input type="text" id="producto" placeholder="Producto">
+        <input type="text" id="cliente" placeholder="Cliente">
+        <input type="text" id="producto" placeholder="Producto">
 
-  <div class="precios-grid">
-    <input type="number" id="precioProducto" placeholder="Precio del producto">
-    <input type="number" id="precioGrabado" placeholder="Precio del grabado">
-  </div>
+        <div class="precios-grid">
+          <input
+            type="number"
+            id="precioProducto"
+            placeholder="Precio del producto"
+          >
+          <input
+            type="number"
+            id="precioGrabado"
+            placeholder="Precio del grabado"
+          >
+        </div>
 
-  <input type="number" id="precioTotal" placeholder="Total" disabled>
+        <!-- 👇 IMPORTANTE: readonly, NO disabled -->
+        <input
+          type="number"
+          id="precioTotal"
+          placeholder="Total"
+          readonly
+        >
 
-  <button id="btnGuardar" class="primary">
-    Guardar venta
-  </button>
+        <button id="btnGuardar" type="button" class="primary">
+          Guardar venta
+        </button>
 
-</div>
-
+      </div>
 
       <ul id="listaVentas"></ul>
     </section>
@@ -85,11 +97,7 @@
     <!-- ===============================
          VISTA HISTORIAL
     ================================ -->
-    <section
-      id="vistaHistorial"
-      class="vista"
-      style="display:none"
-    >
+    <section id="vistaHistorial" class="vista" style="display:none">
       <h2>Ventas pagadas</h2>
       <ul id="listaHistorial"></ul>
     </section>
@@ -97,11 +105,7 @@
     <!-- ===============================
          VISTA GRAFICA
     ================================ -->
-    <section
-      id="vistaGrafica"
-      class="vista"
-      style="display:none"
-    >
+    <section id="vistaGrafica" class="vista" style="display:none">
       <h2>Gráfica mensual</h2>
       <canvas id="graficaVentas"></canvas>
     </section>
@@ -112,7 +116,12 @@
 <!-- ===============================
      BOTÓN MENÚ FLOTANTE
 ================================ -->
-<button id="btnMenu" type="button" class="menu-btn">
+<button
+  id="btnMenu"
+  type="button"
+  class="menu-btn"
+  style="display:none"
+>
   Menú
 </button>
 
@@ -124,27 +133,15 @@
   <div class="menu-panel">
     <h3>Navegación</h3>
 
-    <button
-      type="button"
-      class="menu-item"
-      data-vista="ventas"
-    >
+    <button type="button" class="menu-item" data-vista="ventas">
       Ventas
     </button>
 
-    <button
-      type="button"
-      class="menu-item"
-      data-vista="historial"
-    >
+    <button type="button" class="menu-item" data-vista="historial">
       Historial
     </button>
 
-    <button
-      type="button"
-      class="menu-item"
-      data-vista="grafica"
-    >
+    <button type="button" class="menu-item" data-vista="grafica">
       Gráfica
     </button>
 
@@ -160,10 +157,9 @@
 </div>
 
 <!-- ===============================
-     SCRIPT PRINCIPAL
+     SCRIPT
 ================================ -->
 <script type="module" src="app.js"></script>
 
 </body>
 </html>
-
