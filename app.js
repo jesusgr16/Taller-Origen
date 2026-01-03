@@ -65,14 +65,12 @@ const precioProductoInput = document.getElementById("precioProducto");
 const precioGrabadoInput = document.getElementById("precioGrabado");
 const precioTotalInput = document.getElementById("precioTotal");
 const btnGuardar = document.getElementById("btnGuardar");
-const busquedaInput = document.getElementById("busqueda");
 
 let userId = null;
 let ventaEditandoId = null;
-let chart = null;
 
 // ===============================
-// MODO OSCURO (ESTABLE PC + MÓVIL)
+// MODO OSCURO (PC + MÓVIL)
 // ===============================
 function aplicarModoOscuro(estado) {
   document.body.classList.toggle("dark", estado);
@@ -82,7 +80,7 @@ function aplicarModoOscuro(estado) {
   }
 }
 
-// aplicar preferencia guardada o sistema
+// cargar preferencia
 const darkSaved = localStorage.getItem("darkMode");
 if (darkSaved === "on") {
   aplicarModoOscuro(true);
@@ -105,13 +103,12 @@ if (btnDarkMode) {
 onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
+
     loginView.style.display = "none";
     appView.style.display = "block";
     btnMenu.style.display = "block";
 
-    // reaplicar dark al entrar
     aplicarModoOscuro(localStorage.getItem("darkMode") === "on");
-
     mostrarVista("ventas");
     cargarVentas();
   } else {
@@ -147,40 +144,49 @@ function calcularTotal() {
     (Number(precioProductoInput.value) || 0) +
     (Number(precioGrabadoInput.value) || 0);
 }
+
 precioProductoInput.oninput = calcularTotal;
 precioGrabadoInput.oninput = calcularTotal;
 
 // ===============================
-// GUARDAR / EDITAR
+// GUARDAR / EDITAR VENTA
 // ===============================
 btnGuardar.onclick = async () => {
+  if (!userId) return;
+
   const cliente = clienteInput.value.trim();
   const producto = productoInput.value.trim();
-  const pProd = Number(precioProductoInput.value) || 0;
-  const pGrab = Number(precioGrabadoInput.value) || 0;
-  const total = pProd + pGrab;
+  const precioProducto = Number(precioProductoInput.value) || 0;
+  const precioGrabado = Number(precioGrabadoInput.value) || 0;
+  const total = precioProducto + precioGrabado;
 
-  if (!cliente || !producto) return alert("Completa los campos");
+  if (!cliente || !producto)
+    return alert("Completa cliente y producto");
 
   if (ventaEditandoId) {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
-      cliente, producto, precioProducto: pProd, precioGrabado: pGrab, precio: total
-    });
+    await updateDoc(
+      doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
+      { cliente, producto, precioProducto, precioGrabado, precio: total }
+    );
     ventaEditandoId = null;
     btnGuardar.textContent = "Guardar venta";
   } else {
     await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-      cliente, producto,
-      precioProducto: pProd,
-      precioGrabado: pGrab,
+      cliente,
+      producto,
+      precioProducto,
+      precioGrabado,
       precio: total,
       pagado: false,
       fecha: new Date()
     });
   }
 
-  clienteInput.value = productoInput.value = "";
-  precioProductoInput.value = precioGrabadoInput.value = precioTotalInput.value = "";
+  clienteInput.value = "";
+  productoInput.value = "";
+  precioProductoInput.value = "";
+  precioGrabadoInput.value = "";
+  precioTotalInput.value = "";
 
   cargarVentas();
 };
@@ -189,6 +195,8 @@ btnGuardar.onclick = async () => {
 // CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
+  if (!userId) return;
+
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
@@ -200,10 +208,11 @@ async function cargarVentas() {
 }
 
 // ===============================
-// PINTAR
+// PINTAR VENTAS
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
+
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${v.producto}<br>
@@ -211,7 +220,7 @@ function pintarVenta(id, v) {
     Grabado: $${v.precioGrabado}<br>
     <b>Total: $${v.precio}</b>
 
-    <div style="display:flex; gap:10px; margin-top:12px;">
+    <div class="acciones">
       <button class="primary pagar">Pagado</button>
       <button class="secondary editar">Editar</button>
       <button class="danger eliminar">Eliminar</button>
@@ -253,13 +262,14 @@ function pintarHistorial(v) {
 // MENU
 // ===============================
 btnMenu.onclick = () => menuOverlay.classList.add("active");
+
 menuOverlay.onclick = e => {
   if (e.target === menuOverlay) menuOverlay.classList.remove("active");
 };
 
-document.querySelectorAll(".menu-item[data-vista]").forEach(b => {
-  b.onclick = () => {
-    mostrarVista(b.dataset.vista);
+document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
+  btn.onclick = () => {
+    mostrarVista(btn.dataset.vista);
     menuOverlay.classList.remove("active");
   };
 });
@@ -267,9 +277,11 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(b => {
 // ===============================
 // VISTAS
 // ===============================
-function mostrarVista(v) {
-  ["vistaVentas","vistaHistorial","vistaGrafica"].forEach(id=>{
-    document.getElementById(id).style.display="none";
+function mostrarVista(vista) {
+  ["vistaVentas", "vistaHistorial", "vistaGrafica"].forEach(id => {
+    document.getElementById(id).style.display = "none";
   });
-  document.getElementById("vista"+v.charAt(0).toUpperCase()+v.slice(1)).style.display="block";
+  document.getElementById(
+    "vista" + vista.charAt(0).toUpperCase() + vista.slice(1)
+  ).style.display = "block";
 }
