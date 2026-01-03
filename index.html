@@ -21,13 +21,13 @@
      LOGIN
 ================================ -->
 <div id="login">
-  <h2> Iniciar sesión</h2>
+  <h2>Iniciar sesión</h2>
 
   <input type="email" id="email" placeholder="Correo">
   <input type="password" id="password" placeholder="Contraseña">
 
-  <button id="btnLogin">Entrar</button>
-  <button id="btnRegister">Registrarse</button>
+  <button id="btnLogin" class="primary">Entrar</button>
+  <button id="btnRegister" class="secondary">Registrarse</button>
 </div>
 
 <!-- ===============================
@@ -35,17 +35,18 @@
 ================================ -->
 <div id="app" style="display:none">
 
-  <!-- SIDEBAR -->
-<aside class="sidebar">
-  <h3>Ventas</h3>
+  <!-- SIDEBAR IZQUIERDO -->
+  <aside class="sidebar">
+    <h3 class="logo">Ventas</h3>
 
-  <button id="btnVentas">Ventas</button>
-  <button id="btnHistorial">Historial</button>
-  <button id="btnGrafica">Gráfica</button>
+    <button id="btnVentas" class="nav-btn active">Ventas</button>
+    <button id="btnHistorial" class="nav-btn">Historial</button>
+    <button id="btnGrafica" class="nav-btn">Gráfica</button>
 
-  <button id="btnLogout" class="logout">Cerrar sesión</button>
-</aside>
-
+    <div class="sidebar-footer">
+      <button id="btnLogout" class="nav-btn logout">Cerrar sesión</button>
+    </div>
+  </aside>
 
   <!-- CONTENIDO -->
   <main class="contenido">
@@ -56,24 +57,20 @@
     <section id="vistaVentas" class="vista">
       <h2>Ventas pendientes</h2>
 
-      <!-- RESUMEN -->
       <div id="resumen">
         <p>Hoy: <b id="totalHoy">0</b></p>
         <p>Mes: <b id="totalMes">0</b></p>
       </div>
 
-      <!-- BUSQUEDA -->
-      <input type="text" id="busqueda" placeholder="🔍 Buscar cliente">
+      <input type="text" id="busqueda" placeholder="Buscar cliente">
 
-      <!-- FORMULARIO -->
       <div class="formulario">
         <input type="text" id="cliente" placeholder="Cliente">
         <input type="text" id="producto" placeholder="Producto">
         <input type="number" id="precio" placeholder="Precio">
-        <button id="btnGuardar">Guardar venta</button>
+        <button id="btnGuardar" class="primary">Guardar venta</button>
       </div>
 
-      <!-- LISTA -->
       <ul id="listaVentas"></ul>
     </section>
 
@@ -97,42 +94,9 @@
 </div>
 
 <!-- ===============================
-     SCRIPT PRINCIPAL
+     SCRIPT
 ================================ -->
 <script type="module" src="app.js"></script>
-<!-- BOTÓN MENU -->
-<button id="btnMenu" class="menu-btn">Menú</button>
-
-<!-- PANEL FLOTANTE -->
-<button id="btnMenu" class="menu-btn">Menú</button>
-
-<div id="menuOverlay" class="menu-overlay">
-  <div class="menu-panel">
-    <h3>Navegación</h3>
-
-    <button class="menu-item" data-vista="ventas">Ventas</button>
-    <button class="menu-item" data-vista="historial">Historial</button>
-    <button class="menu-item" data-vista="grafica">Gráfica</button>
-
-    <button id="btnLogout" class="menu-item danger">
-      Cerrar sesión
-    </button>
-  </div>
-</div>
-
-<!-- ELIMINA O COMENTA ESTE BLOQUE -->
-<div class="tabs">
-  <button class="tab">Ventas</button>
-  <button class="tab">Historial</button>
-  <button class="tab">Gráfica</button>
-</div>
-
-<button class="logout">Cerrar sesión</button>
 
 </body>
 </html>
-
-
-
-
-
