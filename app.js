@@ -72,29 +72,32 @@ let ventaEditandoId = null;
 let chart = null;
 
 // ===============================
-// MODO OSCURO (🔥 FIX DEFINITIVO)
+// MODO OSCURO (ESTABLE PC + MÓVIL)
 // ===============================
 function aplicarModoOscuro(estado) {
   document.body.classList.toggle("dark", estado);
   localStorage.setItem("darkMode", estado ? "on" : "off");
-  btnDarkMode.textContent = estado ? "☀️ Modo claro" : "🌙 Modo oscuro";
+  if (btnDarkMode) {
+    btnDarkMode.textContent = estado ? "☀️ Modo claro" : "🌙 Modo oscuro";
+  }
 }
 
-// prioridad: localStorage → sistema
+// aplicar preferencia guardada o sistema
 const darkSaved = localStorage.getItem("darkMode");
-
 if (darkSaved === "on") {
   aplicarModoOscuro(true);
 } else if (darkSaved === null) {
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  aplicarModoOscuro(prefersDark);
+  aplicarModoOscuro(
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
 }
 
-btnDarkMode.onclick = () => {
-  const activo = document.body.classList.contains("dark");
-  aplicarModoOscuro(!activo);
-  menuOverlay.classList.remove("active");
-};
+if (btnDarkMode) {
+  btnDarkMode.onclick = () => {
+    aplicarModoOscuro(!document.body.classList.contains("dark"));
+    menuOverlay.classList.remove("active");
+  };
+}
 
 // ===============================
 // AUTH STATE
@@ -105,6 +108,10 @@ onAuthStateChanged(auth, user => {
     loginView.style.display = "none";
     appView.style.display = "block";
     btnMenu.style.display = "block";
+
+    // reaplicar dark al entrar
+    aplicarModoOscuro(localStorage.getItem("darkMode") === "on");
+
     mostrarVista("ventas");
     cargarVentas();
   } else {
@@ -119,12 +126,14 @@ onAuthStateChanged(auth, user => {
 // AUTH ACTIONS
 // ===============================
 btnRegister.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
+  if (!emailInput.value || !passwordInput.value)
+    return alert("Completa los campos");
   await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
 btnLogin.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
+  if (!emailInput.value || !passwordInput.value)
+    return alert("Completa los campos");
   await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
@@ -134,47 +143,111 @@ btnLogout.onclick = () => signOut(auth);
 // TOTAL AUTOMÁTICO
 // ===============================
 function calcularTotal() {
-  const p1 = Number(precioProductoInput.value) || 0;
-  const p2 = Number(precioGrabadoInput.value) || 0;
-  precioTotalInput.value = p1 + p2;
+  precioTotalInput.value =
+    (Number(precioProductoInput.value) || 0) +
+    (Number(precioGrabadoInput.value) || 0);
 }
-
 precioProductoInput.oninput = calcularTotal;
 precioGrabadoInput.oninput = calcularTotal;
 
 // ===============================
-// GUARDAR / EDITAR VENTA
+// GUARDAR / EDITAR
 // ===============================
 btnGuardar.onclick = async () => {
   const cliente = clienteInput.value.trim();
   const producto = productoInput.value.trim();
-  const precioProducto = Number(precioProductoInput.value) || 0;
-  const precioGrabado = Number(precioGrabadoInput.value) || 0;
-  const total = precioProducto + precioGrabado;
+  const pProd = Number(precioProductoInput.value) || 0;
+  const pGrab = Number(precioGrabadoInput.value) || 0;
+  const total = pProd + pGrab;
 
   if (!cliente || !producto) return alert("Completa los campos");
 
   if (ventaEditandoId) {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
-      cliente, producto, precioProducto, precioGrabado, precio: total
+      cliente, producto, precioProducto: pProd, precioGrabado: pGrab, precio: total
     });
     ventaEditandoId = null;
     btnGuardar.textContent = "Guardar venta";
   } else {
     await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-      cliente, producto, precioProducto, precioGrabado,
-      precio: total, pagado: false, fecha: new Date()
+      cliente, producto,
+      precioProducto: pProd,
+      precioGrabado: pGrab,
+      precio: total,
+      pagado: false,
+      fecha: new Date()
     });
   }
 
-  clienteInput.value = "";
-  productoInput.value = "";
-  precioProductoInput.value = "";
-  precioGrabadoInput.value = "";
-  precioTotalInput.value = "";
+  clienteInput.value = productoInput.value = "";
+  precioProductoInput.value = precioGrabadoInput.value = precioTotalInput.value = "";
 
   cargarVentas();
 };
+
+// ===============================
+// CARGAR VENTAS
+// ===============================
+async function cargarVentas() {
+  listaVentas.innerHTML = "";
+  listaHistorial.innerHTML = "";
+
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+  snap.forEach(d => {
+    const v = d.data();
+    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
+  });
+}
+
+// ===============================
+// PINTAR
+// ===============================
+function pintarVenta(id, v) {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <b>${v.cliente}</b><br>
+    ${v.producto}<br>
+    Producto: $${v.precioProducto}<br>
+    Grabado: $${v.precioGrabado}<br>
+    <b>Total: $${v.precio}</b>
+
+    <div style="display:flex; gap:10px; margin-top:12px;">
+      <button class="primary pagar">Pagado</button>
+      <button class="secondary editar">Editar</button>
+      <button class="danger eliminar">Eliminar</button>
+    </div>
+  `;
+
+  li.querySelector(".pagar").onclick = async () => {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), { pagado: true });
+    cargarVentas();
+  };
+
+  li.querySelector(".editar").onclick = () => {
+    clienteInput.value = v.cliente;
+    productoInput.value = v.producto;
+    precioProductoInput.value = v.precioProducto;
+    precioGrabadoInput.value = v.precioGrabado;
+    precioTotalInput.value = v.precio;
+    ventaEditandoId = id;
+    btnGuardar.textContent = "Actualizar venta";
+  };
+
+  li.querySelector(".eliminar").onclick = async () => {
+    if (confirm("¿Eliminar esta venta?")) {
+      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+      cargarVentas();
+    }
+  };
+
+  listaVentas.appendChild(li);
+}
+
+function pintarHistorial(v) {
+  const li = document.createElement("li");
+  li.textContent = `${v.cliente} - ${v.producto} ($${v.precio})`;
+  listaHistorial.appendChild(li);
+}
 
 // ===============================
 // MENU
@@ -190,3 +263,13 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(b => {
     menuOverlay.classList.remove("active");
   };
 });
+
+// ===============================
+// VISTAS
+// ===============================
+function mostrarVista(v) {
+  ["vistaVentas","vistaHistorial","vistaGrafica"].forEach(id=>{
+    document.getElementById(id).style.display="none";
+  });
+  document.getElementById("vista"+v.charAt(0).toUpperCase()+v.slice(1)).style.display="block";
+}
