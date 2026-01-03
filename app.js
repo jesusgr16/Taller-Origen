@@ -226,7 +226,8 @@ async function cargarGrafica() {
     }
   });
 
-  const ctx = document.getElementById("chartVentas");
+const ctx = document.getElementById("graficaVentas");
+
 
   if (chart) chart.destroy();
 
@@ -261,3 +262,35 @@ async function cargarGrafica() {
     }
   });
 }
+
+function mostrarVista(vista) {
+  document.getElementById("vistaVentas").style.display = "none";
+  document.getElementById("vistaHistorial").style.display = "none";
+  document.getElementById("vistaGrafica").style.display = "none";
+
+  if (vista === "ventas") {
+    document.getElementById("vistaVentas").style.display = "block";
+  }
+
+  if (vista === "historial") {
+    document.getElementById("vistaHistorial").style.display = "block";
+  }
+
+  if (vista === "grafica") {
+    document.getElementById("vistaGrafica").style.display = "block";
+    cargarGrafica(); // 🔥 aquí se carga la gráfica
+  }
+}
+
+document.getElementById("btnVentas").addEventListener("click", () => {
+  mostrarVista("ventas");
+});
+
+document.getElementById("btnHistorial").addEventListener("click", () => {
+  mostrarVista("historial");
+});
+
+document.getElementById("btnGrafica").addEventListener("click", () => {
+  mostrarVista("grafica");
+});
+
