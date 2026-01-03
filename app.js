@@ -299,3 +299,19 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
   });
 });
 
+btnLogin.addEventListener("click", async () => {
+  console.log("Intentando login...");
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      emailInput.value,
+      passwordInput.value
+    );
+    console.log("Login OK");
+  } catch (e) {
+    console.error("ERROR LOGIN:", e.code, e.message);
+    alert(e.message);
+  }
+});
+
+
