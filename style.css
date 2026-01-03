@@ -266,15 +266,76 @@ canvas {
 ================================ */
 .menu-btn {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: auto;
-  padding: 14px 18px;
-  border-radius: 999px;
+  top: 24px;
+  left: 24px;
+  padding: 12px 16px;
+  border-radius: 12px;
   background: var(--accent);
   color: white;
-  box-shadow: 0 14px 30px rgba(37,99,235,0.45);
+  font-weight: 600;
   z-index: 100;
+  box-shadow: 0 10px 25px rgba(37,99,235,.35);
+}
+
+/* ===============================
+   OVERLAY
+================================ */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.25);
+  display: none;
+  z-index: 200;
+}
+
+/* ===============================
+   PANEL LATERAL
+================================ */
+.menu-panel {
+  width: 260px;
+  height: 100%;
+  background: var(--card);
+  padding: 24px;
+  box-shadow: 10px 0 40px rgba(0,0,0,0.08);
+  animation: slideLeft 0.25s ease;
+}
+
+@keyframes slideLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ===============================
+   ITEMS
+================================ */
+.menu-panel h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: var(--primary);
+}
+
+.menu-item {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+  text-align: left;
+}
+
+.menu-item:active {
+  transform: scale(0.96);
+}
+
+.menu-item.danger {
+  background: #fee2e2;
+  color: var(--danger);
 }
 
 /* ===============================
@@ -337,3 +398,4 @@ canvas {
   color: var(--danger);
 }
 }
+
