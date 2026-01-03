@@ -206,3 +206,49 @@ document.getElementById("btnLogin").onclick = login;
 document.getElementById("btnRegister").onclick = registrar;
 document.getElementById("btnGuardar").onclick = guardar;
 document.getElementById("btnLogout").onclick = logout;
+
+let chart = null;
+
+async function cargarGrafica() {
+  const datos = Array(12).fill(0);
+  const ahora = new Date();
+  const añoActual = ahora.getFullYear();
+
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+
+  snap.forEach(doc => {
+    const venta = doc.data();
+    if (!venta.pagado) return;
+
+    const fecha = venta.fecha.toDate();
+    if (fecha.getFullYear() === añoActual) {
+      datos[fecha.getMonth()] += venta.precio;
+    }
+  });
+
+  const ctx = document.getElementById("chartVentas");
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: [
+        "Ene","Feb","Mar","Abr","May","Jun",
+        "Jul","Ago","Sep","Oct","Nov","Dic"
+      ],
+      datasets: [{
+        label: "Ventas ($)",
+        data: datos,
+        backgroundColor: "#1976d2"
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+}
+
