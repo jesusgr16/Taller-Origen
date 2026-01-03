@@ -231,7 +231,7 @@ async function cargarGrafica() {
   if (chart) chart.destroy();
 
   chart = new Chart(ctx, {
-    type: "bar",
+    type: "line",
     data: {
       labels: [
         "Ene","Feb","Mar","Abr","May","Jun",
@@ -240,15 +240,24 @@ async function cargarGrafica() {
       datasets: [{
         label: "Ventas ($)",
         data: datos,
-        backgroundColor: "#1976d2"
+        borderColor: "#1976d2",
+        backgroundColor: "rgba(25,118,210,0.2)",
+        fill: true,
+        tension: 0.3,
+        pointRadius: 5,
+        pointHoverRadius: 7
       }]
     },
     options: {
       responsive: true,
       plugins: {
-        legend: { display: false }
+        legend: { display: true }
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
       }
     }
   });
 }
-
