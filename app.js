@@ -313,3 +313,14 @@ menuItems.forEach(btn => {
   });
 });
 
+btnMenu.addEventListener("click", () => {
+  menuOverlay.style.display = "flex";
+});
+
+menuOverlay.addEventListener("click", e => {
+  if (!e.target.closest(".menu-panel")) {
+    menuOverlay.style.display = "none";
+  }
+});
+
+
