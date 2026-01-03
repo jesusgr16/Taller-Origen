@@ -300,27 +300,26 @@ menuOverlay.addEventListener("click", e => {
   }
 });
 
-// seleccionar opción
-menuItems.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const vista = btn.dataset.vista;
-
-    if (vista) {
-      mostrarVista(vista);
-    }
-
-    menuOverlay.style.display = "none";
-  });
-});
+const btnMenu = document.getElementById("btnMenu");
+const menuOverlay = document.getElementById("menuOverlay");
 
 btnMenu.addEventListener("click", () => {
-  menuOverlay.style.display = "flex";
+  menuOverlay.classList.add("active");
 });
 
 menuOverlay.addEventListener("click", e => {
-  if (!e.target.closest(".menu-panel")) {
-    menuOverlay.style.display = "none";
+  if (e.target === menuOverlay) {
+    menuOverlay.classList.remove("active");
   }
 });
+
+document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    mostrarVista(btn.dataset.vista);
+    menuOverlay.classList.remove("active");
+  });
+});
+
+
 
 
