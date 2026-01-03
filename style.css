@@ -1,4 +1,3 @@
-
 /* ===============================
    VARIABLES
 ================================ */
@@ -25,6 +24,9 @@
   padding: 0;
 }
 
+/* ===============================
+   BODY
+================================ */
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: linear-gradient(180deg, #eef2f7, #f8fafc);
@@ -53,7 +55,7 @@ body {
 }
 
 /* ===============================
-   TITULOS
+   TEXTOS
 ================================ */
 h2 {
   font-size: 24px;
@@ -73,6 +75,7 @@ input {
   background: #f9fbfd;
   margin-bottom: 18px;
   font-size: 15px;
+  color: var(--text);
 }
 
 input::placeholder {
@@ -104,20 +107,17 @@ button:active {
 
 .primary {
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
-  box-shadow: 0 10px 20px rgba(37,99,235,0.35);
+  color: #ffffff;
 }
 
 .secondary {
   background: #e5e7eb;
-  color: var(--primary);
-  margin-top: 10px;
+  color: #0f172a;
 }
 
-.logout {
-  background: transparent;
-  color: var(--danger);
-  border: 1px solid #fecaca;
+.danger {
+  background: #dc2626;
+  color: #ffffff;
 }
 
 /* ===============================
@@ -144,8 +144,20 @@ button:active {
 .formulario {
   display: flex;
   flex-direction: column;
+  gap: 16px;
+}
+
+/* precios lado a lado */
+.precios-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 14px;
-  margin-bottom: 22px;
+}
+
+#precioTotal {
+  background: #eef2f7;
+  font-weight: 700;
+  text-align: center;
 }
 
 /* ===============================
@@ -167,7 +179,7 @@ li {
 }
 
 /* ===============================
-   BOTÓN MENÚ FLOTANTE (🔥 ARREGLADO)
+   MENÚ FLOTANTE
 ================================ */
 .menu-btn {
   position: fixed;
@@ -176,17 +188,12 @@ li {
   padding: 14px 22px;
   border-radius: 999px;
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
-  box-shadow: 0 18px 40px rgba(37,99,235,0.45);
+  color: #ffffff;
   z-index: 2000;
-  width: auto;
-  font-weight: 800;
-  display: none; /* 👈 se controla SOLO por JS */
+  display: none;
 }
 
-/* ===============================
-   OVERLAY
-================================ */
+/* overlay */
 .menu-overlay {
   position: fixed;
   inset: 0;
@@ -199,34 +206,18 @@ li {
   display: block;
 }
 
-/* ===============================
-   PANEL MENÚ
-================================ */
+/* panel */
 .menu-panel {
   position: absolute;
   left: 16px;
   bottom: 90px;
   width: 240px;
-  background: white;
+  background: #ffffff;
   border-radius: 22px;
   padding: 18px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.25);
-  animation: slideUp .25s ease;
 }
 
-@keyframes slideUp {
-  from { transform: translateY(24px); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
-}
-
-.menu-panel h3 {
-  text-align: center;
-  margin-bottom: 14px;
-}
-
-/* ===============================
-   ITEMS MENÚ
-================================ */
+/* items */
 .menu-item {
   width: 100%;
   padding: 13px 14px;
@@ -236,178 +227,75 @@ li {
   font-weight: 600;
 }
 
-.menu-item.danger {
-  background: #fee2e2;
-  color: var(--danger);
-}
-
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* precios lado a lado */
-.precios-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-#precioTotal {
-  background: #eef2f7;
-  font-weight: 700;
-  text-align: center;
-}
-
 /* ===============================
-   FIX DEFINITIVO MODO OSCURO
+   🌙 MODO OSCURO DEFINITIVO
 ================================ */
-
-/* fondo general */
 body.dark {
-  background: radial-gradient(circle at top, #020617, #000314 75%);
+  background: linear-gradient(180deg, #020617, #020617);
+  color: #ffffff;
 }
 
 /* contenedores */
 body.dark #login,
 body.dark #app {
-  background: linear-gradient(180deg, #020617, #000314);
-  border: 1px solid #1e293b;
-}
-
-/* inputs visibles */
-body.dark input {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid #334155;
-  color: #e5e7eb;
-}
-
-body.dark input::placeholder {
-  color: #94a3b8;
-}
-
-body.dark input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
-}
-
-/* total */
-body.dark #precioTotal {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid #334155;
-  color: #e5e7eb;
-}
-
-/* cards de ventas */
-body.dark li {
-  background: linear-gradient(180deg, #020617, #000314);
-  border: 1px solid #334155;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-}
-
-/* ===============================
-   BOTONES (CLAVE)
-================================ */
-
-/* BOTÓN AZUL – menos brillo */
-body.dark .primary {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af);
-  box-shadow: 0 10px 25px rgba(37,99,235,0.35);
-}
-
-/* botón pagado */
-body.dark li button {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  color: white;
-  border: none;
-}
-
-/* botón eliminar */
-body.dark li button:last-child {
-  background: rgba(255,255,255,0.9);
-  color: #020617;
-}
-
-/* ===============================
-   MENÚ FLOTANTE
-================================ */
-body.dark .menu-panel {
-  background: linear-gradient(180deg, #020617, #000314);
-  border: 1px solid #334155;
-}
-
-body.dark .menu-item {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid #334155;
-  color: #e5e7eb;
-}
-
-body.dark .menu-item:hover {
-  background: rgba(59,130,246,0.2);
-}
-
-/* overlay más oscuro */
-body.dark .menu-overlay {
-  background: rgba(2,6,23,0.85);
-}
-
-/* ===============================
-   MODO OSCURO MEJORADO
-================================ */
-body.dark {
-  background: linear-gradient(180deg, #020617, #020617);
-  color: #e5e7eb;
-}
-
-/* tarjetas */
-body.dark #login,
-body.dark #app,
-body.dark li,
-body.dark .menu-panel {
   background: #020617;
   border: 1px solid #1e293b;
 }
 
-/* textos */
-body.dark h2,
-body.dark b,
-body.dark p,
-body.dark li {
-  color: #e5e7eb;
+/* 🔥 FUERZA TODOS LOS TEXTOS */
+body.dark,
+body.dark * {
+  color: #ffffff !important;
 }
 
 /* inputs */
 body.dark input {
   background: #020617;
-  color: #e5e7eb;
-  border: 1px solid #1e293b;
+  border: 1px solid #334155;
 }
 
-/* BOTONES */
+/* placeholder */
+body.dark input::placeholder {
+  color: #cbd5f5;
+}
+
+/* total */
+body.dark #precioTotal {
+  background: #020617;
+  border: 1px solid #334155;
+}
+
+/* cards */
+body.dark li {
+  background: #020617;
+  border: 1px solid #334155;
+}
+
+/* botones */
 body.dark .primary {
   background: linear-gradient(135deg, #1d4ed8, #1e40af);
-  box-shadow: 0 0 0 1px #1e40af;
 }
 
 body.dark .secondary {
   background: #1e293b;
-  color: #e5e7eb;
 }
 
 body.dark .danger {
   background: #7f1d1d;
-  color: #fee2e2;
 }
 
 /* menú */
+body.dark .menu-panel {
+  background: #020617;
+  border: 1px solid #334155;
+}
+
 body.dark .menu-item {
   background: #020617;
-  border: 1px solid #1e293b;
+  border: 1px solid #334155;
 }
 
-body.dark .menu-item:hover {
-  background: #1e293b;
+/* overlay */
+body.dark .menu-overlay {
+  background: rgba(2,6,23,0.85);
 }
-
-
