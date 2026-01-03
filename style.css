@@ -259,3 +259,45 @@ li {
   text-align: center;
 }
 
+/* ===============================
+   MODO OSCURO
+================================ */
+body.dark {
+  --bg: #0f172a;
+  --card: #020617;
+  --primary: #e5e7eb;
+  --primary-soft: #020617;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+
+body.dark {
+  background: linear-gradient(180deg, #020617, #020617);
+}
+
+body.dark input {
+  background: #020617;
+  border-color: #1e293b;
+  color: var(--text);
+}
+
+body.dark li {
+  background: #020617;
+  border-color: #1e293b;
+}
+
+body.dark .menu-panel {
+  background: #020617;
+}
+
+body.dark .menu-item {
+  background: #020617;
+  color: var(--text);
+}
+
+body.dark .menu-item:hover {
+  background: #1e293b;
+}
+
+
