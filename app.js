@@ -20,7 +20,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // ===============================
-// CONFIG
+// CONFIG FIREBASE
 // ===============================
 const firebaseConfig = {
   apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
@@ -41,6 +41,9 @@ const db = getFirestore(app);
 // ===============================
 // DOM
 // ===============================
+const loginView = document.getElementById("login");
+const appView = document.getElementById("app");
+
 const listaVentas = document.getElementById("listaVentas");
 const listaHistorial = document.getElementById("listaHistorial");
 
@@ -52,7 +55,18 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const busquedaInput = document.getElementById("busqueda");
 
+// botones
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
+const btnGuardar = document.getElementById("btnGuardar");
+const btnLogout = document.getElementById("btnLogout");
+
+const btnVentas = document.getElementById("btnVentas");
+const btnHistorial = document.getElementById("btnHistorial");
+const btnGrafica = document.getElementById("btnGrafica");
+
 let userId = null;
+let chart = null;
 
 // ===============================
 // AUTH STATE
@@ -60,43 +74,49 @@ let userId = null;
 onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "flex";
+    loginView.style.display = "none";
+    appView.style.display = "flex";
+    mostrarVista("ventas");
     cargarVentas();
   } else {
     userId = null;
-    document.getElementById("login").style.display = "block";
-    document.getElementById("app").style.display = "none";
+    loginView.style.display = "block";
+    appView.style.display = "none";
   }
 });
 
 // ===============================
-// AUTH ACTIONS
+// AUTH
 // ===============================
-async function registrar() {
-  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
-  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-}
-
-async function login() {
-  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
-  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-}
-
-function logout() {
-  if (confirm("¿Cerrar sesión?")) {
-    signOut(auth);
+btnRegister.addEventListener("click", async () => {
+  if (!emailInput.value || !passwordInput.value) {
+    alert("Completa los campos");
+    return;
   }
-}
+  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+});
+
+btnLogin.addEventListener("click", async () => {
+  if (!emailInput.value || !passwordInput.value) {
+    alert("Completa los campos");
+    return;
+  }
+  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+});
+
+btnLogout.addEventListener("click", () => {
+  if (confirm("¿Cerrar sesión?")) signOut(auth);
+});
 
 // ===============================
 // GUARDAR VENTA
 // ===============================
-async function guardar() {
+btnGuardar.addEventListener("click", async () => {
   if (!userId) return;
 
   if (!clienteInput.value || !productoInput.value || !precioInput.value) {
-    return alert("Completa todos los campos");
+    alert("Completa todos los campos");
+    return;
   }
 
   await addDoc(collection(db, `usuarios/${userId}/ventas`), {
@@ -112,27 +132,7 @@ async function guardar() {
   precioInput.value = "";
 
   cargarVentas();
-}
-
-// ===============================
-// MOSTRAR VENTAS
-// ===============================
-function pintarVenta(id, venta) {
-  const li = document.createElement("li");
-  li.innerHTML = `
-    <b>${venta.cliente}</b> - ${venta.producto}
-    <br>💲${venta.precio}
-    <br>
-    <button onclick="marcarPagado('${id}')">✅ Pagado</button>
-  `;
-  listaVentas.appendChild(li);
-}
-
-function pintarHistorial(venta) {
-  const li = document.createElement("li");
-  li.textContent = `✔ ${venta.cliente} - ${venta.producto} ($${venta.precio})`;
-  listaHistorial.appendChild(li);
-}
+});
 
 // ===============================
 // CARGAR VENTAS
@@ -143,12 +143,12 @@ async function cargarVentas() {
 
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
 
-  snap.forEach(docSnap => {
-    const venta = docSnap.data();
+  snap.forEach(d => {
+    const venta = d.data();
     if (venta.pagado) {
       pintarHistorial(venta);
     } else {
-      pintarVenta(docSnap.id, venta);
+      pintarVenta(d.id, venta);
     }
   });
 
@@ -156,13 +156,47 @@ async function cargarVentas() {
 }
 
 // ===============================
-// MARCAR COMO PAGADO
+// PINTAR
 // ===============================
-window.marcarPagado = async (id) => {
-  const ref = doc(db, `usuarios/${userId}/ventas/${id}`);
-  await updateDoc(ref, { pagado: true });
-  cargarVentas();
-};
+function pintarVenta(id, venta) {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <b>${venta.cliente}</b> - ${venta.producto}
+    <br>💲${venta.precio}
+    <br>
+    <button class="pagar">✅ Pagado</button>
+  `;
+
+  li.querySelector(".pagar").addEventListener("click", async () => {
+    const ref = doc(db, `usuarios/${userId}/ventas/${id}`);
+    await updateDoc(ref, { pagado: true });
+    cargarVentas();
+  });
+
+  listaVentas.appendChild(li);
+}
+
+function pintarHistorial(venta) {
+  const li = document.createElement("li");
+  li.textContent = `✔ ${venta.cliente} - ${venta.producto} ($${venta.precio})`;
+  listaHistorial.appendChild(li);
+}
+
+// ===============================
+// BUSQUEDA
+// ===============================
+busquedaInput.addEventListener("input", async () => {
+  listaVentas.innerHTML = "";
+  const texto = busquedaInput.value.toLowerCase();
+
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+  snap.forEach(d => {
+    const v = d.data();
+    if (!v.pagado && v.cliente.toLowerCase().includes(texto)) {
+      pintarVenta(d.id, v);
+    }
+  });
+});
 
 // ===============================
 // TOTALES
@@ -184,85 +218,8 @@ async function calcularTotales() {
 }
 
 // ===============================
-// BUSQUEDA
+// VISTAS
 // ===============================
-busquedaInput.addEventListener("input", async () => {
-  const texto = busquedaInput.value.toLowerCase();
-  listaVentas.innerHTML = "";
-
-  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(docSnap => {
-    const v = docSnap.data();
-    if (!v.pagado && v.cliente.toLowerCase().includes(texto)) {
-      pintarVenta(docSnap.id, v);
-    }
-  });
-});
-
-// ===============================
-// EVENTOS BOTONES
-// ===============================
-document.getElementById("btnLogin").onclick = login;
-document.getElementById("btnRegister").onclick = registrar;
-document.getElementById("btnGuardar").onclick = guardar;
-document.getElementById("btnLogout").onclick = logout;
-
-let chart = null;
-
-async function cargarGrafica() {
-  const datos = Array(12).fill(0);
-  const ahora = new Date();
-  const añoActual = ahora.getFullYear();
-
-  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-
-  snap.forEach(doc => {
-    const venta = doc.data();
-    if (!venta.pagado) return;
-
-    const fecha = venta.fecha.toDate();
-    if (fecha.getFullYear() === añoActual) {
-      datos[fecha.getMonth()] += venta.precio;
-    }
-  });
-
-const ctx = document.getElementById("graficaVentas");
-
-
-  if (chart) chart.destroy();
-
-  chart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: [
-        "Ene","Feb","Mar","Abr","May","Jun",
-        "Jul","Ago","Sep","Oct","Nov","Dic"
-      ],
-      datasets: [{
-        label: "Ventas ($)",
-        data: datos,
-        borderColor: "#1976d2",
-        backgroundColor: "rgba(25,118,210,0.2)",
-        fill: true,
-        tension: 0.3,
-        pointRadius: 5,
-        pointHoverRadius: 7
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: true }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-}
-
 function mostrarVista(vista) {
   document.getElementById("vistaVentas").style.display = "none";
   document.getElementById("vistaHistorial").style.display = "none";
@@ -271,26 +228,58 @@ function mostrarVista(vista) {
   if (vista === "ventas") {
     document.getElementById("vistaVentas").style.display = "block";
   }
-
   if (vista === "historial") {
     document.getElementById("vistaHistorial").style.display = "block";
   }
-
   if (vista === "grafica") {
     document.getElementById("vistaGrafica").style.display = "block";
-    cargarGrafica(); // 🔥 aquí se carga la gráfica
+    cargarGrafica();
   }
 }
 
-document.getElementById("btnVentas").addEventListener("click", () => {
-  mostrarVista("ventas");
-});
+btnVentas.addEventListener("click", () => mostrarVista("ventas"));
+btnHistorial.addEventListener("click", () => mostrarVista("historial"));
+btnGrafica.addEventListener("click", () => mostrarVista("grafica"));
 
-document.getElementById("btnHistorial").addEventListener("click", () => {
-  mostrarVista("historial");
-});
+// ===============================
+// GRAFICA
+// ===============================
+async function cargarGrafica() {
+  const datos = Array(12).fill(0);
+  const año = new Date().getFullYear();
 
-document.getElementById("btnGrafica").addEventListener("click", () => {
-  mostrarVista("grafica");
-});
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+  snap.forEach(d => {
+    const v = d.data();
+    if (!v.pagado) return;
+    const f = v.fecha.toDate();
+    if (f.getFullYear() === año) {
+      datos[f.getMonth()] += v.precio;
+    }
+  });
 
+  const ctx = document.getElementById("graficaVentas");
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
+      datasets: [{
+        label: "Ventas ($)",
+        data: datos,
+        borderColor: "#1976d2",
+        backgroundColor: "rgba(25,118,210,0.2)",
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
