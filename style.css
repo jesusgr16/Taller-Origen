@@ -351,3 +351,63 @@ body.dark .menu-item:hover {
 body.dark .menu-overlay {
   background: rgba(2,6,23,0.85);
 }
+
+/* ===============================
+   MODO OSCURO MEJORADO
+================================ */
+body.dark {
+  background: linear-gradient(180deg, #020617, #020617);
+  color: #e5e7eb;
+}
+
+/* tarjetas */
+body.dark #login,
+body.dark #app,
+body.dark li,
+body.dark .menu-panel {
+  background: #020617;
+  border: 1px solid #1e293b;
+}
+
+/* textos */
+body.dark h2,
+body.dark b,
+body.dark p,
+body.dark li {
+  color: #e5e7eb;
+}
+
+/* inputs */
+body.dark input {
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid #1e293b;
+}
+
+/* BOTONES */
+body.dark .primary {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  box-shadow: 0 0 0 1px #1e40af;
+}
+
+body.dark .secondary {
+  background: #1e293b;
+  color: #e5e7eb;
+}
+
+body.dark .danger {
+  background: #7f1d1d;
+  color: #fee2e2;
+}
+
+/* menú */
+body.dark .menu-item {
+  background: #020617;
+  border: 1px solid #1e293b;
+}
+
+body.dark .menu-item:hover {
+  background: #1e293b;
+}
+
+
