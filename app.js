@@ -15,11 +15,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // ===============================
-// FIREBASE INSTANCIAS
+// ESPERAR A FIREBASE
 // ===============================
 const auth = window.auth;
 const db = window.db;
 
+if (!auth || !db) {
+  console.error("❌ Firebase no cargó");
+}
 // ===============================
 // VARIABLES
 // ===============================
@@ -228,3 +231,4 @@ if ("serviceWorker" in navigator) {
     .then(() => console.log("✅ Service Worker activo"))
     .catch(err => console.error("❌ SW error", err));
 }
+
