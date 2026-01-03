@@ -339,4 +339,23 @@ btnDarkMode.onclick = () => {
   menuOverlay.classList.remove("active");
 };
 
+// ===============================
+// MODO OSCURO (REAL)
+// ===============================
+const btnDarkMode = document.getElementById("btnDarkMode");
+
+// cargar preferencia guardada
+if (localStorage.getItem("darkMode") === "true") {
+  document.body.classList.add("dark");
+}
+
+btnDarkMode.onclick = () => {
+  document.body.classList.toggle("dark");
+
+  // guardar preferencia
+  const activo = document.body.classList.contains("dark");
+  localStorage.setItem("darkMode", activo);
+};
+
+
 
