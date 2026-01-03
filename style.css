@@ -306,3 +306,32 @@ body.dark .menu-item {
 body.dark .menu-overlay {
   background: rgba(2,6,23,0.85);
 }
+
+/* ===============================
+   LOGO + NOMBRE EMPRESA
+================================ */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.brand img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.brand span {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+/* MODO OSCURO */
+body.dark .brand span {
+  color: #ffffff;
+}
+
