@@ -100,8 +100,26 @@
      SCRIPT PRINCIPAL
 ================================ -->
 <script type="module" src="app.js"></script>
+<!-- BOTÓN MENU -->
+<button id="btnMenu" class="menu-btn">Menú</button>
+
+<!-- PANEL FLOTANTE -->
+<div id="menuOverlay" class="menu-overlay">
+  <div class="menu-panel">
+    <h3>Opciones</h3>
+
+    <button class="menu-item" data-vista="ventas">Ventas</button>
+    <button class="menu-item" data-vista="historial">Historial</button>
+    <button class="menu-item" data-vista="grafica">Gráfica</button>
+
+    <button id="btnLogout" class="menu-item danger">
+      Cerrar sesión
+    </button>
+  </div>
+</div>
 
 </body>
 </html>
+
 
 
