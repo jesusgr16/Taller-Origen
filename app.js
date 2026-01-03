@@ -55,15 +55,13 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const busquedaInput = document.getElementById("busqueda");
 
-// botones
 const btnLogin = document.getElementById("btnLogin");
 const btnRegister = document.getElementById("btnRegister");
 const btnGuardar = document.getElementById("btnGuardar");
 const btnLogout = document.getElementById("btnLogout");
 
-const btnVentas = document.getElementById("btnVentas");
-const btnHistorial = document.getElementById("btnHistorial");
-const btnGrafica = document.getElementById("btnGrafica");
+const btnMenu = document.getElementById("btnMenu");
+const menuOverlay = document.getElementById("menuOverlay");
 
 let userId = null;
 let chart = null;
@@ -75,7 +73,7 @@ onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
     loginView.style.display = "none";
-    appView.style.display = "flex";
+    appView.style.display = "block";
     mostrarVista("ventas");
     cargarVentas();
   } else {
@@ -93,7 +91,11 @@ btnRegister.addEventListener("click", async () => {
     alert("Completa los campos");
     return;
   }
-  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+  await createUserWithEmailAndPassword(
+    auth,
+    emailInput.value,
+    passwordInput.value
+  );
 });
 
 btnLogin.addEventListener("click", async () => {
@@ -101,11 +103,17 @@ btnLogin.addEventListener("click", async () => {
     alert("Completa los campos");
     return;
   }
-  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+  await signInWithEmailAndPassword(
+    auth,
+    emailInput.value,
+    passwordInput.value
+  );
 });
 
 btnLogout.addEventListener("click", () => {
-  if (confirm("¿Cerrar sesión?")) signOut(auth);
+  if (confirm("¿Cerrar sesión?")) {
+    signOut(auth);
+  }
 });
 
 // ===============================
@@ -162,14 +170,16 @@ function pintarVenta(id, venta) {
   const li = document.createElement("li");
   li.innerHTML = `
     <b>${venta.cliente}</b> - ${venta.producto}
-    <br>💲${venta.precio}
+    <br>$${venta.precio}
     <br>
-    <button class="pagar">✅ Pagado</button>
+    <button class="pagar">Pagado</button>
   `;
 
   li.querySelector(".pagar").addEventListener("click", async () => {
-    const ref = doc(db, `usuarios/${userId}/ventas/${id}`);
-    await updateDoc(ref, { pagado: true });
+    await updateDoc(
+      doc(db, `usuarios/${userId}/ventas/${id}`),
+      { pagado: true }
+    );
     cargarVentas();
   });
 
@@ -178,7 +188,7 @@ function pintarVenta(id, venta) {
 
 function pintarHistorial(venta) {
   const li = document.createElement("li");
-  li.textContent = `✔ ${venta.cliente} - ${venta.producto} ($${venta.precio})`;
+  li.textContent = `${venta.cliente} - ${venta.producto} ($${venta.precio})`;
   listaHistorial.appendChild(li);
 }
 
@@ -210,7 +220,10 @@ async function calcularTotales() {
   snap.forEach(d => {
     const f = d.data().fecha.toDate();
     if (f.toDateString() === ahora.toDateString()) hoy++;
-    if (f.getMonth() === ahora.getMonth() && f.getFullYear() === ahora.getFullYear()) mes++;
+    if (
+      f.getMonth() === ahora.getMonth() &&
+      f.getFullYear() === ahora.getFullYear()
+    ) mes++;
   });
 
   document.getElementById("totalHoy").textContent = hoy;
@@ -236,10 +249,6 @@ function mostrarVista(vista) {
     cargarGrafica();
   }
 }
-
-btnVentas.addEventListener("click", () => mostrarVista("ventas"));
-btnHistorial.addEventListener("click", () => mostrarVista("historial"));
-btnGrafica.addEventListener("click", () => mostrarVista("grafica"));
 
 // ===============================
 // GRAFICA
@@ -269,10 +278,8 @@ async function cargarGrafica() {
       datasets: [{
         label: "Ventas ($)",
         data: datos,
-        borderColor: "#1976d2",
-        backgroundColor: "rgba(25,118,210,0.2)",
         fill: true,
-        tension: 0.3
+        tension: 0.35
       }]
     },
     options: {
@@ -284,25 +291,9 @@ async function cargarGrafica() {
   });
 }
 
-const btnMenu = document.getElementById("btnMenu");
-const menuOverlay = document.getElementById("menuOverlay");
-const menuItems = document.querySelectorAll(".menu-item");
-
-// abrir menú
-btnMenu.addEventListener("click", () => {
-  menuOverlay.style.display = "flex";
-});
-
-// cerrar al tocar fondo
-menuOverlay.addEventListener("click", e => {
-  if (e.target === menuOverlay) {
-    menuOverlay.style.display = "none";
-  }
-});
-
-const btnMenu = document.getElementById("btnMenu");
-const menuOverlay = document.getElementById("menuOverlay");
-
+// ===============================
+// MENU FLOTANTE
+// ===============================
 btnMenu.addEventListener("click", () => {
   menuOverlay.classList.add("active");
 });
@@ -319,7 +310,3 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
     menuOverlay.classList.remove("active");
   });
 });
-
-
-
-
