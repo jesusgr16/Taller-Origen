@@ -59,20 +59,25 @@
         id="busqueda"
         placeholder="Buscar cliente"
       >
+<div class="formulario">
 
-      <div class="formulario">
-        <input type="text" id="cliente" placeholder="Cliente">
-        <input type="text" id="producto" placeholder="Producto">
-        <input type="number" id="precio" placeholder="Precio">
+  <input type="text" id="cliente" placeholder="Cliente">
 
-        <button
-          id="btnGuardar"
-          type="button"
-          class="primary"
-        >
-          Guardar venta
-        </button>
-      </div>
+  <input type="text" id="producto" placeholder="Producto">
+
+  <div class="precios-grid">
+    <input type="number" id="precioProducto" placeholder="Precio del producto">
+    <input type="number" id="precioGrabado" placeholder="Precio del grabado">
+  </div>
+
+  <input type="number" id="precioTotal" placeholder="Total" disabled>
+
+  <button id="btnGuardar" class="primary">
+    Guardar venta
+  </button>
+
+</div>
+
 
       <ul id="listaVentas"></ul>
     </section>
@@ -161,3 +166,4 @@
 
 </body>
 </html>
+
