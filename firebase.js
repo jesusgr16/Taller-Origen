@@ -1,188 +1,56 @@
 // ===============================
-// FIREBASE DESDE WINDOW
+// IMPORTS
 // ===============================
-const auth = window.auth;
-const db = window.db;
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// ===============================
-// VARIABLES DOM
-// ===============================
-const lista = document.getElementById("lista");
-const clienteInput = document.getElementById("cliente");
-const productoInput = document.getElementById("producto");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const busquedaInput = document.getElementById("busqueda");
-
-let userId = null;
-
-// ===============================
-// AUTH STATE
-// ===============================
-window.onAuthStateChanged(auth, user => {
-  if (user) {
-    userId = user.uid;
-
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-
-    cargarVentas();
-  } else {
-    userId = null;
-
-    document.getElementById("login").style.display = "block";
-    document.getElementById("app").style.display = "none";
-
-    lista.innerHTML = "";
-  }
-});
+import {
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 // ===============================
-// REGISTRO
+// CONFIG
 // ===============================
-function registrar() {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa correo y contraseña");
-    return;
-  }
-
-  window.createUserWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  )
-    .then(() => console.log("✅ Usuario creado"))
-    .catch(err => alert(err.message));
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
+  authDomain: "taller-origen.firebaseapp.com",
+  projectId: "taller-origen",
+  storageBucket: "taller-origen.firebasestorage.app",
+  messagingSenderId: "563693867578",
+  appId: "1:563693867578:web:141c4c1afa09eeebfc5b03"
+};
 
 // ===============================
-// LOGIN
+// INIT
 // ===============================
-function login() {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa correo y contraseña");
-    return;
-  }
-
-  window.signInWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  )
-    .then(() => console.log("✅ Sesión iniciada"))
-    .catch(err => alert(err.message));
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // ===============================
-// LOGOUT
+// EXPONER AL WINDOW
 // ===============================
-function logout() {
-  window.signOut(auth);
-}
+window.auth = auth;
+window.db = db;
 
-// ===============================
-// GUARDAR VENTA
-// ===============================
-async function guardar() {
-  if (!userId) {
-    alert("Debes iniciar sesión");
-    return;
-  }
+// Auth
+window.onAuthStateChanged = onAuthStateChanged;
+window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+window.signOut = signOut;
 
-  const cliente = clienteInput.value.trim();
-  const producto = productoInput.value.trim();
+// Firestore
+window.collection = collection;
+window.addDoc = addDoc;
+window.getDocs = getDocs;
 
-  if (!cliente || !producto) {
-    alert("Completa todos los campos");
-    return;
-  }
-
-  const venta = {
-    cliente,
-    producto,
-    fecha: new Date()
-  };
-
-  await window.addDoc(
-    window.collection(db, `usuarios/${userId}/ventas`),
-    venta
-  );
-
-  mostrar(venta);
-  calcularTotales();
-
-  clienteInput.value = "";
-  productoInput.value = "";
-}
-
-// ===============================
-// MOSTRAR
-// ===============================
-function mostrar(venta) {
-  const li = document.createElement("li");
-  li.textContent = `${venta.cliente} - ${venta.producto}`;
-  lista.appendChild(li);
-}
-
-// ===============================
-// CARGAR VENTAS
-// ===============================
-async function cargarVentas() {
-  lista.innerHTML = "";
-
-  const snapshot = await window.getDocs(
-    window.collection(db, `usuarios/${userId}/ventas`)
-  );
-
-  snapshot.forEach(doc => mostrar(doc.data()));
-  calcularTotales();
-}
-
-// ===============================
-// TOTALES
-// ===============================
-async function calcularTotales() {
-  let hoy = 0;
-  let mes = 0;
-  const ahora = new Date();
-
-  const snapshot = await window.getDocs(
-    window.collection(db, `usuarios/${userId}/ventas`)
-  );
-
-  snapshot.forEach(doc => {
-    const fecha = doc.data().fecha.toDate
-      ? doc.data().fecha.toDate()
-      : new Date(doc.data().fecha);
-
-    if (fecha.toDateString() === ahora.toDateString()) hoy++;
-    if (
-      fecha.getMonth() === ahora.getMonth() &&
-      fecha.getFullYear() === ahora.getFullYear()
-    ) mes++;
-  });
-
-  document.getElementById("totalHoy").textContent = hoy;
-  document.getElementById("totalMes").textContent = mes;
-}
-
-// ===============================
-// BUSQUEDA
-// ===============================
-if (busquedaInput) {
-  busquedaInput.addEventListener("input", async () => {
-    const texto = busquedaInput.value.toLowerCase();
-    lista.innerHTML = "";
-
-    const snapshot = await window.getDocs(
-      window.collection(db, `usuarios/${userId}/ventas`)
-    );
-
-    snapshot.forEach(doc => {
-      const venta = doc.data();
-      if (venta.cliente.toLowerCase().includes(texto)) {
-        mostrar(venta);
-      }
-    });
-  });
-}
+console.log("🔥 Firebase listo");
