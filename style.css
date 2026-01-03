@@ -239,3 +239,23 @@ li {
   background: #fee2e2;
   color: var(--danger);
 }
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* precios lado a lado */
+.precios-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+#precioTotal {
+  background: #eef2f7;
+  font-weight: 700;
+  text-align: center;
+}
+
