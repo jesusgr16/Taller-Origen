@@ -69,24 +69,7 @@ let chart = null;
 // ===============================
 // AUTH STATE
 // ===============================
-onAuthStateChanged(auth, user => {
-  if (user) {
-    userId = user.uid;
 
-    loginView.style.display = "none";
-    appView.style.display = "block";
-    btnMenu.style.display = "block"; // ✅ mostrar menú
-
-    mostrarVista("ventas");
-    cargarVentas();
-  } else {
-    userId = null;
-
-    loginView.style.display = "block";
-    appView.style.display = "none";
-    btnMenu.style.display = "none"; // ❌ ocultar menú
-  }
-});
 
 // ===============================
 // AUTH
@@ -315,3 +298,4 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
     menuOverlay.classList.remove("active");
   });
 });
+
