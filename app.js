@@ -16,7 +16,8 @@ import {
   addDoc,
   getDocs,
   doc,
-  updateDoc
+  updateDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // ===============================
@@ -62,29 +63,27 @@ const productoInput = document.getElementById("producto");
 const precioProductoInput = document.getElementById("precioProducto");
 const precioGrabadoInput = document.getElementById("precioGrabado");
 const precioTotalInput = document.getElementById("precioTotal");
+const btnGuardar = document.getElementById("btnGuardar");
 
 const busquedaInput = document.getElementById("busqueda");
-const btnGuardar = document.getElementById("btnGuardar");
 
 let userId = null;
 let chart = null;
+let ventaEditandoId = null;
 
 // ===============================
-// AUTH STATE (CLAVE)
+// AUTH STATE
 // ===============================
 onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
-
     loginView.style.display = "none";
     appView.style.display = "block";
     btnMenu.style.display = "block";
-
     mostrarVista("ventas");
     cargarVentas();
   } else {
     userId = null;
-
     loginView.style.display = "block";
     appView.style.display = "none";
     btnMenu.style.display = "none";
@@ -95,23 +94,13 @@ onAuthStateChanged(auth, user => {
 // AUTH ACTIONS
 // ===============================
 btnRegister.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa los campos");
-    return;
-  }
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
   await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
 btnLogin.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa los campos");
-    return;
-  }
-  try {
-    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-  } catch (e) {
-    alert(e.message);
-  }
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
+  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
 btnLogout.onclick = () => signOut(auth);
@@ -129,29 +118,40 @@ precioProductoInput.oninput = calcularTotal;
 precioGrabadoInput.oninput = calcularTotal;
 
 // ===============================
-// GUARDAR VENTA
+// GUARDAR / EDITAR VENTA
 // ===============================
 btnGuardar.onclick = async () => {
   if (!userId) return;
 
-  if (
-    !clienteInput.value ||
-    !productoInput.value ||
-    precioTotalInput.value === ""
-  ) {
-    alert("Completa todos los campos");
-    return;
-  }
+  const cliente = clienteInput.value.trim();
+  const producto = productoInput.value.trim();
+  const precioProducto = Number(precioProductoInput.value) || 0;
+  const precioGrabado = Number(precioGrabadoInput.value) || 0;
+  const total = precioProducto + precioGrabado;
 
-  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-    cliente: clienteInput.value,
-    producto: productoInput.value,
-    precioProducto: Number(precioProductoInput.value) || 0,
-    precioGrabado: Number(precioGrabadoInput.value) || 0,
-    precio: Number(precioTotalInput.value),
-    pagado: false,
-    fecha: new Date()
-  });
+  if (!cliente || !producto) return alert("Completa los campos");
+
+  if (ventaEditandoId) {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
+      cliente,
+      producto,
+      precioProducto,
+      precioGrabado,
+      precio: total
+    });
+    ventaEditandoId = null;
+    btnGuardar.textContent = "Guardar venta";
+  } else {
+    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+      cliente,
+      producto,
+      precioProducto,
+      precioGrabado,
+      precio: total,
+      pagado: false,
+      fecha: new Date()
+    });
+  }
 
   clienteInput.value = "";
   productoInput.value = "";
@@ -166,13 +166,10 @@ btnGuardar.onclick = async () => {
 // CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
-  if (!userId) return;
-
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-
   snap.forEach(d => {
     const v = d.data();
     v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
@@ -182,22 +179,44 @@ async function cargarVentas() {
 }
 
 // ===============================
-// PINTAR
+// PINTAR VENTA
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${v.producto}<br>
-    Producto: $${v.precioProducto || 0}<br>
-    Grabado: $${v.precioGrabado || 0}<br>
-    <b>Total: $${v.precio}</b><br>
-    <button>Marcar pagado</button>
+    Producto: $${v.precioProducto}<br>
+    Grabado: $${v.precioGrabado}<br>
+    <b>Total: $${v.precio}</b>
+
+    <div style="display:flex; gap:10px; margin-top:12px;">
+      <button class="primary pagar">Pagado</button>
+      <button class="secondary editar">Editar</button>
+      <button class="danger eliminar">Eliminar</button>
+    </div>
   `;
 
-  li.querySelector("button").onclick = async () => {
+  li.querySelector(".pagar").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), { pagado: true });
     cargarVentas();
+  };
+
+  li.querySelector(".editar").onclick = () => {
+    clienteInput.value = v.cliente;
+    productoInput.value = v.producto;
+    precioProductoInput.value = v.precioProducto;
+    precioGrabadoInput.value = v.precioGrabado;
+    precioTotalInput.value = v.precio;
+    ventaEditandoId = id;
+    btnGuardar.textContent = "Actualizar venta";
+  };
+
+  li.querySelector(".eliminar").onclick = async () => {
+    if (confirm("¿Eliminar esta venta?")) {
+      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+      cargarVentas();
+    }
   };
 
   listaVentas.appendChild(li);
@@ -213,8 +232,6 @@ function pintarHistorial(v) {
 // BUSQUEDA
 // ===============================
 busquedaInput.oninput = async () => {
-  if (!userId) return;
-
   listaVentas.innerHTML = "";
   const texto = busquedaInput.value.toLowerCase();
 
@@ -252,11 +269,7 @@ function mostrarVista(vista) {
   ["vistaVentas", "vistaHistorial", "vistaGrafica"].forEach(id => {
     document.getElementById(id).style.display = "none";
   });
-
-  document.getElementById(
-    "vista" + vista.charAt(0).toUpperCase() + vista.slice(1)
-  ).style.display = "block";
-
+  document.getElementById("vista" + vista.charAt(0).toUpperCase() + vista.slice(1)).style.display = "block";
   if (vista === "grafica") cargarGrafica();
 }
 
