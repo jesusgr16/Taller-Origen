@@ -92,8 +92,12 @@ async function login() {
 // LOGOUT
 // ===============================
 function logout() {
-  signOut(auth);
+  const seguro = confirm("¿Seguro que deseas cerrar sesión?");
+  if (seguro) {
+    signOut(auth);
+  }
 }
+
 
 // ===============================
 // GUARDAR VENTA
@@ -173,4 +177,30 @@ busquedaInput.addEventListener("input", async () => {
 // ===============================
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
+}
+
+// ===============================
+// EVENTOS BOTONES
+// ===============================
+document.getElementById("btnLogin")?.addEventListener("click", login);
+document.getElementById("btnRegister")?.addEventListener("click", registrar);
+document.getElementById("btnGuardar")?.addEventListener("click", guardar);
+document.getElementById("btnLogout")?.addEventListener("click", logout);
+
+if (busquedaInput) {
+  busquedaInput.addEventListener("input", async () => {
+    lista.innerHTML = "";
+    const texto = busquedaInput.value.toLowerCase();
+
+    const snap = await getDocs(
+      collection(db, `usuarios/${userId}/ventas`)
+    );
+
+    snap.forEach(doc => {
+      const v = doc.data();
+      if (v.cliente.toLowerCase().includes(texto)) {
+        mostrar(v);
+      }
+    });
+  });
 }
