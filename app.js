@@ -1,5 +1,5 @@
 // ===============================
-// IMPORTS FIREBASE
+// FIREBASE IMPORTS
 // ===============================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
@@ -21,7 +21,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // ===============================
-// CONFIG FIREBASE
+// CONFIG
 // ===============================
 const firebaseConfig = {
   apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
@@ -32,70 +32,60 @@ const firebaseConfig = {
   appId: "1:563693867578:web:141c4c1afa09eeebfc5b03"
 };
 
-// ===============================
-// INIT
-// ===============================
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // ===============================
 // DOM
 // ===============================
-const loginView = document.getElementById("login");
-const appView = document.getElementById("app");
+const $ = id => document.getElementById(id);
 
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
+const loginView = $("login");
+const appView = $("app");
 
-const btnLogin = document.getElementById("btnLogin");
-const btnRegister = document.getElementById("btnRegister");
-const btnLogout = document.getElementById("btnLogout");
+const emailInput = $("email");
+const passwordInput = $("password");
 
-const btnMenu = document.getElementById("btnMenu");
-const menuOverlay = document.getElementById("menuOverlay");
-const btnDarkMode = document.getElementById("btnDarkMode");
+const btnLogin = $("btnLogin");
+const btnRegister = $("btnRegister");
+const btnLogout = $("btnLogout");
 
-const listaVentas = document.getElementById("listaVentas");
-const listaHistorial = document.getElementById("listaHistorial");
+const btnMenu = $("btnMenu");
+const menuOverlay = $("menuOverlay");
+const btnDarkMode = $("btnDarkMode");
 
-const clienteInput = document.getElementById("cliente");
-const productoInput = document.getElementById("producto");
-const precioProductoInput = document.getElementById("precioProducto");
-const precioGrabadoInput = document.getElementById("precioGrabado");
-const precioTotalInput = document.getElementById("precioTotal");
-const btnGuardar = document.getElementById("btnGuardar");
+const listaVentas = $("listaVentas");
+const listaHistorial = $("listaHistorial");
+
+const clienteInput = $("cliente");
+const productoInput = $("producto");
+const precioProductoInput = $("precioProducto");
+const precioGrabadoInput = $("precioGrabado");
+const precioTotalInput = $("precioTotal");
+const btnGuardar = $("btnGuardar");
+
+const totalHoyEl = $("totalHoy");
+const totalMesEl = $("totalMes");
 
 let userId = null;
 let ventaEditandoId = null;
 
 // ===============================
-// MODO OSCURO (PC + MÓVIL)
+// MODO OSCURO
 // ===============================
-function aplicarModoOscuro(estado) {
-  document.body.classList.toggle("dark", estado);
-  localStorage.setItem("darkMode", estado ? "on" : "off");
-  if (btnDarkMode) {
-    btnDarkMode.textContent = estado ? "☀️ Modo claro" : "🌙 Modo oscuro";
-  }
+function setDarkMode(on) {
+  document.body.classList.toggle("dark", on);
+  localStorage.setItem("darkMode", on ? "on" : "off");
+  btnDarkMode.textContent = on ? "☀️ Modo claro" : "🌙 Modo oscuro";
 }
 
-// cargar preferencia
-const darkSaved = localStorage.getItem("darkMode");
-if (darkSaved === "on") {
-  aplicarModoOscuro(true);
-} else if (darkSaved === null) {
-  aplicarModoOscuro(
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-}
+setDarkMode(localStorage.getItem("darkMode") === "on");
 
-if (btnDarkMode) {
-  btnDarkMode.onclick = () => {
-    aplicarModoOscuro(!document.body.classList.contains("dark"));
-    menuOverlay.classList.remove("active");
-  };
-}
+btnDarkMode.onclick = () => {
+  setDarkMode(!document.body.classList.contains("dark"));
+  menuOverlay.classList.remove("active");
+};
 
 // ===============================
 // AUTH STATE
@@ -103,13 +93,9 @@ if (btnDarkMode) {
 onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
-
     loginView.style.display = "none";
     appView.style.display = "block";
     btnMenu.style.display = "block";
-
-    aplicarModoOscuro(localStorage.getItem("darkMode") === "on");
-    mostrarVista("ventas");
     cargarVentas();
   } else {
     userId = null;
@@ -123,14 +109,12 @@ onAuthStateChanged(auth, user => {
 // AUTH ACTIONS
 // ===============================
 btnRegister.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value)
-    return alert("Completa los campos");
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
   await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
 btnLogin.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value)
-    return alert("Completa los campos");
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
   await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
@@ -144,82 +128,101 @@ function calcularTotal() {
     (Number(precioProductoInput.value) || 0) +
     (Number(precioGrabadoInput.value) || 0);
 }
-
 precioProductoInput.oninput = calcularTotal;
 precioGrabadoInput.oninput = calcularTotal;
 
 // ===============================
-// GUARDAR / EDITAR VENTA
+// GUARDAR / EDITAR
 // ===============================
 btnGuardar.onclick = async () => {
-  if (!userId) return;
+  if (!userId) return alert("Sesión inválida");
 
   const cliente = clienteInput.value.trim();
   const producto = productoInput.value.trim();
-  const precioProducto = Number(precioProductoInput.value) || 0;
-  const precioGrabado = Number(precioGrabadoInput.value) || 0;
-  const total = precioProducto + precioGrabado;
+  const pProd = Number(precioProductoInput.value) || 0;
+  const pGrab = Number(precioGrabadoInput.value) || 0;
+  const total = pProd + pGrab;
 
-  if (!cliente || !producto)
-    return alert("Completa cliente y producto");
+  if (!cliente || !producto) return alert("Completa los campos");
 
-  if (ventaEditandoId) {
-    await updateDoc(
-      doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
-      { cliente, producto, precioProducto, precioGrabado, precio: total }
-    );
-    ventaEditandoId = null;
-    btnGuardar.textContent = "Guardar venta";
-  } else {
-    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-      cliente,
-      producto,
-      precioProducto,
-      precioGrabado,
-      precio: total,
-      pagado: false,
-      fecha: new Date()
-    });
+  try {
+    if (ventaEditandoId) {
+      await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
+        cliente, producto, precioProducto: pProd, precioGrabado: pGrab, precio: total
+      });
+      ventaEditandoId = null;
+      btnGuardar.textContent = "Guardar venta";
+    } else {
+      await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+        cliente,
+        producto,
+        precioProducto: pProd,
+        precioGrabado: pGrab,
+        precio: total,
+        pagado: false,
+        fecha: new Date()
+      });
+    }
+
+    clienteInput.value = "";
+    productoInput.value = "";
+    precioProductoInput.value = "";
+    precioGrabadoInput.value = "";
+    precioTotalInput.value = "";
+
+    cargarVentas();
+  } catch (e) {
+    console.error(e);
+    alert("Error al guardar venta");
   }
-
-  clienteInput.value = "";
-  productoInput.value = "";
-  precioProductoInput.value = "";
-  precioGrabadoInput.value = "";
-  precioTotalInput.value = "";
-
-  cargarVentas();
 };
 
 // ===============================
-// CARGAR VENTAS
+// CARGAR VENTAS + TOTALES
 // ===============================
 async function cargarVentas() {
-  if (!userId) return;
-
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
+  let hoy = 0;
+  let mes = 0;
+  const ahora = new Date();
+
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+
   snap.forEach(d => {
     const v = d.data();
+    const fecha = v.fecha?.toDate ? v.fecha.toDate() : new Date();
+
+    if (
+      fecha.getDate() === ahora.getDate() &&
+      fecha.getMonth() === ahora.getMonth() &&
+      fecha.getFullYear() === ahora.getFullYear()
+    ) hoy++;
+
+    if (
+      fecha.getMonth() === ahora.getMonth() &&
+      fecha.getFullYear() === ahora.getFullYear()
+    ) mes++;
+
     v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
   });
+
+  totalHoyEl.textContent = hoy;
+  totalMesEl.textContent = mes;
 }
 
 // ===============================
-// PINTAR VENTAS
+// PINTAR
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
-
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${v.producto}<br>
     Producto: $${v.precioProducto}<br>
     Grabado: $${v.precioGrabado}<br>
     <b>Total: $${v.precio}</b>
-
     <div class="acciones">
       <button class="primary pagar">Pagado</button>
       <button class="secondary editar">Editar</button>
@@ -243,7 +246,7 @@ function pintarVenta(id, v) {
   };
 
   li.querySelector(".eliminar").onclick = async () => {
-    if (confirm("¿Eliminar esta venta?")) {
+    if (confirm("¿Eliminar venta?")) {
       await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
       cargarVentas();
     }
@@ -262,26 +265,6 @@ function pintarHistorial(v) {
 // MENU
 // ===============================
 btnMenu.onclick = () => menuOverlay.classList.add("active");
-
 menuOverlay.onclick = e => {
   if (e.target === menuOverlay) menuOverlay.classList.remove("active");
 };
-
-document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
-  btn.onclick = () => {
-    mostrarVista(btn.dataset.vista);
-    menuOverlay.classList.remove("active");
-  };
-});
-
-// ===============================
-// VISTAS
-// ===============================
-function mostrarVista(vista) {
-  ["vistaVentas", "vistaHistorial", "vistaGrafica"].forEach(id => {
-    document.getElementById(id).style.display = "none";
-  });
-  document.getElementById(
-    "vista" + vista.charAt(0).toUpperCase() + vista.slice(1)
-  ).style.display = "block";
-}
