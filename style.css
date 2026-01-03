@@ -261,44 +261,93 @@ li {
 }
 
 /* ===============================
-   MODO OSCURO
+   FIX DEFINITIVO MODO OSCURO
 ================================ */
+
+/* fondo general */
 body.dark {
-  --bg: #0f172a;
-  --card: #020617;
-  --primary: #e5e7eb;
-  --primary-soft: #020617;
-  --text: #e5e7eb;
-  --muted: #94a3b8;
-  --shadow: 0 20px 50px rgba(0,0,0,0.6);
+  background: radial-gradient(circle at top, #020617, #000314 75%);
 }
 
-body.dark {
-  background: linear-gradient(180deg, #020617, #020617);
+/* contenedores */
+body.dark #login,
+body.dark #app {
+  background: linear-gradient(180deg, #020617, #000314);
+  border: 1px solid #1e293b;
 }
 
+/* inputs visibles */
 body.dark input {
-  background: #020617;
-  border-color: #1e293b;
-  color: var(--text);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
+body.dark input::placeholder {
+  color: #94a3b8;
+}
+
+body.dark input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+}
+
+/* total */
+body.dark #precioTotal {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid #334155;
+  color: #e5e7eb;
+}
+
+/* cards de ventas */
 body.dark li {
-  background: #020617;
-  border-color: #1e293b;
+  background: linear-gradient(180deg, #020617, #000314);
+  border: 1px solid #334155;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
+/* ===============================
+   BOTONES (CLAVE)
+================================ */
+
+/* BOTÓN AZUL – menos brillo */
+body.dark .primary {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  box-shadow: 0 10px 25px rgba(37,99,235,0.35);
+}
+
+/* botón pagado */
+body.dark li button {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  border: none;
+}
+
+/* botón eliminar */
+body.dark li button:last-child {
+  background: rgba(255,255,255,0.9);
+  color: #020617;
+}
+
+/* ===============================
+   MENÚ FLOTANTE
+================================ */
 body.dark .menu-panel {
-  background: #020617;
+  background: linear-gradient(180deg, #020617, #000314);
+  border: 1px solid #334155;
 }
 
 body.dark .menu-item {
-  background: #020617;
-  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
 body.dark .menu-item:hover {
-  background: #1e293b;
+  background: rgba(59,130,246,0.2);
 }
 
-
+/* overlay más oscuro */
+body.dark .menu-overlay {
+  background: rgba(2,6,23,0.85);
+}
