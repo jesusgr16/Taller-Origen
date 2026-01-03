@@ -91,11 +91,7 @@ btnRegister.addEventListener("click", async () => {
     alert("Completa los campos");
     return;
   }
-  await createUserWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  );
+  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 });
 
 btnLogin.addEventListener("click", async () => {
@@ -103,11 +99,7 @@ btnLogin.addEventListener("click", async () => {
     alert("Completa los campos");
     return;
   }
-  await signInWithEmailAndPassword(
-    auth,
-    emailInput.value,
-    passwordInput.value
-  );
+  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 });
 
 btnLogout.addEventListener("click", () => {
@@ -169,17 +161,16 @@ async function cargarVentas() {
 function pintarVenta(id, venta) {
   const li = document.createElement("li");
   li.innerHTML = `
-    <b>${venta.cliente}</b> - ${venta.producto}
-    <br>$${venta.precio}
-    <br>
-    <button class="pagar">Pagado</button>
+    <b>${venta.cliente}</b><br>
+    ${venta.producto}<br>
+    $${venta.precio}<br>
+    <button class="pagar">Marcar pagado</button>
   `;
 
   li.querySelector(".pagar").addEventListener("click", async () => {
-    await updateDoc(
-      doc(db, `usuarios/${userId}/ventas/${id}`),
-      { pagado: true }
-    );
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+      pagado: true
+    });
     cargarVentas();
   });
 
@@ -220,10 +211,7 @@ async function calcularTotales() {
   snap.forEach(d => {
     const f = d.data().fecha.toDate();
     if (f.toDateString() === ahora.toDateString()) hoy++;
-    if (
-      f.getMonth() === ahora.getMonth() &&
-      f.getFullYear() === ahora.getFullYear()
-    ) mes++;
+    if (f.getMonth() === ahora.getMonth() && f.getFullYear() === ahora.getFullYear()) mes++;
   });
 
   document.getElementById("totalHoy").textContent = hoy;
@@ -241,9 +229,11 @@ function mostrarVista(vista) {
   if (vista === "ventas") {
     document.getElementById("vistaVentas").style.display = "block";
   }
+
   if (vista === "historial") {
     document.getElementById("vistaHistorial").style.display = "block";
   }
+
   if (vista === "grafica") {
     document.getElementById("vistaGrafica").style.display = "block";
     cargarGrafica();
@@ -268,7 +258,6 @@ async function cargarGrafica() {
   });
 
   const ctx = document.getElementById("graficaVentas");
-
   if (chart) chart.destroy();
 
   chart = new Chart(ctx, {
