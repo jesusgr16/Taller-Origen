@@ -1,4 +1,3 @@
-
 /* ===============================
    VARIABLES
 ================================ */
@@ -122,7 +121,7 @@ button:active {
 }
 
 /* ===============================
-   RESUMEN
+   RESUMEN (HOY / MES)
 ================================ */
 #resumen {
   display: grid;
@@ -132,11 +131,12 @@ button:active {
 }
 
 #resumen p {
-  background: var(--primary-soft);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   border-radius: 16px;
   padding: 16px;
   text-align: center;
-  font-weight: 700;
+  font-weight: 800;
+  color: white;
 }
 
 /* ===============================
@@ -148,7 +148,6 @@ button:active {
   gap: 16px;
 }
 
-/* precios lado a lado */
 .precios-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -179,18 +178,34 @@ li {
   border: 1px solid #e5e7eb;
 }
 
+/* acciones */
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.acciones button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
 /* ===============================
    MENÚ FLOTANTE
 ================================ */
 .menu-btn {
   position: fixed;
-  left: 20px;
-  bottom: 20px;
-  padding: 14px 22px;
+  left: 16px;
+  bottom: 16px;
+  padding: 10px 18px;
   border-radius: 999px;
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: #ffffff;
   z-index: 2000;
+  width: auto;
+  font-size: 14px;
   display: none;
 }
 
@@ -216,9 +231,9 @@ li {
   background: #ffffff;
   border-radius: 22px;
   padding: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
 }
 
-/* items */
 .menu-item {
   width: 100%;
   padding: 13px 14px;
@@ -229,63 +244,54 @@ li {
 }
 
 /* ===============================
-   🌙 MODO OSCURO DEFINITIVO
+   🌙 MODO OSCURO
 ================================ */
 body.dark {
   background: linear-gradient(180deg, #020617, #020617);
-  color: #ffffff;
+  color: #e5e7eb;
 }
 
-/* contenedores */
 body.dark #login,
 body.dark #app {
   background: #020617;
   border: 1px solid #1e293b;
 }
 
-/* 🔥 FUERZA TODOS LOS TEXTOS */
-body.dark,
-body.dark * {
-  color: #ffffff !important;
-}
-
-/* inputs */
 body.dark input {
   background: #020617;
   border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
-/* placeholder */
 body.dark input::placeholder {
-  color: #cbd5f5;
+  color: #94a3b8;
 }
 
-/* total */
 body.dark #precioTotal {
   background: #020617;
   border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
-/* cards */
 body.dark li {
   background: #020617;
   border: 1px solid #334155;
 }
 
-/* botones */
 body.dark .primary {
   background: linear-gradient(135deg, #1d4ed8, #1e40af);
 }
 
 body.dark .secondary {
-  background: #1e293b;
+  background: #e5e7eb;
+  color: #020617;
 }
 
 body.dark .danger {
   background: #7f1d1d;
+  color: #fee2e2;
 }
 
-/* menú */
 body.dark .menu-panel {
   background: #020617;
   border: 1px solid #334155;
@@ -294,9 +300,9 @@ body.dark .menu-panel {
 body.dark .menu-item {
   background: #020617;
   border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
-/* overlay */
 body.dark .menu-overlay {
   background: rgba(2,6,23,0.85);
 }
