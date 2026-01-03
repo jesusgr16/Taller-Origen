@@ -11,6 +11,9 @@
 
   <!-- ESTILOS -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- CHART -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -35,9 +38,10 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <h3>📊 Ventas</h3>
-    <button onclick="mostrarVista('ventas')">🧾 Ventas</button>
-    <button onclick="mostrarVista('historial')">📦 Historial</button>
-    <button onclick="mostrarVista('grafica')">📈 Gráfica</button>
+
+    <button id="btnVentas">🧾 Ventas</button>
+    <button id="btnHistorial">📦 Historial</button>
+    <button id="btnGrafica">📈 Gráfica</button>
 
     <button id="btnLogout" class="logout">🚪 Cerrar sesión</button>
   </aside>
@@ -49,7 +53,6 @@
          VISTA VENTAS
     ================================ -->
     <section id="vistaVentas" class="vista">
-
       <h2>🧾 Ventas pendientes</h2>
 
       <!-- RESUMEN -->
@@ -71,7 +74,6 @@
 
       <!-- LISTA -->
       <ul id="listaVentas"></ul>
-
     </section>
 
     <!-- ===============================
@@ -89,11 +91,6 @@
       <h2>📈 Gráfica mensual</h2>
       <canvas id="graficaVentas"></canvas>
     </section>
-    <div id="grafica" style="display:none">
-  <h3>📊 Ventas por mes</h3>
-  <canvas id="chartVentas"></canvas>
-</div>
-
 
   </main>
 </div>
@@ -102,9 +99,6 @@
      SCRIPT PRINCIPAL
 ================================ -->
 <script type="module" src="app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </body>
 </html>
-
-
