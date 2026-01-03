@@ -59,8 +59,12 @@ const listaHistorial = document.getElementById("listaHistorial");
 
 const clienteInput = document.getElementById("cliente");
 const productoInput = document.getElementById("producto");
-const precioInput = document.getElementById("precio");
+const precioProductoInput = document.getElementById("precioProducto");
+const precioGrabadoInput = document.getElementById("precioGrabado");
+const precioTotalInput = document.getElementById("precioTotal");
+
 const busquedaInput = document.getElementById("busqueda");
+const btnGuardar = document.getElementById("btnGuardar");
 
 let userId = null;
 let chart = null;
@@ -90,38 +94,51 @@ onAuthStateChanged(auth, user => {
 // ===============================
 // AUTH ACTIONS
 // ===============================
-btnRegister.addEventListener("click", async () => {
+btnRegister.onclick = async () => {
   if (!emailInput.value || !passwordInput.value) {
     alert("Completa los campos");
     return;
   }
   await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-});
+};
 
-btnLogin.addEventListener("click", async () => {
+btnLogin.onclick = async () => {
   if (!emailInput.value || !passwordInput.value) {
     alert("Completa los campos");
     return;
   }
-
   try {
     await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
   } catch (e) {
     alert(e.message);
   }
-});
+};
 
-btnLogout.addEventListener("click", () => {
-  signOut(auth);
-});
+btnLogout.onclick = () => signOut(auth);
+
+// ===============================
+// TOTAL AUTOMÁTICO
+// ===============================
+function calcularTotal() {
+  const p1 = Number(precioProductoInput.value) || 0;
+  const p2 = Number(precioGrabadoInput.value) || 0;
+  precioTotalInput.value = p1 + p2;
+}
+
+precioProductoInput.oninput = calcularTotal;
+precioGrabadoInput.oninput = calcularTotal;
 
 // ===============================
 // GUARDAR VENTA
 // ===============================
-document.getElementById("btnGuardar").addEventListener("click", async () => {
+btnGuardar.onclick = async () => {
   if (!userId) return;
 
-  if (!clienteInput.value || !productoInput.value || !precioInput.value) {
+  if (
+    !clienteInput.value ||
+    !productoInput.value ||
+    precioTotalInput.value === ""
+  ) {
     alert("Completa todos los campos");
     return;
   }
@@ -129,17 +146,21 @@ document.getElementById("btnGuardar").addEventListener("click", async () => {
   await addDoc(collection(db, `usuarios/${userId}/ventas`), {
     cliente: clienteInput.value,
     producto: productoInput.value,
-    precio: Number(precioInput.value),
+    precioProducto: Number(precioProductoInput.value) || 0,
+    precioGrabado: Number(precioGrabadoInput.value) || 0,
+    precio: Number(precioTotalInput.value),
     pagado: false,
     fecha: new Date()
   });
 
   clienteInput.value = "";
   productoInput.value = "";
-  precioInput.value = "";
+  precioProductoInput.value = "";
+  precioGrabadoInput.value = "";
+  precioTotalInput.value = "";
 
   cargarVentas();
-});
+};
 
 // ===============================
 // CARGAR VENTAS
@@ -168,7 +189,9 @@ function pintarVenta(id, v) {
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${v.producto}<br>
-    $${v.precio}<br>
+    Producto: $${v.precioProducto || 0}<br>
+    Grabado: $${v.precioGrabado || 0}<br>
+    <b>Total: $${v.precio}</b><br>
     <button>Marcar pagado</button>
   `;
 
@@ -189,7 +212,7 @@ function pintarHistorial(v) {
 // ===============================
 // BUSQUEDA
 // ===============================
-busquedaInput.addEventListener("input", async () => {
+busquedaInput.oninput = async () => {
   if (!userId) return;
 
   listaVentas.innerHTML = "";
@@ -202,7 +225,7 @@ busquedaInput.addEventListener("input", async () => {
       pintarVenta(d.id, v);
     }
   });
-});
+};
 
 // ===============================
 // TOTALES
@@ -230,8 +253,9 @@ function mostrarVista(vista) {
     document.getElementById(id).style.display = "none";
   });
 
-  document.getElementById("vista" + vista.charAt(0).toUpperCase() + vista.slice(1))
-    .style.display = "block";
+  document.getElementById(
+    "vista" + vista.charAt(0).toUpperCase() + vista.slice(1)
+  ).style.display = "block";
 
   if (vista === "grafica") cargarGrafica();
 }
