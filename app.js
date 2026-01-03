@@ -1,6 +1,7 @@
 // ===============================
 // IMPORTS FIREBASE
 // ===============================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getAuth,
   onAuthStateChanged,
@@ -13,10 +14,10 @@ import {
   getFirestore,
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  doc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 // ===============================
 // CONFIG
@@ -38,11 +39,15 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ===============================
-// VARIABLES DOM
+// DOM
 // ===============================
-const lista = document.getElementById("lista");
+const listaVentas = document.getElementById("listaVentas");
+const listaHistorial = document.getElementById("listaHistorial");
+
 const clienteInput = document.getElementById("cliente");
 const productoInput = document.getElementById("producto");
+const precioInput = document.getElementById("precio");
+
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const busquedaInput = document.getElementById("busqueda");
@@ -56,102 +61,122 @@ onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
     document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
+    document.getElementById("app").style.display = "flex";
     cargarVentas();
   } else {
     userId = null;
     document.getElementById("login").style.display = "block";
     document.getElementById("app").style.display = "none";
-    lista.innerHTML = "";
   }
 });
 
 // ===============================
-// REGISTRO
+// AUTH ACTIONS
 // ===============================
 async function registrar() {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa correo y contraseña");
-    return;
-  }
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
   await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 }
 
-// ===============================
-// LOGIN
-// ===============================
 async function login() {
-  if (!emailInput.value || !passwordInput.value) {
-    alert("Completa correo y contraseña");
-    return;
-  }
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
   await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 }
 
-// ===============================
-// LOGOUT
-// ===============================
 function logout() {
-  const seguro = confirm("¿Seguro que deseas cerrar sesión?");
-  if (seguro) {
+  if (confirm("¿Cerrar sesión?")) {
     signOut(auth);
   }
 }
-
 
 // ===============================
 // GUARDAR VENTA
 // ===============================
 async function guardar() {
-  if (!userId) return alert("Inicia sesión");
+  if (!userId) return;
 
-  const cliente = clienteInput.value.trim();
-  const producto = productoInput.value.trim();
-  if (!cliente || !producto) return alert("Campos vacíos");
+  if (!clienteInput.value || !productoInput.value || !precioInput.value) {
+    return alert("Completa todos los campos");
+  }
 
   await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-    cliente,
-    producto,
+    cliente: clienteInput.value,
+    producto: productoInput.value,
+    precio: Number(precioInput.value),
+    pagado: false,
     fecha: new Date()
   });
 
   clienteInput.value = "";
   productoInput.value = "";
+  precioInput.value = "";
+
   cargarVentas();
 }
 
 // ===============================
-// MOSTRAR
+// MOSTRAR VENTAS
 // ===============================
-function mostrar(venta) {
+function pintarVenta(id, venta) {
   const li = document.createElement("li");
-  li.textContent = `${venta.cliente} - ${venta.producto}`;
-  lista.appendChild(li);
+  li.innerHTML = `
+    <b>${venta.cliente}</b> - ${venta.producto}
+    <br>💲${venta.precio}
+    <br>
+    <button onclick="marcarPagado('${id}')">✅ Pagado</button>
+  `;
+  listaVentas.appendChild(li);
+}
+
+function pintarHistorial(venta) {
+  const li = document.createElement("li");
+  li.textContent = `✔ ${venta.cliente} - ${venta.producto} ($${venta.precio})`;
+  listaHistorial.appendChild(li);
 }
 
 // ===============================
 // CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
-  lista.innerHTML = "";
+  listaVentas.innerHTML = "";
+  listaHistorial.innerHTML = "";
+
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(doc => mostrar(doc.data()));
+
+  snap.forEach(docSnap => {
+    const venta = docSnap.data();
+    if (venta.pagado) {
+      pintarHistorial(venta);
+    } else {
+      pintarVenta(docSnap.id, venta);
+    }
+  });
+
   calcularTotales();
 }
+
+// ===============================
+// MARCAR COMO PAGADO
+// ===============================
+window.marcarPagado = async (id) => {
+  const ref = doc(db, `usuarios/${userId}/ventas/${id}`);
+  await updateDoc(ref, { pagado: true });
+  cargarVentas();
+};
 
 // ===============================
 // TOTALES
 // ===============================
 async function calcularTotales() {
-  let hoy = 0, mes = 0;
+  let hoy = 0;
+  let mes = 0;
   const ahora = new Date();
 
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(doc => {
-    const fecha = doc.data().fecha.toDate();
-    if (fecha.toDateString() === ahora.toDateString()) hoy++;
-    if (fecha.getMonth() === ahora.getMonth() &&
-        fecha.getFullYear() === ahora.getFullYear()) mes++;
+  snap.forEach(d => {
+    const f = d.data().fecha.toDate();
+    if (f.toDateString() === ahora.toDateString()) hoy++;
+    if (f.getMonth() === ahora.getMonth() && f.getFullYear() === ahora.getFullYear()) mes++;
   });
 
   document.getElementById("totalHoy").textContent = hoy;
@@ -162,49 +187,22 @@ async function calcularTotales() {
 // BUSQUEDA
 // ===============================
 busquedaInput.addEventListener("input", async () => {
-  lista.innerHTML = "";
   const texto = busquedaInput.value.toLowerCase();
+  listaVentas.innerHTML = "";
 
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(doc => {
-    const v = doc.data();
-    if (v.cliente.toLowerCase().includes(texto)) mostrar(v);
+  snap.forEach(docSnap => {
+    const v = docSnap.data();
+    if (!v.pagado && v.cliente.toLowerCase().includes(texto)) {
+      pintarVenta(docSnap.id, v);
+    }
   });
 });
-
-// ===============================
-// SERVICE WORKER
-// ===============================
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
 
 // ===============================
 // EVENTOS BOTONES
 // ===============================
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("btnLogin")?.addEventListener("click", login);
-  document.getElementById("btnRegister")?.addEventListener("click", registrar);
-  document.getElementById("btnGuardar")?.addEventListener("click", guardar);
-  document.getElementById("btnLogout")?.addEventListener("click", logout);
-});
-
-
-if (busquedaInput) {
-  busquedaInput.addEventListener("input", async () => {
-    lista.innerHTML = "";
-    const texto = busquedaInput.value.toLowerCase();
-
-    const snap = await getDocs(
-      collection(db, `usuarios/${userId}/ventas`)
-    );
-
-    snap.forEach(doc => {
-      const v = doc.data();
-      if (v.cliente.toLowerCase().includes(texto)) {
-        mostrar(v);
-      }
-    });
-  });
-}
-
+document.getElementById("btnLogin").onclick = login;
+document.getElementById("btnRegister").onclick = registrar;
+document.getElementById("btnGuardar").onclick = guardar;
+document.getElementById("btnLogout").onclick = logout;
