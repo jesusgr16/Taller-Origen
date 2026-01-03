@@ -35,9 +35,9 @@ const firebaseConfig = {
 // ===============================
 // INIT
 // ===============================
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
 
 // ===============================
 // DOM
@@ -54,6 +54,7 @@ const btnLogout = document.getElementById("btnLogout");
 
 const btnMenu = document.getElementById("btnMenu");
 const menuOverlay = document.getElementById("menuOverlay");
+const btnDarkMode = document.getElementById("btnDarkMode");
 
 const listaVentas = document.getElementById("listaVentas");
 const listaHistorial = document.getElementById("listaHistorial");
@@ -64,12 +65,36 @@ const precioProductoInput = document.getElementById("precioProducto");
 const precioGrabadoInput = document.getElementById("precioGrabado");
 const precioTotalInput = document.getElementById("precioTotal");
 const btnGuardar = document.getElementById("btnGuardar");
-
 const busquedaInput = document.getElementById("busqueda");
 
 let userId = null;
-let chart = null;
 let ventaEditandoId = null;
+let chart = null;
+
+// ===============================
+// MODO OSCURO (🔥 FIX DEFINITIVO)
+// ===============================
+function aplicarModoOscuro(estado) {
+  document.body.classList.toggle("dark", estado);
+  localStorage.setItem("darkMode", estado ? "on" : "off");
+  btnDarkMode.textContent = estado ? "☀️ Modo claro" : "🌙 Modo oscuro";
+}
+
+// prioridad: localStorage → sistema
+const darkSaved = localStorage.getItem("darkMode");
+
+if (darkSaved === "on") {
+  aplicarModoOscuro(true);
+} else if (darkSaved === null) {
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  aplicarModoOscuro(prefersDark);
+}
+
+btnDarkMode.onclick = () => {
+  const activo = document.body.classList.contains("dark");
+  aplicarModoOscuro(!activo);
+  menuOverlay.classList.remove("active");
+};
 
 // ===============================
 // AUTH STATE
@@ -121,8 +146,6 @@ precioGrabadoInput.oninput = calcularTotal;
 // GUARDAR / EDITAR VENTA
 // ===============================
 btnGuardar.onclick = async () => {
-  if (!userId) return;
-
   const cliente = clienteInput.value.trim();
   const producto = productoInput.value.trim();
   const precioProducto = Number(precioProductoInput.value) || 0;
@@ -133,23 +156,14 @@ btnGuardar.onclick = async () => {
 
   if (ventaEditandoId) {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
-      cliente,
-      producto,
-      precioProducto,
-      precioGrabado,
-      precio: total
+      cliente, producto, precioProducto, precioGrabado, precio: total
     });
     ventaEditandoId = null;
     btnGuardar.textContent = "Guardar venta";
   } else {
     await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-      cliente,
-      producto,
-      precioProducto,
-      precioGrabado,
-      precio: total,
-      pagado: false,
-      fecha: new Date()
+      cliente, producto, precioProducto, precioGrabado,
+      precio: total, pagado: false, fecha: new Date()
     });
   }
 
@@ -163,144 +177,7 @@ btnGuardar.onclick = async () => {
 };
 
 // ===============================
-// CARGAR VENTAS
-// ===============================
-async function cargarVentas() {
-  listaVentas.innerHTML = "";
-  listaHistorial.innerHTML = "";
-
-  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(d => {
-    const v = d.data();
-    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
-  });
-
-  calcularTotales();
-}
-
-// ===============================
-// PINTAR VENTA
-// ===============================
-function pintarVenta(id, v) {
-  const li = document.createElement("li");
-  li.innerHTML = `
-    <b>${v.cliente}</b><br>
-    ${v.producto}<br>
-    Producto: $${v.precioProducto}<br>
-    Grabado: $${v.precioGrabado}<br>
-    <b>Total: $${v.precio}</b>
-
-    <div style="display:flex; gap:10px; margin-top:12px;">
-      <button class="primary pagar">Pagado</button>
-      <button class="secondary editar">Editar</button>
-      <button class="danger eliminar">Eliminar</button>
-    </div>
-  `;
-
-  li.querySelector(".pagar").onclick = async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), { pagado: true });
-    cargarVentas();
-  };
-
-  li.querySelector(".editar").onclick = () => {
-    clienteInput.value = v.cliente;
-    productoInput.value = v.producto;
-    precioProductoInput.value = v.precioProducto;
-    precioGrabadoInput.value = v.precioGrabado;
-    precioTotalInput.value = v.precio;
-    ventaEditandoId = id;
-    btnGuardar.textContent = "Actualizar venta";
-  };
-
-  li.querySelector(".eliminar").onclick = async () => {
-    if (confirm("¿Eliminar esta venta?")) {
-      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
-      cargarVentas();
-    }
-  };
-
-  listaVentas.appendChild(li);
-}
-
-function pintarHistorial(v) {
-  const li = document.createElement("li");
-  li.textContent = `${v.cliente} - ${v.producto} ($${v.precio})`;
-  listaHistorial.appendChild(li);
-}
-
-// ===============================
-// BUSQUEDA
-// ===============================
-busquedaInput.oninput = async () => {
-  listaVentas.innerHTML = "";
-  const texto = busquedaInput.value.toLowerCase();
-
-  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(d => {
-    const v = d.data();
-    if (!v.pagado && v.cliente.toLowerCase().includes(texto)) {
-      pintarVenta(d.id, v);
-    }
-  });
-};
-
-// ===============================
-// TOTALES
-// ===============================
-async function calcularTotales() {
-  let hoy = 0, mes = 0;
-  const ahora = new Date();
-
-  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(d => {
-    const f = d.data().fecha.toDate();
-    if (f.toDateString() === ahora.toDateString()) hoy++;
-    if (f.getMonth() === ahora.getMonth()) mes++;
-  });
-
-  document.getElementById("totalHoy").textContent = hoy;
-  document.getElementById("totalMes").textContent = mes;
-}
-
-// ===============================
-// VISTAS
-// ===============================
-function mostrarVista(vista) {
-  ["vistaVentas", "vistaHistorial", "vistaGrafica"].forEach(id => {
-    document.getElementById(id).style.display = "none";
-  });
-  document.getElementById("vista" + vista.charAt(0).toUpperCase() + vista.slice(1)).style.display = "block";
-  if (vista === "grafica") cargarGrafica();
-}
-
-// ===============================
-// GRAFICA
-// ===============================
-async function cargarGrafica() {
-  const datos = Array(12).fill(0);
-  const año = new Date().getFullYear();
-
-  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
-  snap.forEach(d => {
-    const v = d.data();
-    if (v.pagado && v.fecha.toDate().getFullYear() === año) {
-      datos[v.fecha.toDate().getMonth()] += v.precio;
-    }
-  });
-
-  if (chart) chart.destroy();
-
-  chart = new Chart(document.getElementById("graficaVentas"), {
-    type: "line",
-    data: {
-      labels: ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],
-      datasets: [{ label: "Ventas", data: datos, fill: true, tension: 0.3 }]
-    }
-  });
-}
-
-// ===============================
-// MENU FLOTANTE
+// MENU
 // ===============================
 btnMenu.onclick = () => menuOverlay.classList.add("active");
 menuOverlay.onclick = e => {
@@ -313,32 +190,3 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(b => {
     menuOverlay.classList.remove("active");
   };
 });
-
-// ===============================
-// MODO OSCURO
-// ===============================
-const btnDarkMode = document.getElementById("btnDarkMode");
-
-// cargar preferencia
-if (localStorage.getItem("darkMode") === "on") {
-  document.body.classList.add("dark");
-  btnDarkMode.textContent = "☀️ Modo claro";
-}
-
-btnDarkMode.onclick = () => {
-  document.body.classList.toggle("dark");
-
-  if (document.body.classList.contains("dark")) {
-    localStorage.setItem("darkMode", "on");
-    btnDarkMode.textContent = "☀️ Modo claro";
-  } else {
-    localStorage.setItem("darkMode", "off");
-    btnDarkMode.textContent = "🌙 Modo oscuro";
-  }
-
-  menuOverlay.classList.remove("active");
-};
-
-
-
-
