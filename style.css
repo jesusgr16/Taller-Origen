@@ -159,3 +159,30 @@ li {
     padding: 20px;
   }
 }
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tab {
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  background: #e0e0e0;
+  border-radius: 6px;
+}
+
+.tab.active {
+  background: #1976d2;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
