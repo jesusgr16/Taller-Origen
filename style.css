@@ -107,10 +107,6 @@ button:active {
   box-shadow: 0 10px 20px rgba(37,99,235,0.35);
 }
 
-.primary:hover {
-  filter: brightness(1.05);
-}
-
 .secondary {
   background: #e5e7eb;
   color: var(--primary);
@@ -139,7 +135,6 @@ button:active {
   padding: 16px;
   text-align: center;
   font-weight: 700;
-  font-size: 15px;
 }
 
 /* ===============================
@@ -168,34 +163,24 @@ li {
   padding: 16px;
   border-radius: 18px;
   border: 1px solid #e5e7eb;
-  animation: fadeIn 0.2s ease;
-}
-
-li button {
-  margin-top: 12px;
-  background: var(--accent);
-  color: white;
 }
 
 /* ===============================
-   BOTÓN MENÚ FLOTANTE
+   BOTÓN MENÚ FLOTANTE (🔥 ARREGLADO)
 ================================ */
-#btnMenu {
-  display: none; /* 👈 oculto hasta iniciar sesión */
-}
-
 .menu-btn {
   position: fixed;
   left: 20px;
   bottom: 20px;
-  padding: 14px 20px;
+  padding: 14px 22px;
   border-radius: 999px;
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
   color: white;
-  box-shadow: 0 16px 35px rgba(37,99,235,0.45);
-  z-index: 1001;
+  box-shadow: 0 18px 40px rgba(37,99,235,0.45);
+  z-index: 2000;
   width: auto;
-  font-weight: 700;
+  font-weight: 800;
+  display: none; /* 👈 se controla SOLO por JS */
 }
 
 /* ===============================
@@ -206,7 +191,7 @@ li button {
   inset: 0;
   background: rgba(15,23,42,0.45);
   display: none;
-  z-index: 1000;
+  z-index: 1999;
 }
 
 .menu-overlay.active {
@@ -236,7 +221,6 @@ li button {
 .menu-panel h3 {
   text-align: center;
   margin-bottom: 14px;
-  font-size: 16px;
 }
 
 /* ===============================
@@ -249,11 +233,6 @@ li button {
   background: var(--primary-soft);
   margin-bottom: 12px;
   font-weight: 600;
-  transition: background .15s ease;
-}
-
-.menu-item:hover {
-  background: #e2e8f0;
 }
 
 .menu-item.danger {
