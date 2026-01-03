@@ -313,3 +313,30 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(b => {
     menuOverlay.classList.remove("active");
   };
 });
+
+// ===============================
+// MODO OSCURO
+// ===============================
+const btnDarkMode = document.getElementById("btnDarkMode");
+
+// cargar preferencia
+if (localStorage.getItem("darkMode") === "on") {
+  document.body.classList.add("dark");
+  btnDarkMode.textContent = "☀️ Modo claro";
+}
+
+btnDarkMode.onclick = () => {
+  document.body.classList.toggle("dark");
+
+  if (document.body.classList.contains("dark")) {
+    localStorage.setItem("darkMode", "on");
+    btnDarkMode.textContent = "☀️ Modo claro";
+  } else {
+    localStorage.setItem("darkMode", "off");
+    btnDarkMode.textContent = "🌙 Modo oscuro";
+  }
+
+  menuOverlay.classList.remove("active");
+};
+
+
