@@ -35,20 +35,7 @@
 ================================ -->
 <div id="app" style="display:none">
 
-  <!-- SIDEBAR IZQUIERDO -->
-  <aside class="sidebar">
-    <h3 class="logo">Ventas</h3>
-
-    <button id="btnVentas" class="nav-btn active">Ventas</button>
-    <button id="btnHistorial" class="nav-btn">Historial</button>
-    <button id="btnGrafica" class="nav-btn">Gráfica</button>
-
-    <div class="sidebar-footer">
-      <button id="btnLogout" class="nav-btn logout">Cerrar sesión</button>
-    </div>
-  </aside>
-
-  <!-- CONTENIDO -->
+  <!-- CONTENIDO PRINCIPAL -->
   <main class="contenido">
 
     <!-- ===============================
@@ -91,6 +78,30 @@
     </section>
 
   </main>
+</div>
+
+<!-- ===============================
+     BOTÓN MENÚ FLOTANTE
+================================ -->
+<button id="btnMenu" class="menu-btn">Menú</button>
+
+<!-- ===============================
+     OVERLAY MENÚ
+================================ -->
+<div id="menuOverlay" class="menu-overlay">
+
+  <div class="menu-panel">
+    <h3>Navegación</h3>
+
+    <button class="menu-item" data-vista="ventas">Ventas</button>
+    <button class="menu-item" data-vista="historial">Historial</button>
+    <button class="menu-item" data-vista="grafica">Gráfica</button>
+
+    <button id="btnLogout" class="menu-item danger">
+      Cerrar sesión
+    </button>
+  </div>
+
 </div>
 
 <!-- ===============================
