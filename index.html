@@ -15,6 +15,7 @@
   <!-- CHART -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
 <!-- ===============================
@@ -85,7 +86,11 @@
           readonly
         >
 
-        <button id="btnGuardar" type="button" class="primary">
+        <button
+          id="btnGuardar"
+          type="button"
+          class="primary"
+        >
           Guardar venta
         </button>
 
@@ -97,7 +102,11 @@
     <!-- ===============================
          VISTA HISTORIAL
     ================================ -->
-    <section id="vistaHistorial" class="vista" style="display:none">
+    <section
+      id="vistaHistorial"
+      class="vista"
+      style="display:none"
+    >
       <h2>Ventas pagadas</h2>
       <ul id="listaHistorial"></ul>
     </section>
@@ -105,7 +114,11 @@
     <!-- ===============================
          VISTA GRAFICA
     ================================ -->
-    <section id="vistaGrafica" class="vista" style="display:none">
+    <section
+      id="vistaGrafica"
+      class="vista"
+      style="display:none"
+    >
       <h2>Gráfica mensual</h2>
       <canvas id="graficaVentas"></canvas>
     </section>
@@ -133,15 +146,27 @@
   <div class="menu-panel">
     <h3>Navegación</h3>
 
-    <button type="button" class="menu-item" data-vista="ventas">
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="ventas"
+    >
       Ventas
     </button>
 
-    <button type="button" class="menu-item" data-vista="historial">
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="historial"
+    >
       Historial
     </button>
 
-    <button type="button" class="menu-item" data-vista="grafica">
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="grafica"
+    >
       Gráfica
     </button>
 
