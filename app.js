@@ -183,6 +183,8 @@ btnGuardar.onclick = async () => {
 // CARGAR VENTAS + TOTALES
 // ===============================
 async function cargarVentas() {
+  if (!userId) return;
+
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
@@ -190,29 +192,35 @@ async function cargarVentas() {
   let mes = 0;
   const ahora = new Date();
 
-  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
+  const q = query(ventasRef, orderBy("fecha", "desc"));
+  const snap = await getDocs(q);
 
   snap.forEach(d => {
     const v = d.data();
     const fecha = v.fecha?.toDate ? v.fecha.toDate() : new Date();
 
+    // conteo hoy
     if (
       fecha.getDate() === ahora.getDate() &&
       fecha.getMonth() === ahora.getMonth() &&
       fecha.getFullYear() === ahora.getFullYear()
     ) hoy++;
 
+    // conteo mes
     if (
       fecha.getMonth() === ahora.getMonth() &&
       fecha.getFullYear() === ahora.getFullYear()
     ) mes++;
 
+    // pintar
     v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
   });
 
-  totalHoyEl.textContent = hoy;
-  totalMesEl.textContent = mes;
+  totalHoy.textContent = hoy;
+  totalMes.textContent = mes;
 }
+
 
 // ===============================
 // PINTAR
@@ -292,5 +300,6 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
     menuOverlay.classList.remove("active");
   });
 });
+
 
 
