@@ -268,3 +268,26 @@ btnMenu.onclick = () => menuOverlay.classList.add("active");
 menuOverlay.onclick = e => {
   if (e.target === menuOverlay) menuOverlay.classList.remove("active");
 };
+
+// ===============================
+// NAVEGACIÓN DEL MENÚ (FIX)
+// ===============================
+document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const vista = btn.dataset.vista;
+
+    // ocultar todas
+    document.getElementById("vistaVentas").style.display = "none";
+    document.getElementById("vistaHistorial").style.display = "none";
+    document.getElementById("vistaGrafica").style.display = "none";
+
+    // mostrar la seleccionada
+    document.getElementById(
+      "vista" + vista.charAt(0).toUpperCase() + vista.slice(1)
+    ).style.display = "block";
+
+    // cerrar menú
+    menuOverlay.classList.remove("active");
+  });
+});
+
