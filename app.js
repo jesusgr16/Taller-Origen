@@ -283,3 +283,33 @@ async function cargarGrafica() {
     }
   });
 }
+
+const btnMenu = document.getElementById("btnMenu");
+const menuOverlay = document.getElementById("menuOverlay");
+const menuItems = document.querySelectorAll(".menu-item");
+
+// abrir menú
+btnMenu.addEventListener("click", () => {
+  menuOverlay.style.display = "flex";
+});
+
+// cerrar al tocar fondo
+menuOverlay.addEventListener("click", e => {
+  if (e.target === menuOverlay) {
+    menuOverlay.style.display = "none";
+  }
+});
+
+// seleccionar opción
+menuItems.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const vista = btn.dataset.vista;
+
+    if (vista) {
+      mostrarVista(vista);
+    }
+
+    menuOverlay.style.display = "none";
+  });
+});
+
