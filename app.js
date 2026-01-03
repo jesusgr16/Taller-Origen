@@ -107,28 +107,29 @@ btnLogout.addEventListener("click", () => {
 // ===============================
 // GUARDAR VENTA
 // ===============================
-btnGuardar.addEventListener("click", async () => {
-  if (!userId) return;
+onAuthStateChanged(auth, user => {
+  if (user) {
+    userId = user.uid;
 
-  if (!clienteInput.value || !productoInput.value || !precioInput.value) {
-    alert("Completa todos los campos");
-    return;
+    loginView.style.display = "none";
+    appView.style.display = "block";
+
+    // 🔥 MOSTRAR MENÚ SOLO CUANDO HAY SESIÓN
+    btnMenu.style.display = "block";
+
+    mostrarVista("ventas");
+    cargarVentas();
+  } else {
+    userId = null;
+
+    loginView.style.display = "block";
+    appView.style.display = "none";
+
+    // 🔒 OCULTAR MENÚ EN LOGIN
+    btnMenu.style.display = "none";
   }
-
-  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-    cliente: clienteInput.value,
-    producto: productoInput.value,
-    precio: Number(precioInput.value),
-    pagado: false,
-    fecha: new Date()
-  });
-
-  clienteInput.value = "";
-  productoInput.value = "";
-  precioInput.value = "";
-
-  cargarVentas();
 });
+
 
 // ===============================
 // CARGAR VENTAS
@@ -313,5 +314,6 @@ btnLogin.addEventListener("click", async () => {
     alert(e.message);
   }
 });
+
 
 
