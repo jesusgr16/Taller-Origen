@@ -31,31 +31,66 @@
      APP
 ================================ -->
 <div id="app" style="display:none">
-  <h2>📦 Registro de Ventas</h2>
 
-  <!-- RESUMEN -->
-  <div id="resumen">
-    <p>📅 Hoy: <b id="totalHoy">0</b></p>
-    <p>🗓️ Mes: <b id="totalMes">0</b></p>
-  </div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h3>📊 Ventas</h3>
+    <button onclick="mostrarVista('ventas')">🧾 Ventas</button>
+    <button onclick="mostrarVista('historial')">📦 Historial</button>
+    <button onclick="mostrarVista('grafica')">📈 Gráfica</button>
 
-  <!-- BUSQUEDA -->
-  <input
-    type="text"
-    id="busqueda"
-    placeholder="🔍 Buscar cliente"
-  >
+    <button id="btnLogout" class="logout">🚪 Cerrar sesión</button>
+  </aside>
 
-  <!-- FORMULARIO -->
-  <input type="text" id="cliente" placeholder="Cliente">
-  <input type="text" id="producto" placeholder="Producto">
+  <!-- CONTENIDO -->
+  <main class="contenido">
 
-  <button id="btnGuardar">Guardar venta</button>
+    <!-- ===============================
+         VISTA VENTAS
+    ================================ -->
+    <section id="vistaVentas" class="vista">
 
-  <!-- LISTA -->
-  <ul id="lista"></ul>
+      <h2>🧾 Ventas pendientes</h2>
 
-  <button id="btnLogout" class="logout">Cerrar sesión</button>
+      <!-- RESUMEN -->
+      <div id="resumen">
+        <p>📅 Hoy: <b id="totalHoy">0</b></p>
+        <p>🗓️ Mes: <b id="totalMes">0</b></p>
+      </div>
+
+      <!-- BUSQUEDA -->
+      <input type="text" id="busqueda" placeholder="🔍 Buscar cliente">
+
+      <!-- FORMULARIO -->
+      <div class="formulario">
+        <input type="text" id="cliente" placeholder="Cliente">
+        <input type="text" id="producto" placeholder="Producto">
+        <input type="number" id="precio" placeholder="Precio">
+        <button id="btnGuardar">Guardar venta</button>
+      </div>
+
+      <!-- LISTA -->
+      <ul id="listaVentas"></ul>
+
+    </section>
+
+    <!-- ===============================
+         VISTA HISTORIAL
+    ================================ -->
+    <section id="vistaHistorial" class="vista" style="display:none">
+      <h2>📦 Ventas pagadas</h2>
+      <ul id="listaHistorial"></ul>
+    </section>
+
+    <!-- ===============================
+         VISTA GRAFICA
+    ================================ -->
+    <section id="vistaGrafica" class="vista" style="display:none">
+      <h2>📈 Gráfica mensual</h2>
+      <canvas id="graficaVentas"></canvas>
+    </section>
+
+  </main>
 </div>
 
 <!-- ===============================
