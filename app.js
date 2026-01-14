@@ -336,6 +336,20 @@ btnDarkMode.onclick = () => {
     ? "☀️ Modo claro"
     : "🌙 Modo oscuro";
 };
+// ===============================
+// PINTAR HISTORIAL (FIX)
+// ===============================
+function pintarHistorial(v) {
+  const li = document.createElement("li");
+
+  li.innerHTML = `
+    <b>${v.cliente}</b><br>
+    ${v.producto}<br>
+    <b>Total: $${v.precio}</b>
+  `;
+
+  listaHistorial.appendChild(li);
+}
 
 
 
