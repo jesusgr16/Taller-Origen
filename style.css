@@ -329,15 +329,9 @@ body.dark .menu-overlay {
   object-fit: contain;
 }
 
-
 .brand span {
   font-size: 20px;
   font-weight: 800;
-}
-
-/* LOGO GRANDE */
-.logo-header img {
-  width: 120px;
 }
 
 .logo-header span {
@@ -362,6 +356,7 @@ body.dark .menu-overlay {
   border-radius: 10px;
   text-align: center;
 }
+
 /* ===============================
    GRAFICA
 ================================ */
@@ -370,6 +365,7 @@ body.dark .menu-overlay {
   height: 260px !important;
   margin-top: 20px;
 }
+
 /* ===============================
    SELECTOR DE MES
 ================================ */
@@ -385,19 +381,18 @@ body.dark .menu-overlay {
   margin-top: 16px;
 }
 
-/* foco */
 #selectorMes:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
 }
 
-/* 🌙 MODO OSCURO */
 body.dark #selectorMes {
-  background: #020617;
-  border: 1px solid #334155;
-  color: #e5e7eb;
+  background: #000000;
+  border: 1px solid #555555;
+  color: #ffffff;
 }
+
 /* ===============================
    PRODUCTO + BOTON ELIMINAR
 ================================ */
@@ -418,7 +413,7 @@ body.dark #selectorMes {
   border: none;
   cursor: pointer;
   font-size: 18px;
-  color: #dc2626; /* rojo */
+  color: #dc2626;
   padding: 4px;
 }
 
@@ -426,20 +421,35 @@ body.dark #selectorMes {
   transform: scale(0.9);
 }
 
-/* 🌙 MODO OSCURO */
 body.dark .btn-eliminar-producto {
   color: #f87171;
 }
 
-.btn-agregar-grande {
-  width: 100%;
-  font-size: 24px;
-  font-weight: bold;
-  margin: 12px 0;
+/* =====================================================
+   🔥 AJUSTES VISUALES (NUEVO – SIN TOCAR LO ANTERIOR)
+===================================================== */
+
+/* Reduce espacios excesivos entre campos */
+.formulario > * {
+  margin-bottom: 10px;
 }
 
+/* Botón + más discreto y ordenado */
+#btnAddProducto {
+  max-width: 56px;
+  padding: 10px;
+  font-size: 18px;
+  margin-left: 8px;
+}
 
+/* Alinea input + botón */
+.producto-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-
-
-
+/* Elimina sensación de botón gigante */
+.btn-agregar-grande {
+  display: none;
+}
