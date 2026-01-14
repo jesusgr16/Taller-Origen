@@ -485,4 +485,44 @@ body.dark #btnAddProducto {
   color: #000000;
 }
 
+/* ===============================
+   FIX DEFINITIVO BOTÓN AGREGAR ➕
+================================ */
 
+/* contenedor input + botón */
+.producto-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* input de producto */
+#producto {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* botón + */
+#btnAddProducto {
+  width: 46px !important;
+  height: 46px;
+  min-width: 46px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 22px;
+  line-height: 1;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* evitar que herede ancho completo */
+#btnAddProducto.secondary {
+  width: 46px !important;
+}
+
+/* 🌙 modo oscuro */
+body.dark #btnAddProducto {
+  background: #ffffff;
+  color: #000000;
+}
