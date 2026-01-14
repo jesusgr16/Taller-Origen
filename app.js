@@ -132,13 +132,21 @@ btnLogout.onclick = () => signOut(auth);
 // ===============================
 // TOTAL AUTOMÁTICO
 // ===============================
-function calcularTotal() {
-  precioTotalInput.value =
-    (Number(precioProductoInput.value) || 0) +
-    (Number(precioGrabadoInput.value) || 0);
+function obtenerCantidadTotal() {
+  if (productos.length === 0) return 1;
+
+  return productos.reduce((acc, p) => acc + (p.cantidad || 1), 0);
 }
-precioProductoInput.oninput = calcularTotal;
-precioGrabadoInput.oninput = calcularTotal;
+
+function calcularTotal() {
+  const cantidadTotal = obtenerCantidadTotal();
+  const precioProducto = Number(precioProductoInput.value) || 0;
+  const precioGrabado = Number(precioGrabadoInput.value) || 0;
+
+  const total = (cantidadTotal * precioProducto) + precioGrabado;
+  precioTotalInput.value = total;
+}
+
 
 // ===============================
 // PRODUCTOS DINÁMICOS (FIX FINAL)
@@ -181,6 +189,7 @@ function renderProductos() {
 
     li.querySelector("input").oninput = e => {
       productos[index].cantidad = Number(e.target.value) || 1;
+       calcularTotal();
     };
 
     listaProductosEl.appendChild(li);
@@ -200,9 +209,11 @@ btnGuardar.onclick = async () => {
       ? productos.map(p => `${p.nombre} x${p.cantidad}`).join(", ")
       : productoInput.value.trim();
 
-  const pProd = Number(precioProductoInput.value) || 0;
-  const pGrab = Number(precioGrabadoInput.value) || 0;
-  const total = pProd + pGrab;
+ const pProd = Number(precioProductoInput.value) || 0;
+const pGrab = Number(precioGrabadoInput.value) || 0;
+const cantidadTotal = obtenerCantidadTotal();
+
+const total = (cantidadTotal * pProd) + pGrab;
 
   if (!cliente || !producto) return alert("Completa los campos");
 
@@ -358,4 +369,5 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
 
     menuOverlay.classList.remove("active");
   });
+
 });
