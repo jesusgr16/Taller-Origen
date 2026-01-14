@@ -2,17 +2,17 @@
    VARIABLES
 ================================ */
 :root {
-  --bg: #f1f5f9;
+  --bg: #ffffff;
   --card: #ffffff;
-  --primary: #0f172a;
+  --primary: #000000;
   --primary-soft: #f1f5f9;
-  --accent: #2563eb;
-  --accent-soft: rgba(37,99,235,0.15);
+  --accent: #000000;
+  --accent-soft: rgba(0,0,0,0.15);
   --danger: #dc2626;
-  --text: #0f172a;
-  --muted: #64748b;
+  --text: #000000;
+  --muted: #6b7280;
   --radius: 20px;
-  --shadow: 0 20px 45px rgba(15,23,42,0.12);
+  --shadow: 0 20px 45px rgba(0,0,0,0.12);
 }
 
 /* ===============================
@@ -29,10 +29,11 @@
 ================================ */
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: linear-gradient(180deg, #eef2f7, #f8fafc);
+  background: #ffffff;
   min-height: 100vh;
   padding: 24px;
   color: var(--text);
+  transition: background 0.3s, color 0.3s;
 }
 
 /* ===============================
@@ -71,8 +72,8 @@ input {
   width: 100%;
   padding: 15px 16px;
   border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  background: #f9fbfd;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
   margin-bottom: 18px;
   font-size: 15px;
   color: var(--text);
@@ -84,8 +85,8 @@ input::placeholder {
 
 input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
 }
 
 /* ===============================
@@ -95,10 +96,12 @@ button {
   width: 100%;
   padding: 14px;
   border-radius: 16px;
-  border: none;
+  border: 1px solid #000000;
   font-weight: 700;
   cursor: pointer;
   transition: all .15s ease;
+  background: #000000;
+  color: #ffffff;
 }
 
 button:active {
@@ -106,18 +109,20 @@ button:active {
 }
 
 .primary {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: #000000;
   color: #ffffff;
 }
 
 .secondary {
-  background: #e5e7eb;
-  color: #0f172a;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #000000;
 }
 
 .danger {
   background: #dc2626;
   color: #ffffff;
+  border: none;
 }
 
 /* ===============================
@@ -131,12 +136,12 @@ button:active {
 }
 
 #resumen p {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: #000000;
   border-radius: 16px;
   padding: 16px;
   text-align: center;
   font-weight: 800;
-  color: white;
+  color: #ffffff;
 }
 
 /* ===============================
@@ -155,7 +160,7 @@ button:active {
 }
 
 #precioTotal {
-  background: #eef2f7;
+  background: #f3f4f6;
   font-weight: 700;
   text-align: center;
 }
@@ -172,7 +177,7 @@ ul {
 }
 
 li {
-  background: #f8fafc;
+  background: #ffffff;
   padding: 16px;
   border-radius: 18px;
   border: 1px solid #e5e7eb;
@@ -201,19 +206,18 @@ li {
   bottom: 16px;
   padding: 10px 18px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: #000000;
   color: #ffffff;
   z-index: 2000;
   width: auto;
   font-size: 14px;
-  display: none;
 }
 
 /* overlay */
 .menu-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15,23,42,0.45);
+  background: rgba(0,0,0,0.6);
   display: none;
   z-index: 1999;
 }
@@ -238,77 +242,77 @@ li {
   width: 100%;
   padding: 13px 14px;
   border-radius: 14px;
-  background: var(--primary-soft);
+  background: #ffffff;
   margin-bottom: 12px;
   font-weight: 600;
+  border: 1px solid #000000;
+  color: #000000;
 }
 
 /* ===============================
    🌙 MODO OSCURO
 ================================ */
 body.dark {
-  background: linear-gradient(180deg, #020617, #020617);
-  color: #e5e7eb;
+  background: #000000;
+  color: #ffffff;
 }
 
 body.dark #login,
 body.dark #app {
-  background: #020617;
-  border: 1px solid #1e293b;
+  background: #000000;
+  border: 1px solid #333333;
 }
 
 body.dark input {
-  background: #020617;
-  border: 1px solid #334155;
-  color: #e5e7eb;
+  background: #000000;
+  border: 1px solid #555555;
+  color: #ffffff;
 }
 
 body.dark input::placeholder {
-  color: #94a3b8;
+  color: #9ca3af;
 }
 
 body.dark #precioTotal {
-  background: #020617;
-  border: 1px solid #334155;
-  color: #e5e7eb;
+  background: #000000;
+  border: 1px solid #555555;
+  color: #ffffff;
 }
 
 body.dark li {
-  background: #020617;
-  border: 1px solid #334155;
+  background: #000000;
+  border: 1px solid #555555;
 }
 
-body.dark .primary {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+body.dark button {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
 }
 
 body.dark .secondary {
-  background: #e5e7eb;
-  color: #020617;
-}
-
-body.dark .danger {
-  background: #7f1d1d;
-  color: #fee2e2;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
 }
 
 body.dark .menu-panel {
-  background: #020617;
-  border: 1px solid #334155;
+  background: #000000;
+  border: 1px solid #555555;
 }
 
 body.dark .menu-item {
-  background: #020617;
-  border: 1px solid #334155;
-  color: #e5e7eb;
+  background: #000000;
+  border: 1px solid #ffffff;
+  color: #ffffff;
 }
 
 body.dark .menu-overlay {
-  background: rgba(2,6,23,0.85);
+  background: rgba(0,0,0,0.85);
 }
 
 /* ===============================
-   LOGO + NOMBRE EMPRESA
+   LOGO
 ================================ */
 .brand {
   display: flex;
@@ -321,57 +325,32 @@ body.dark .menu-overlay {
 .brand img {
   width: 42px;
   height: 42px;
-  object-fit: contain;
 }
 
 .brand span {
   font-size: 20px;
   font-weight: 800;
-  color: var(--text);
 }
 
-/* MODO OSCURO */
-body.dark .brand span {
-  color: #ffffff;
-}
-
-/* ===============================
-   🔥 NUEVAS FUNCIONES
-================================ */
-
-/* LOGO GRANDE Y CENTRADO (SOLO IMAGEN) */
-.logo-header {
-  justify-content: center;
-}
-
+/* LOGO GRANDE */
 .logo-header img {
   width: 120px;
-  height: auto;
 }
 
 .logo-header span {
   display: none;
 }
 
-/* LISTA DE PRODUCTOS */
-.lista-productos {
-  list-style: none;
-  padding: 0;
-  margin-top: 6px;
-}
-
+/* ===============================
+   LISTA DE PRODUCTOS
+================================ */
 .lista-productos li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(37,99,235,0.05);
   padding: 12px 14px;
   border-radius: 14px;
-  border: 1px solid rgba(37,99,235,0.2);
-}
-
-.lista-productos span {
-  font-weight: 600;
+  border: 1px solid #000000;
 }
 
 .lista-productos input {
@@ -379,15 +358,4 @@ body.dark .brand span {
   padding: 6px;
   border-radius: 10px;
   text-align: center;
-  margin-bottom: 0;
-}
-
-/* MODO OSCURO LISTA PRODUCTOS */
-body.dark .lista-productos li {
-  background: rgba(37,99,235,0.15);
-  border-color: rgba(37,99,235,0.35);
-}
-
-body.dark .lista-productos span {
-  color: #e5e7eb;
 }
