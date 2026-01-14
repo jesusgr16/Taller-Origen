@@ -150,20 +150,35 @@ function agregarProducto() {
   calcularTotal();
 }
 
-btnAddProducto.onclick = agregarProducto;
-
 function renderProductos() {
   listaProductosEl.innerHTML = "";
+
   productos.forEach((p, i) => {
     const li = document.createElement("li");
+    li.classList.add("producto-item");
+
     li.innerHTML = `
       <span>${p.nombre}</span>
-      <input type="number" min="1" value="${p.cantidad}">
+
+      <div class="producto-acciones">
+        <input type="number" min="1" value="${p.cantidad}">
+        <button class="btn-eliminar-producto" title="Eliminar producto">🗑️</button>
+      </div>
     `;
+
+    // cambiar cantidad
     li.querySelector("input").oninput = e => {
       productos[i].cantidad = Number(e.target.value) || 1;
       calcularTotal();
     };
+
+    // eliminar producto
+    li.querySelector(".btn-eliminar-producto").onclick = () => {
+      productos.splice(i, 1);
+      renderProductos();
+      calcularTotal();
+    };
+
     listaProductosEl.appendChild(li);
   });
 }
@@ -460,6 +475,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
