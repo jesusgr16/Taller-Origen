@@ -431,6 +431,13 @@ body.dark .btn-eliminar-producto {
   color: #f87171;
 }
 
+.btn-agregar-grande {
+  width: 100%;
+  font-size: 26px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
 
 
 
