@@ -215,7 +215,7 @@ async function cargarVentas() {
   const ahora = new Date();
 
   const ventasRef = collection(db, `usuarios/${userId}/ventas`);
-  const q = query(ventasRef, orderBy("fecha", "desc"));
+  const q = query(ventasRef, orderBy("fecha", "asc"));
   const snap = await getDocs(q);
 
   snap.forEach(d => {
@@ -455,6 +455,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
