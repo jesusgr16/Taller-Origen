@@ -76,6 +76,8 @@ const btnAddProducto = $("btnAddProducto");
 
 let userId = null;
 let productos = [];
+let grafica = null;
+
 
 // ===============================
 // AUTH STATE
@@ -453,6 +455,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
