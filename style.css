@@ -454,75 +454,44 @@ body.dark .btn-eliminar-producto {
   display: none;
 }
 /* ===============================
-   FIX BOTÓN AGREGAR PRODUCTO ➕
-================================ */
-.producto-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-#producto {
-  flex: 1;
-  margin-bottom: 0;
-}
-
-#btnAddProducto {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  border-radius: 50%;
-  font-size: 22px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 🌙 MODO OSCURO */
-body.dark #btnAddProducto {
-  background: #ffffff;
-  color: #000000;
-}
-
-/* ===============================
    FIX DEFINITIVO BOTÓN AGREGAR ➕
+   (NO TOCAR NADA MÁS)
 ================================ */
 
-/* contenedor input + botón */
 .producto-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* input de producto */
 #producto {
   flex: 1;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 
-/* botón + */
 #btnAddProducto {
-  width: 46px !important;
-  height: 46px;
-  min-width: 46px;
-  padding: 0;
+  all: unset;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 50%;
+  border: 1px solid #000000;
+  background: #ffffff;
+  color: #000000;
   font-size: 22px;
-  line-height: 1;
-  display: flex !important;
+  font-weight: bold;
+  display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
-/* evitar que herede ancho completo */
-#btnAddProducto.secondary {
-  width: 46px !important;
+#btnAddProducto:active {
+  transform: scale(0.9);
 }
 
-/* 🌙 modo oscuro */
 body.dark #btnAddProducto {
   background: #ffffff;
   color: #000000;
 }
+
