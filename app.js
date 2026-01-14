@@ -314,9 +314,15 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
       btn.dataset.vista.charAt(0).toUpperCase() +
       btn.dataset.vista.slice(1)
     ).style.display = "block";
+
+    if (btn.dataset.vista === "grafica") {
+      cargarGraficaMensual();
+    }
+
     menuOverlay.classList.remove("active");
   };
 });
+
 // ===============================
 // MODO OSCURO (FIX DEFINITIVO)
 // ===============================
@@ -350,5 +356,104 @@ function pintarHistorial(v) {
 
   listaHistorial.appendChild(li);
 }
+// ===============================
+// GRAFICA LINEAL - SOLO PAGADAS + SELECTOR DE MES
+// ===============================
+async function cargarGraficaMensual(mesSeleccionado = null) {
+  if (!userId) return;
+
+  const canvas = document.getElementById("graficaVentas");
+  const selector = document.getElementById("selectorMes");
+  if (!canvas || !selector) return;
+
+  // Llenar selector solo una vez
+  if (selector.options.length === 0) {
+    const meses = [
+      "Enero","Febrero","Marzo","Abril","Mayo","Junio",
+      "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
+    ];
+
+    meses.forEach((m, i) => {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = m;
+      selector.appendChild(opt);
+    });
+
+    selector.value = new Date().getMonth();
+
+    selector.onchange = () => {
+      cargarGraficaMensual(Number(selector.value));
+    };
+  }
+
+  const mes = mesSeleccionado !== null
+    ? mesSeleccionado
+    : Number(selector.value);
+
+  const añoActual = new Date().getFullYear();
+  const ventasPorDia = {};
+  let totalMes = 0;
+
+  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
+  const snap = await getDocs(ventasRef);
+
+  snap.forEach(d => {
+    const v = d.data();
+
+    // 🔒 SOLO VENTAS PAGADAS
+    if (!v.pagado) return;
+
+    const fecha = v.fecha?.toDate ? v.fecha.toDate() : null;
+    if (!fecha) return;
+
+    if (
+      fecha.getMonth() === mes &&
+      fecha.getFullYear() === añoActual
+    ) {
+      const dia = fecha.getDate();
+      const precio = Number(v.precio) || 0;
+
+      ventasPorDia[dia] = (ventasPorDia[dia] || 0) + precio;
+      totalMes += precio;
+    }
+  });
+
+  const dias = Object.keys(ventasPorDia)
+    .map(Number)
+    .sort((a, b) => a - b);
+
+  const totales = dias.map(d => ventasPorDia[d]);
+
+  // Mostrar total arriba
+  const titulo = document.querySelector("#vistaGrafica h2");
+  if (titulo) {
+    titulo.textContent = `Total del mes: $${totalMes}`;
+  }
+
+  if (grafica) grafica.destroy();
+
+  grafica = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: dias.map(d => `Día ${d}`),
+      datasets: [{
+        label: "Ventas pagadas",
+        data: totales,
+        tension: 0.35,
+        borderWidth: 3,
+        pointRadius: 5
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+
 
 
