@@ -75,7 +75,6 @@ const listaProductosEl = $("listaProductos");
 const btnAddProducto = $("btnAddProducto");
 
 let userId = null;
-let ventaEditandoId = null;
 let productos = [];
 
 // ===============================
@@ -201,7 +200,67 @@ btnGuardar.onclick = async () => {
 };
 
 // ===============================
-// MENU FUNCIONAL
+// CARGAR VENTAS (FIX DEFINITIVO)
+// ===============================
+async function cargarVentas() {
+  if (!userId) return;
+
+  listaVentas.innerHTML = "";
+  listaHistorial.innerHTML = "";
+
+  let hoy = 0;
+  let mes = 0;
+  const ahora = new Date();
+
+  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
+  const q = query(ventasRef, orderBy("fecha", "desc"));
+  const snap = await getDocs(q);
+
+  snap.forEach(d => {
+    const v = d.data();
+    const fecha = v.fecha?.toDate ? v.fecha.toDate() : new Date();
+
+    if (
+      fecha.getDate() === ahora.getDate() &&
+      fecha.getMonth() === ahora.getMonth() &&
+      fecha.getFullYear() === ahora.getFullYear()
+    ) hoy++;
+
+    if (
+      fecha.getMonth() === ahora.getMonth() &&
+      fecha.getFullYear() === ahora.getFullYear()
+    ) mes++;
+
+    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
+  });
+
+  totalHoyEl.textContent = hoy;
+  totalMesEl.textContent = mes;
+}
+
+// ===============================
+// PINTAR
+// ===============================
+function pintarVenta(id, v) {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <b>${v.cliente}</b><br>
+    ${v.producto}<br>
+    Producto: $${v.precioProducto}<br>
+    Grabado: $${v.precioGrabado}<br>
+    <b>Total: $${v.precio}</b>
+  `;
+  listaVentas.appendChild(li);
+}
+
+function pintarHistorial(v) {
+  const li = document.createElement("li");
+  li.textContent = `${v.cliente} - ${v.producto} ($${v.precio})`;
+  listaHistorial.appendChild(li);
+}
+
+// ===============================
+// MENU
 // ===============================
 btnMenu.onclick = () => menuOverlay.classList.add("active");
 
@@ -214,7 +273,11 @@ menuOverlay.onclick = e => {
 document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
   btn.onclick = () => {
     document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
-    document.getElementById("vista" + btn.dataset.vista.charAt(0).toUpperCase() + btn.dataset.vista.slice(1)).style.display = "block";
+    document.getElementById(
+      "vista" +
+      btn.dataset.vista.charAt(0).toUpperCase() +
+      btn.dataset.vista.slice(1)
+    ).style.display = "block";
     menuOverlay.classList.remove("active");
   };
 });
