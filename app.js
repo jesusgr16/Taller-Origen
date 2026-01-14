@@ -243,21 +243,57 @@ async function cargarVentas() {
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
+
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${v.producto}<br>
     Producto: $${v.precioProducto}<br>
     Grabado: $${v.precioGrabado}<br>
     <b>Total: $${v.precio}</b>
+
+    <div class="acciones">
+      <button class="primary pagar">Pagado</button>
+      <button class="secondary editar">Editar</button>
+      <button class="danger eliminar">Eliminar</button>
+    </div>
   `;
+
+  // PAGADO
+  li.querySelector(".pagar").onclick = async () => {
+    await updateDoc(
+      doc(db, `usuarios/${userId}/ventas/${id}`),
+      { pagado: true }
+    );
+    cargarVentas();
+  };
+
+  // EDITAR
+  li.querySelector(".editar").onclick = () => {
+    clienteInput.value = v.cliente;
+    precioProductoInput.value = v.precioProducto;
+    precioGrabadoInput.value = v.precioGrabado;
+    precioTotalInput.value = v.precio;
+
+    // reconstruir productos visualmente
+    productos = v.producto.split(",").map(p => {
+      const [nombre, cant] = p.trim().split(" x");
+      return { nombre, cantidad: Number(cant) || 1 };
+    });
+
+    renderProductos();
+  };
+
+  // ELIMINAR
+  li.querySelector(".eliminar").onclick = async () => {
+    if (confirm("¿Eliminar venta?")) {
+      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+      cargarVentas();
+    }
+  };
+
   listaVentas.appendChild(li);
 }
 
-function pintarHistorial(v) {
-  const li = document.createElement("li");
-  li.textContent = `${v.cliente} - ${v.producto} ($${v.precio})`;
-  listaHistorial.appendChild(li);
-}
 
 // ===============================
 // MENU
@@ -281,3 +317,4 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
     menuOverlay.classList.remove("active");
   };
 });
+
