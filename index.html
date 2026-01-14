@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>App de Ventas</title>
+  <script type="module" src="app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===============================
+       PWA ANDROID
+  ================================ -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- ===============================
+       PWA IPHONE 🍎
+  ================================ -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Taller Origen">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-ios.png">
+
+  <!-- ESTILOS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- CHART -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<!-- ===============================
+     LOGIN
+================================ -->
+<div id="login">
+  <div class="brand logo-header">
+    <img src="taller.jpg" alt="Logo empresa">
+    <span>Taller Origen</span>
+  </div>
+
+  <h2>Iniciar sesión</h2>
+
+  <input type="email" id="email" placeholder="Correo">
+  <input type="password" id="password" placeholder="Contraseña">
+
+  <button id="btnLogin" type="button" class="primary">
+    Entrar
+  </button>
+
+  <button id="btnRegister" type="button" class="secondary">
+    Registrarse
+  </button>
+</div>
+
+<!-- ===============================
+     APP
+================================ -->
+<div id="app" style="display:none">
+  <div class="brand logo-header">
+    <img src="taller.jpg" alt="Logo empresa">
+    <span>Taller Origen</span>
+  </div>
+
+  <main class="contenido">
+
+    <!-- ===============================
+         VISTA VENTAS
+    ================================ -->
+    <section id="vistaVentas" class="vista">
+      <h2>Ventas pendientes</h2>
+
+      <div id="resumen">
+        <p>Hoy: <b id="totalHoy">0</b></p>
+        <p>Mes: <b id="totalMes">0</b></p>
+      </div>
+
+      <input
+        type="text"
+        id="busqueda"
+        placeholder="Buscar cliente"
+      >
+
+      <div class="formulario">
+
+        <input type="text" id="cliente" placeholder="Cliente">
+
+        <!-- PRODUCTO + BOTÓN -->
+        <div class="producto-row">
+          <input
+            type="text"
+            id="producto"
+            placeholder="Productos (Agregar ➕)"
+          >
+          <button
+            type="button"
+            id="btnAddProducto"
+            class="secondary"
+          >
+            ➕
+          </button>
+        </div>
+
+        <!-- LISTA DE PRODUCTOS -->
+        <ul id="listaProductos" class="lista-productos"></ul>
+
+        <div class="precios-grid">
+          <input
+            type="number"
+            id="precioProducto"
+            placeholder="Precio del producto"
+          >
+          <input
+            type="number"
+            id="precioGrabado"
+            placeholder="Precio del grabado"
+          >
+        </div>
+
+        <!-- TOTAL AUTOMÁTICO -->
+        <input
+          type="number"
+          id="precioTotal"
+          placeholder="Total"
+          readonly
+        >
+
+        <button
+          id="btnGuardar"
+          type="button"
+          class="primary"
+        >
+          Guardar venta
+        </button>
+
+      </div>
+
+      <ul id="listaVentas"></ul>
+    </section>
+
+    <!-- ===============================
+         VISTA HISTORIAL
+    ================================ -->
+    <section
+      id="vistaHistorial"
+      class="vista"
+      style="display:none"
+    >
+      <h2>Ventas pagadas</h2>
+      <ul id="listaHistorial"></ul>
+    </section>
+
+    <!-- ===============================
+         VISTA GRAFICA
+    ================================ -->
+    <section
+      id="vistaGrafica"
+      class="vista"
+      style="display:none"
+    >
+      <h2>Gráfica mensual</h2>
+      <canvas id="graficaVentas"></canvas>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===============================
+     BOTÓN MENÚ FLOTANTE
+================================ -->
+<button
+  id="btnMenu"
+  type="button"
+  class="menu-btn"
+  style="display:none"
+>
+  Menú
+</button>
+
+<!-- ===============================
+     OVERLAY MENÚ
+================================ -->
+<div id="menuOverlay" class="menu-overlay">
+
+  <div class="menu-panel">
+    <h3>Navegación</h3>
+
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="ventas"
+    >
+      Ventas
+    </button>
+
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="historial"
+    >
+      Historial
+    </button>
+
+    <button
+      type="button"
+      class="menu-item"
+      data-vista="grafica"
+    >
+      Gráfica
+    </button>
+
+    <!-- 🌙 MODO OSCURO -->
+    <button
+      type="button"
+      id="btnDarkMode"
+      class="menu-item"
+    >
+      🌙 Modo oscuro
+    </button>
+
+    <button
+      id="btnLogout"
+      type="button"
+      class="menu-item danger"
+    >
+      Cerrar sesión
+    </button>
+  </div>
+
+</div>
+
+<!-- ===============================
+     SCRIPT PRINCIPAL
+================================ -->
+<script type="module" src="app.js"></script>
+
+<!-- ===============================
+     SERVICE WORKER
+================================ -->
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+
+</body>
+</html>
