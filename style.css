@@ -398,6 +398,40 @@ body.dark #selectorMes {
   border: 1px solid #334155;
   color: #e5e7eb;
 }
+/* ===============================
+   PRODUCTO + BOTON ELIMINAR
+================================ */
+.producto-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.producto-acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-eliminar-producto {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #dc2626; /* rojo */
+  padding: 4px;
+}
+
+.btn-eliminar-producto:active {
+  transform: scale(0.9);
+}
+
+/* 🌙 MODO OSCURO */
+body.dark .btn-eliminar-producto {
+  color: #f87171;
+}
+
+
 
 
 
