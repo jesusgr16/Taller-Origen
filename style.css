@@ -322,10 +322,13 @@ body.dark .menu-overlay {
   margin-bottom: 20px;
 }
 
-.brand img {
-  width: 42px;
-  height: 42px;
+.logo-header img {
+  width: 120px;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
 }
+
 
 .brand span {
   font-size: 20px;
@@ -359,3 +362,4 @@ body.dark .menu-overlay {
   border-radius: 10px;
   text-align: center;
 }
+
