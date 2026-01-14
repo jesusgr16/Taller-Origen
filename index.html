@@ -84,20 +84,21 @@
 
         <input type="text" id="cliente" placeholder="Cliente">
 
-        <!-- PRODUCTO + BOTÓN -->
-        <div class="producto-row">
-          <input
-            type="text"
-            id="producto"
-            placeholder="Productos (Agregar ➕)"
-          >
-          <button
-  type="button"
-  id="btnAddProductoGrande"
-  class="secondary btn-agregar-grande"
->
-  +
-        </div>
+      <div class="producto-row">
+  <input
+    type="text"
+    id="producto"
+    placeholder="Producto"
+  >
+  <button
+    type="button"
+    id="btnAddProducto"
+    class="secondary"
+  >
+    +
+  </button>
+</div>
+
 
         <!-- LISTA DE PRODUCTOS -->
         <ul id="listaProductos" class="lista-productos"></ul>
@@ -261,6 +262,7 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
 
 
 
