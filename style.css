@@ -362,4 +362,42 @@ body.dark .menu-overlay {
   border-radius: 10px;
   text-align: center;
 }
+/* ===============================
+   GRAFICA
+================================ */
+#graficaVentas {
+  width: 100% !important;
+  height: 260px !important;
+  margin-top: 20px;
+}
+/* ===============================
+   SELECTOR DE MES
+================================ */
+#selectorMes {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  background: #f9fbfd;
+  color: #0f172a;
+  margin-top: 16px;
+}
+
+/* foco */
+#selectorMes:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+}
+
+/* 🌙 MODO OSCURO */
+body.dark #selectorMes {
+  background: #020617;
+  border: 1px solid #334155;
+  color: #e5e7eb;
+}
+
+
 
