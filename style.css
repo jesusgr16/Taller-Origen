@@ -453,3 +453,36 @@ body.dark .btn-eliminar-producto {
 .btn-agregar-grande {
   display: none;
 }
+/* ===============================
+   FIX BOTÓN AGREGAR PRODUCTO ➕
+================================ */
+.producto-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#producto {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+#btnAddProducto {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  font-size: 22px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🌙 MODO OSCURO */
+body.dark #btnAddProducto {
+  background: #ffffff;
+  color: #000000;
+}
+
+
