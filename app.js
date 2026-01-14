@@ -317,4 +317,25 @@ document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
     menuOverlay.classList.remove("active");
   };
 });
+// ===============================
+// MODO OSCURO (FIX DEFINITIVO)
+// ===============================
+const darkSaved = localStorage.getItem("darkMode");
+
+if (darkSaved === "on") {
+  document.body.classList.add("dark");
+}
+
+btnDarkMode.onclick = () => {
+  document.body.classList.toggle("dark");
+
+  const activo = document.body.classList.contains("dark");
+  localStorage.setItem("darkMode", activo ? "on" : "off");
+
+  btnDarkMode.textContent = activo
+    ? "☀️ Modo claro"
+    : "🌙 Modo oscuro";
+};
+
+
 
