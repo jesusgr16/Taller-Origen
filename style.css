@@ -494,4 +494,44 @@ body.dark #btnAddProducto {
   background: #ffffff;
   color: #000000;
 }
+/* ===============================
+   AJUSTE ESPACIOS PRODUCTO
+================================ */
+
+/* evita doble espacio en fila producto */
+.producto-row {
+  margin-bottom: 6px;
+}
+
+/* el input de producto no debe empujar */
+.producto-row input {
+  margin-bottom: 0;
+}
+
+/* la lista de productos se pega más */
+#listaProductos {
+  margin-top: 4px;
+}
+
+/* botón + integrado */
+#btnAddProducto {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #000000;
+  font-weight: 900;
+}
+
+/* hover */
+#btnAddProducto:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* 🌙 modo oscuro */
+body.dark #btnAddProducto {
+  background: #ffffff;
+  color: #000000;
+}
+
+
 
