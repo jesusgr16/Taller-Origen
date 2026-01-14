@@ -72,7 +72,10 @@ const totalHoyEl = $("totalHoy");
 const totalMesEl = $("totalMes");
 
 const listaProductosEl = $("listaProductos");
-const btnAddProducto = $("btnAddProducto");
+if (btnAddProducto) {
+  btnAddProducto.addEventListener("click", agregarProducto);
+}
+
 const btnAddProductoGrande = $("btnAddProductoGrande");
 
 if (btnAddProductoGrande) {
@@ -481,6 +484,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
