@@ -19,7 +19,8 @@ import {
   updateDoc,
   deleteDoc,
   query,
-  orderBy
+  orderBy,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // ===============================
@@ -70,31 +71,12 @@ const btnGuardar = $("btnGuardar");
 const totalHoyEl = $("totalHoy");
 const totalMesEl = $("totalMes");
 
-// 🔹 NUEVO
 const listaProductosEl = $("listaProductos");
 const btnAddProducto = $("btnAddProducto");
 
 let userId = null;
 let ventaEditandoId = null;
-
-// 🔹 NUEVO
 let productos = [];
-
-// ===============================
-// MODO OSCURO
-// ===============================
-function setDarkMode(on) {
-  document.body.classList.toggle("dark", on);
-  localStorage.setItem("darkMode", on ? "on" : "off");
-  btnDarkMode.textContent = on ? "☀️ Modo claro" : "🌙 Modo oscuro";
-}
-
-setDarkMode(localStorage.getItem("darkMode") === "on");
-
-btnDarkMode.onclick = () => {
-  setDarkMode(!document.body.classList.contains("dark"));
-  menuOverlay.classList.remove("active");
-};
 
 // ===============================
 // AUTH STATE
@@ -105,12 +87,14 @@ onAuthStateChanged(auth, user => {
     loginView.style.display = "none";
     appView.style.display = "block";
     btnMenu.style.display = "block";
+    btnGuardar.disabled = false;
     cargarVentas();
   } else {
     userId = null;
     loginView.style.display = "block";
     appView.style.display = "none";
     btnMenu.style.display = "none";
+    btnGuardar.disabled = true;
   }
 });
 
@@ -130,244 +114,107 @@ btnLogin.onclick = async () => {
 btnLogout.onclick = () => signOut(auth);
 
 // ===============================
-// TOTAL AUTOMÁTICO
+// TOTAL
 // ===============================
 function obtenerCantidadTotal() {
   if (productos.length === 0) return 1;
-
-  return productos.reduce((acc, p) => acc + (p.cantidad || 1), 0);
+  return productos.reduce((acc, p) => acc + (Number(p.cantidad) || 0), 0);
 }
 
 function calcularTotal() {
-  const cantidadTotal = obtenerCantidadTotal();
-  const precioProducto = Number(precioProductoInput.value) || 0;
-  const precioGrabado = Number(precioGrabadoInput.value) || 0;
-
-  const total = (cantidadTotal * precioProducto) + precioGrabado;
-  precioTotalInput.value = total;
+  const cantidad = obtenerCantidadTotal();
+  const precio = Number(precioProductoInput.value) || 0;
+  const grabado = Number(precioGrabadoInput.value) || 0;
+  precioTotalInput.value = (cantidad * precio) + grabado;
 }
 
+precioProductoInput.oninput = calcularTotal;
+precioGrabadoInput.oninput = calcularTotal;
 
 // ===============================
-// PRODUCTOS DINÁMICOS (FIX FINAL)
+// PRODUCTOS
 // ===============================
 function agregarProducto() {
   const nombre = productoInput.value.trim();
   if (!nombre) return;
 
-  productos.push({
-    nombre,
-    cantidad: 1
-  });
-
+  productos.push({ nombre, cantidad: 1 });
   productoInput.value = "";
   renderProductos();
+  calcularTotal();
 }
 
-// ENTER
-productoInput.addEventListener("keyup", e => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    agregarProducto();
-  }
-});
-
-// BOTÓN ➕
-if (btnAddProducto) {
-  btnAddProducto.onclick = agregarProducto;
-}
+btnAddProducto.onclick = agregarProducto;
 
 function renderProductos() {
   listaProductosEl.innerHTML = "";
-
-  productos.forEach((p, index) => {
+  productos.forEach((p, i) => {
     const li = document.createElement("li");
     li.innerHTML = `
       <span>${p.nombre}</span>
       <input type="number" min="1" value="${p.cantidad}">
     `;
-
     li.querySelector("input").oninput = e => {
-      productos[index].cantidad = Number(e.target.value) || 1;
-       calcularTotal();
+      productos[i].cantidad = Number(e.target.value) || 1;
+      calcularTotal();
     };
-
     listaProductosEl.appendChild(li);
   });
 }
 
 // ===============================
-// GUARDAR / EDITAR
+// GUARDAR
 // ===============================
 btnGuardar.onclick = async () => {
-  if (!userId) return alert("Sesión inválida");
+  if (!auth.currentUser) return alert("Sesión no lista, espera un momento");
 
   const cliente = clienteInput.value.trim();
+  if (!cliente) return alert("Ingresa el cliente");
+  if (productos.length === 0) return alert("Agrega al menos un producto");
 
-  const producto =
-    productos.length > 0
-      ? productos.map(p => `${p.nombre} x${p.cantidad}`).join(", ")
-      : productoInput.value.trim();
-
- const pProd = Number(precioProductoInput.value) || 0;
-const pGrab = Number(precioGrabadoInput.value) || 0;
-const cantidadTotal = obtenerCantidadTotal();
-
-const total = (cantidadTotal * pProd) + pGrab;
-
-  if (!cliente || !producto) return alert("Completa los campos");
+  const producto = productos.map(p => `${p.nombre} x${p.cantidad}`).join(", ");
+  const total = Number(precioTotalInput.value) || 0;
 
   try {
-    if (ventaEditandoId) {
-      await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
-        cliente,
-        producto,
-        precioProducto: pProd,
-        precioGrabado: pGrab,
-        precio: total
-      });
-      ventaEditandoId = null;
-      btnGuardar.textContent = "Guardar venta";
-    } else {
-      await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-        cliente,
-        producto,
-        precioProducto: pProd,
-        precioGrabado: pGrab,
-        precio: total,
-        pagado: false,
-        fecha: new Date()
-      });
-    }
+    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+      cliente,
+      producto,
+      precioProducto: Number(precioProductoInput.value) || 0,
+      precioGrabado: Number(precioGrabadoInput.value) || 0,
+      precio: total,
+      pagado: false,
+      fecha: Timestamp.now()
+    });
 
     clienteInput.value = "";
-    productoInput.value = "";
     precioProductoInput.value = "";
     precioGrabadoInput.value = "";
     precioTotalInput.value = "";
-
     productos = [];
     renderProductos();
-
     cargarVentas();
+
   } catch (e) {
-    console.error(e);
-    alert("Error al guardar venta");
+    console.error("ERROR FIRESTORE:", e);
+    alert(e.message);
   }
 };
 
 // ===============================
-// CARGAR VENTAS + TOTALES
-// ===============================
-async function cargarVentas() {
-  if (!userId) return;
-
-  listaVentas.innerHTML = "";
-  listaHistorial.innerHTML = "";
-
-  let hoy = 0;
-  let mes = 0;
-  const ahora = new Date();
-
-  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
-  const q = query(ventasRef, orderBy("fecha", "desc"));
-  const snap = await getDocs(q);
-
-  snap.forEach(d => {
-    const v = d.data();
-    const fecha = v.fecha?.toDate ? v.fecha.toDate() : new Date();
-
-    if (
-      fecha.getDate() === ahora.getDate() &&
-      fecha.getMonth() === ahora.getMonth() &&
-      fecha.getFullYear() === ahora.getFullYear()
-    ) hoy++;
-
-    if (
-      fecha.getMonth() === ahora.getMonth() &&
-      fecha.getFullYear() === ahora.getFullYear()
-    ) mes++;
-
-    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
-  });
-
-  totalHoy.textContent = hoy;
-  totalMes.textContent = mes;
-}
-
-// ===============================
-// PINTAR
-// ===============================
-function pintarVenta(id, v) {
-  const li = document.createElement("li");
-  li.innerHTML = `
-    <b>${v.cliente}</b><br>
-    ${v.producto}<br>
-    Producto: $${v.precioProducto}<br>
-    Grabado: $${v.precioGrabado}<br>
-    <b>Total: $${v.precio}</b>
-    <div class="acciones">
-      <button class="primary pagar">Pagado</button>
-      <button class="secondary editar">Editar</button>
-      <button class="danger eliminar">Eliminar</button>
-    </div>
-  `;
-
-  li.querySelector(".pagar").onclick = async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), { pagado: true });
-    cargarVentas();
-  };
-
-  li.querySelector(".editar").onclick = () => {
-    clienteInput.value = v.cliente;
-    productoInput.value = v.producto;
-    precioProductoInput.value = v.precioProducto;
-    precioGrabadoInput.value = v.precioGrabado;
-    precioTotalInput.value = v.precio;
-    ventaEditandoId = id;
-    btnGuardar.textContent = "Actualizar venta";
-  };
-
-  li.querySelector(".eliminar").onclick = async () => {
-    if (confirm("¿Eliminar venta?")) {
-      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
-      cargarVentas();
-    }
-  };
-
-  listaVentas.appendChild(li);
-}
-
-function pintarHistorial(v) {
-  const li = document.createElement("li");
-  li.textContent = `${v.cliente} - ${v.producto} ($${v.precio})`;
-  listaHistorial.appendChild(li);
-}
-
-// ===============================
-// MENU
+// MENU FUNCIONAL
 // ===============================
 btnMenu.onclick = () => menuOverlay.classList.add("active");
+
 menuOverlay.onclick = e => {
-  if (e.target === menuOverlay) menuOverlay.classList.remove("active");
+  if (e.target === menuOverlay) {
+    menuOverlay.classList.remove("active");
+  }
 };
 
-// ===============================
-// NAVEGACIÓN DEL MENÚ (FIX)
-// ===============================
 document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const vista = btn.dataset.vista;
-
-    document.getElementById("vistaVentas").style.display = "none";
-    document.getElementById("vistaHistorial").style.display = "none";
-    document.getElementById("vistaGrafica").style.display = "none";
-
-    document.getElementById(
-      "vista" + vista.charAt(0).toUpperCase() + vista.slice(1)
-    ).style.display = "block";
-
+  btn.onclick = () => {
+    document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
+    document.getElementById("vista" + btn.dataset.vista.charAt(0).toUpperCase() + btn.dataset.vista.slice(1)).style.display = "block";
     menuOverlay.classList.remove("active");
-  });
-
+  };
 });
