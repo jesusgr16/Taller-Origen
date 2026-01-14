@@ -124,10 +124,15 @@ function obtenerCantidadTotal() {
 
 function calcularTotal() {
   const cantidad = obtenerCantidadTotal();
-  const precio = Number(precioProductoInput.value) || 0;
-  const grabado = Number(precioGrabadoInput.value) || 0;
-  precioTotalInput.value = (cantidad * precio) + grabado;
+  const precioProducto = Number(precioProductoInput.value) || 0;
+  const precioGrabado = Number(precioGrabadoInput.value) || 0;
+
+  const totalProducto = cantidad * precioProducto;
+  const totalGrabado = cantidad * precioGrabado;
+
+  precioTotalInput.value = totalProducto + totalGrabado;
 }
+
 
 precioProductoInput.oninput = calcularTotal;
 precioGrabadoInput.oninput = calcularTotal;
@@ -455,6 +460,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
