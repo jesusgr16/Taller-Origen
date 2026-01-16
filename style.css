@@ -499,64 +499,50 @@ body.dark #btnAddProducto {
 ================================ */
 .estado-wrapper {
   position: relative;
+  width: 100%;
 }
 
-/* botón estado */
 .estado-btn {
+  width: 100%;
+  border-radius: 14px;
   background: #e5e7eb;
-  color: #0f172a;
-  border-radius: 999px;
-  padding: 8px 14px;
   font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.estado-btn:active {
-  transform: scale(0.95);
+.estado-btn.realizado {
+  background: #16a34a;
+  color: white;
 }
 
-/* menú desplegable */
+.estado-btn.pendiente {
+  background: #e5e7eb;
+}
+
 .estado-menu {
-  position: absolute;
-  right: 0;
-  bottom: 48px;
-  width: 160px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  padding: 8px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.25s ease, opacity 0.25s ease;
+  opacity: 0;
+  margin-top: 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-
-  /* animación */
-  opacity: 0;
-  transform: translateY(10px) scale(0.95);
-  pointer-events: none;
-  transition: all 0.25s ease;
+  gap: 8px;
 }
 
-/* visible */
-.estado-menu:not(.hidden) {
+.estado-menu.show {
+  max-height: 200px;
   opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
 }
 
-/* botones del menú */
 .estado-menu button {
-  width: 100%;
   padding: 10px;
   border-radius: 12px;
   font-weight: 600;
-  background: #f1f5f9;
-  border: none;
-  cursor: pointer;
 }
 
-.estado-menu button:hover {
-  background: #e2e8f0;
+.estado-menu .realizado {
+  background: #16a34a;
+  color: white;
 }
 
 /* ===============================
@@ -568,17 +554,12 @@ body.dark .estado-btn {
   color: #e5e7eb;
 }
 
-body.dark .estado-menu {
-  background: #020617;
-  border: 1px solid #334155;
-}
-
 body.dark .estado-menu button {
   background: #020617;
-  color: #e5e7eb;
   border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
-body.dark .estado-menu button:hover {
-  background: #1e293b;
+body.dark .estado-menu .realizado {
+  background: #166534;
 }
