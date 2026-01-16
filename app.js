@@ -272,10 +272,13 @@ async function cargarVentas() {
 // ===============================
 // PINTAR
 // ===============================
+// ===============================
+// PINTAR VENTA (FINAL)
+// ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
-  const estadoTexto = v.estado === "realizado" ? "Realizado" : "Pendiente";
+  const estado = v.estado || "pendiente";
 
   li.innerHTML = `
     <b>${v.cliente}</b><br>
@@ -284,38 +287,68 @@ function pintarVenta(id, v) {
     Grabado: $${v.precioGrabado}<br>
     <b>Total: $${v.precio}</b>
 
-    <div class="acciones estado-wrapper">
-      <button class="estado-btn">
-        ${estadoTexto} ▸
-      </button>
+    <div class="acciones">
+      <button class="primary pagar">Pagado</button>
+      <button class="secondary editar">Editar</button>
 
-      <div class="estado-menu hidden">
-        <button data-estado="pendiente">Pendiente</button>
-        <button data-estado="realizado">Realizado</button>
-        <button data-estado="eliminar" class="danger">Eliminar</button>
+      <div class="estado-wrapper">
+        <button class="estado-btn ${estado}">
+          ${estado.charAt(0).toUpperCase() + estado.slice(1)} ▸
+        </button>
+
+        <div class="estado-menu">
+          <button data-estado="pendiente">Pendiente</button>
+          <button data-estado="realizado" class="realizado">Realizado</button>
+          <button data-estado="eliminar" class="danger">Eliminar</button>
+        </div>
       </div>
     </div>
   `;
 
-  // referencias
-  const btnEstado = li.querySelector(".estado-btn");
-  const menu = li.querySelector(".estado-menu");
-
-  // abrir / cerrar menú
-  btnEstado.onclick = () => {
-    menu.classList.toggle("hidden");
+  // ===============================
+  // PAGADO
+  // ===============================
+  li.querySelector(".pagar").onclick = async () => {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+      pagado: true
+    });
+    cargarVentas();
   };
 
-  // opciones del menú
-  menu.querySelectorAll("button").forEach(btn => {
-    btn.onclick = async () => {
-      const accion = btn.dataset.estado;
+  // ===============================
+  // EDITAR (si lo usas)
+  // ===============================
+  li.querySelector(".editar").onclick = () => {
+    clienteInput.value = v.cliente;
+    precioTotalInput.value = v.precio;
+    ventaEditandoId = id;
+    btnGuardar.textContent = "Actualizar venta";
+  };
 
-      if (accion === "eliminar") {
-        await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+  // ===============================
+  // MOSTRAR / OCULTAR MENÚ
+  // ===============================
+  const estadoBtn = li.querySelector(".estado-btn");
+  const estadoMenu = li.querySelector(".estado-menu");
+
+  estadoBtn.onclick = () => {
+    estadoMenu.classList.toggle("show");
+  };
+
+  // ===============================
+  // OPCIONES DE ESTADO
+  // ===============================
+  estadoMenu.querySelectorAll("button").forEach(btn => {
+    btn.onclick = async () => {
+      const opcion = btn.dataset.estado;
+
+      if (opcion === "eliminar") {
+        if (confirm("¿Eliminar esta venta?")) {
+          await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+        }
       } else {
         await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-          estado: accion
+          estado: opcion
         });
       }
 
@@ -325,7 +358,6 @@ function pintarVenta(id, v) {
 
   listaVentas.appendChild(li);
 }
-
 
 // ===============================
 // MENU
@@ -485,6 +517,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
