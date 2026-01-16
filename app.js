@@ -544,15 +544,30 @@ function calcResult() {
     calcDisplay().value = "Error";
   }
 }
+// ===============================
+// 🧮 CALCULADORA (GLOBAL)
+// ===============================
+const calcDisplayEl = () => document.getElementById("calcDisplay");
 
+window.calcAdd = function (v) {
+  calcDisplayEl().value += v;
+};
 
+window.calcClear = function () {
+  calcDisplayEl().value = "";
+};
 
+window.calcDel = function () {
+  calcDisplayEl().value = calcDisplayEl().value.slice(0, -1);
+};
 
-
-
-
-
-
+window.calcResult = function () {
+  try {
+    calcDisplayEl().value = eval(calcDisplayEl().value);
+  } catch {
+    calcDisplayEl().value = "Error";
+  }
+};
 
 
 
