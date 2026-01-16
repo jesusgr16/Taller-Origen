@@ -829,10 +829,80 @@ body.dark .calc-grid button:active {
 }
 
 body.dark .calc-grid .igual {
-  background: #2563eb;
-  color: #ffffff;
-  border: none;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
 }
+/* Efecto tap estilo iOS */
+button,
+.calc-grid button {
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+button:active,
+.calc-grid button:active {
+  transform: scale(0.94);
+}
+button,
+.calc-grid button {
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+body.dark button,
+body.dark .calc-grid button {
+  box-shadow: 0 6px 18px rgba(255,255,255,0.08);
+}
+@keyframes iosFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Para cards, listas, calculadora */
+li,
+.calc-container,
+.menu-panel {
+  animation: iosFadeUp 0.25s ease-out;
+}
+.calc-display {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.calc-display:focus-within {
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.2);
+  transform: scale(1.01);
+}
+.calc-display {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.calc-display:focus-within {
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.2);
+  transform: scale(1.01);
+}
+.calc-grid .igual {
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.calc-grid .igual:active {
+  transform: scale(0.9);
+}
+.estado-menu {
+  transition: max-height 0.25s cubic-bezier(.4,0,.2,1),
+              opacity 0.25s ease,
+              transform 0.25s ease;
+  transform: translateY(-4px);
+}
+
+.estado-menu.show {
+  transform: translateY(0);
+}
+
 
 
 
