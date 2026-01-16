@@ -1,3 +1,4 @@
+
 /* ===============================
    VARIABLES
 ================================ */
@@ -126,6 +127,46 @@ button:active {
 }
 
 /* ===============================
+   RESUMEN (HOY / MES)
+================================ */
+#resumen {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+#resumen p {
+  background: #000000;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+/* ===============================
+   FORMULARIO
+================================ */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.precios-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+#precioTotal {
+  background: #f3f4f6;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* ===============================
    LISTAS
 ================================ */
 ul {
@@ -143,10 +184,390 @@ li {
   border: 1px solid #e5e7eb;
 }
 
+/* acciones */
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.acciones button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+/* ===============================
+   MENÚ FLOTANTE
+================================ */
+.menu-btn {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #000000;
+  color: #ffffff;
+  z-index: 2000;
+  width: auto;
+  font-size: 14px;
+}
+
+/* overlay */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  z-index: 1999;
+}
+
+.menu-overlay.active {
+  display: block;
+}
+
+/* panel */
+.menu-panel {
+  position: absolute;
+  left: 16px;
+  bottom: 90px;
+  width: 240px;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.menu-item {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  background: #ffffff;
+  margin-bottom: 12px;
+  font-weight: 600;
+  border: 1px solid #000000;
+  color: #000000;
+}
+
+/* ===============================
+   🌙 MODO OSCURO
+================================ */
+body.dark {
+  background: #000000;
+  color: #ffffff;
+}
+
+body.dark #login,
+body.dark #app {
+  background: #000000;
+  border: 1px solid #333333;
+}
+
+body.dark input {
+  background: #000000;
+  border: 1px solid #555555;
+  color: #ffffff;
+}
+
+body.dark input::placeholder {
+  color: #9ca3af;
+}
+
+body.dark #precioTotal {
+  background: #000000;
+  border: 1px solid #555555;
+  color: #ffffff;
+}
+
+body.dark li {
+  background: #000000;
+  border: 1px solid #555555;
+}
+
+body.dark button {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+}
+
+body.dark .secondary {
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+body.dark .menu-panel {
+  background: #000000;
+  border: 1px solid #555555;
+}
+
+body.dark .menu-item {
+  background: #000000;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+body.dark .menu-overlay {
+  background: rgba(0,0,0,0.85);
+}
+
+/* ===============================
+   LOGO
+================================ */
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.logo-header img {
+  width: 120px;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.brand span {
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.logo-header span {
+  display: none;
+}
+
+/* ===============================
+   LISTA DE PRODUCTOS
+================================ */
+.lista-productos li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #000000;
+}
+
+.lista-productos input {
+  width: 60px;
+  padding: 6px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* ===============================
+   GRAFICA
+================================ */
+#graficaVentas {
+  width: 100% !important;
+  height: 260px !important;
+  margin-top: 20px;
+}
+
+/* ===============================
+   SELECTOR DE MES
+================================ */
+#selectorMes {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  background: #f9fbfd;
+  color: #0f172a;
+  margin-top: 16px;
+}
+
+#selectorMes:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
+}
+
+body.dark #selectorMes {
+  background: #000000;
+  border: 1px solid #555555;
+  color: #ffffff;
+}
+
+/* ===============================
+   PRODUCTO + BOTON ELIMINAR
+================================ */
+.producto-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.producto-acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-eliminar-producto {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #dc2626;
+  padding: 4px;
+}
+
+.btn-eliminar-producto:active {
+  transform: scale(0.9);
+}
+
+body.dark .btn-eliminar-producto {
+  color: #f87171;
+}
+
 /* =====================================================
-   🔥 ACCIONES – FIX DEFINITIVO
+   🔥 AJUSTES VISUALES (NUEVO – SIN TOCAR LO ANTERIOR)
 ===================================================== */
 
+/* Reduce espacios excesivos entre campos */
+.formulario > * {
+  margin-bottom: 10px;
+}
+
+/* Botón + más discreto y ordenado */
+#btnAddProducto {
+  max-width: 56px;
+  padding: 10px;
+  font-size: 18px;
+  margin-left: 8px;
+}
+
+/* Alinea input + botón */
+.producto-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Elimina sensación de botón gigante */
+.btn-agregar-grande {
+  display: none;
+}
+/* ===============================
+   FIX DEFINITIVO BOTÓN AGREGAR ➕
+   (NO TOCAR NADA MÁS)
+================================ */
+
+.producto-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#producto {
+  flex: 1;
+  margin-bottom: 0 !important;
+}
+
+#btnAddProducto {
+  all: unset;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  border: 1px solid #000000;
+  background: #ffffff;
+  color: #000000;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#btnAddProducto:active {
+  transform: scale(0.9);
+}
+
+body.dark #btnAddProducto {
+  background: #ffffff;
+  color: #000000;
+}
+/* ===============================
+   ESTADO DESPLEGABLE
+================================ */
+.estado-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.estado-btn {
+  width: 100%;
+  border-radius: 14px;
+  background: #e5e7eb;
+  font-weight: 700;
+}
+
+.estado-btn.realizado {
+  background: #16a34a;
+  color: white;
+}
+
+.estado-btn.pendiente {
+  background: #e5e7eb;
+}
+
+.estado-menu {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.25s ease, opacity 0.25s ease;
+  opacity: 0;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.estado-menu.show {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.estado-menu button {
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.estado-menu .realizado {
+  background: #16a34a;
+  color: white;
+}
+
+/* ===============================
+   🌙 MODO OSCURO
+================================ */
+body.dark .estado-btn {
+  background: #020617;
+  border: 1px solid #334155;
+  color: #e5e7eb;
+}
+
+body.dark .estado-menu button {
+  background: #020617;
+  border: 1px solid #334155;
+  color: #e5e7eb;
+}
+
+body.dark .estado-menu .realizado {
+  background: #166534;
+}
+
+/* ===============================
+   ACCIONES (3 BOTONES IGUALES)
+================================ */
 .acciones {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -157,111 +578,106 @@ li {
 .acciones button {
   height: 46px;
   border-radius: 14px;
-  font-size: 14px;
   font-weight: 700;
-  padding: 0;
-}
-
-/* Botones base */
-.pagar,
-.editar,
-.estado-btn {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #000000;
+  width: 100%;
 }
 
 /* ===============================
-   ESTADO DESPLEGABLE
+   BOTONES PRINCIPALES
+================================ */
+.pagar {
+  background: white;
+  color: black;
+}
+
+.editar {
+  background: white;
+  color: black;
+  border: 1px solid #e5e7eb;
+}
+
+/* ===============================
+   ESTADO (BOTÓN PRINCIPAL)
 ================================ */
 .estado-wrapper {
   position: relative;
 }
 
 .estado-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: white;
+  color: black;
+  border: 1px solid #e5e7eb;
 }
 
-/* Menú */
+/* ===============================
+   MENÚ DESPLEGABLE (ABAJO)
+================================ */
 .estado-menu {
   position: absolute;
-  top: calc(100% + 8px);
   left: 0;
+  top: calc(100% + 8px);
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: transparent;
 
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: max-height 0.25s ease, opacity 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .estado-menu.show {
-  max-height: 220px;
+  max-height: 300px;
   opacity: 1;
 }
 
-/* Opciones */
+/* BOTONES DEL MENÚ */
 .estado-menu button {
-  height: 44px;
-  border-radius: 14px;
+  width: 100%;
+  height: 42px;
+  border-radius: 12px;
   font-weight: 700;
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #000000;
 }
 
+/* ===============================
+   COLORES
+================================ */
 .estado-menu .realizado {
   background: #16a34a;
-  color: #ffffff;
-  border: none;
+  color: white;
 }
 
 .estado-menu .danger {
   background: #dc2626;
-  color: #ffffff;
-  border: none;
+  color: white;
 }
-
 /* ===============================
-   🌙 MODO OSCURO (FIX REAL)
+   🌙 MODO OSCURO
 ================================ */
-body.dark {
-  background: #000000;
-  color: #ffffff;
-}
-
-body.dark li {
-  background: #000000;
-  border: 1px solid #555555;
-}
-
-/* BOTONES IGUALES Y BLANCOS */
 body.dark .pagar,
 body.dark .editar,
 body.dark .estado-btn {
-  background: #ffffff;
-  color: #000000;
+  background: white;
+  color: black;
+}
+
+body.dark .editar,
+body.dark .estado-btn {
   border: none;
 }
 
-/* Menú desplegable */
 body.dark .estado-menu button {
-  background: #ffffff;
-  color: #000000;
+  background: white;
+  color: black;
 }
 
 body.dark .estado-menu .realizado {
   background: #16a34a;
-  color: #ffffff;
+  color: white;
 }
 
 body.dark .estado-menu .danger {
   background: #dc2626;
-  color: #ffffff;
+  color: white;
 }
