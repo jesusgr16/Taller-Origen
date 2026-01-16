@@ -149,14 +149,44 @@
       <ul id="listaHistorial"></ul>
     </section>
 
-    <section
+ <!-- ===============================
+     VISTA CALCULADORA
+================================ -->
+<section
   id="vistaCalculadora"
   class="vista"
   style="display:none"
 >
-  <h2 style="font-size:32px; text-align:center; margin-top:40px;">
-    PRÓXIMAMENTE
-  </h2>
+  <h2>Calculadora</h2>
+
+  <div class="calculadora">
+    <input type="text" id="calcDisplay" readonly>
+
+    <div class="calc-grid">
+      <button onclick="calcClear()">C</button>
+      <button onclick="calcDel()">⌫</button>
+      <button onclick="calcAdd('/')">÷</button>
+      <button onclick="calcAdd('*')">×</button>
+
+      <button onclick="calcAdd('7')">7</button>
+      <button onclick="calcAdd('8')">8</button>
+      <button onclick="calcAdd('9')">9</button>
+      <button onclick="calcAdd('-')">−</button>
+
+      <button onclick="calcAdd('4')">4</button>
+      <button onclick="calcAdd('5')">5</button>
+      <button onclick="calcAdd('6')">6</button>
+      <button onclick="calcAdd('+')">+</button>
+
+      <button onclick="calcAdd('1')">1</button>
+      <button onclick="calcAdd('2')">2</button>
+      <button onclick="calcAdd('3')">3</button>
+      <button onclick="calcResult()" class="igual">=</button>
+
+      <button onclick="calcAdd('0')" class="cero">0</button>
+      <button onclick="calcAdd('.')">.</button>
+    </div>
+  </div>
 </section>
 
 
@@ -262,6 +292,7 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
 
 
 
