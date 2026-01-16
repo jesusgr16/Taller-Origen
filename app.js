@@ -275,6 +275,12 @@ async function cargarVentas() {
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
+  const textoEstado =
+    v.estado === "realizado" ? "Realizado" : "Pendiente";
+
+  const claseEstado =
+    v.estado === "realizado" ? "estado-realizado" : "estado-pendiente";
+
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${v.producto}<br>
@@ -285,46 +291,49 @@ function pintarVenta(id, v) {
     <div class="acciones">
       <button class="primary pagar">Pagado</button>
       <button class="secondary editar">Editar</button>
-      <button class="danger eliminar">Eliminar</button>
+      <button class="estado-btn ${claseEstado}">
+        ${textoEstado} ▸
+      </button>
     </div>
   `;
 
   // PAGADO
   li.querySelector(".pagar").onclick = async () => {
-    await updateDoc(
-      doc(db, `usuarios/${userId}/ventas/${id}`),
-      { pagado: true }
-    );
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+      pagado: true
+    });
     cargarVentas();
   };
 
-  // EDITAR
-  li.querySelector(".editar").onclick = () => {
-    clienteInput.value = v.cliente;
-    precioProductoInput.value = v.precioProducto;
-    precioGrabadoInput.value = v.precioGrabado;
-    precioTotalInput.value = v.precio;
+  // ESTADO / OPCIONES
+  li.querySelector(".estado-btn").onclick = async () => {
+    const opcion = prompt(
+      "Elige una opción:\n1 - Pendiente\n2 - Realizado\n3 - Eliminar"
+    );
 
-    // reconstruir productos visualmente
-    productos = v.producto.split(",").map(p => {
-      const [nombre, cant] = p.trim().split(" x");
-      return { nombre, cantidad: Number(cant) || 1 };
-    });
-
-    renderProductos();
-  };
-
-  // ELIMINAR
-  li.querySelector(".eliminar").onclick = async () => {
-    if (confirm("¿Eliminar venta?")) {
-      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
-      cargarVentas();
+    if (opcion === "1") {
+      await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+        estado: "pendiente"
+      });
     }
+
+    if (opcion === "2") {
+      await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+        estado: "realizado"
+      });
+    }
+
+    if (opcion === "3") {
+      if (confirm("¿Seguro que deseas eliminar la venta?")) {
+        await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+      }
+    }
+
+    cargarVentas();
   };
 
   listaVentas.appendChild(li);
 }
-
 
 // ===============================
 // MENU
@@ -484,6 +493,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
