@@ -518,6 +518,35 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
   });
 }
 
+// ===============================
+// 🧮 CALCULADORA INTERNA
+// ===============================
+function calcDisplay() {
+  return document.getElementById("calcDisplay");
+}
+
+function calcAdd(v) {
+  calcDisplay().value += v;
+}
+
+function calcClear() {
+  calcDisplay().value = "";
+}
+
+function calcDel() {
+  calcDisplay().value = calcDisplay().value.slice(0, -1);
+}
+
+function calcResult() {
+  try {
+    calcDisplay().value = eval(calcDisplay().value);
+  } catch {
+    calcDisplay().value = "Error";
+  }
+}
+
+
+
 
 
 
