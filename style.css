@@ -804,5 +804,37 @@ body.dark #calcDisplay {
   border: 1px solid #555555;
 }
 
+/* ===============================
+   🧮 CALCULADORA – MODO OSCURO FIX
+================================ */
+body.dark .calculadora {
+  background: #000000;
+  border: 1px solid #333333;
+}
+
+body.dark #calcDisplay {
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #555555;
+}
+
+body.dark .calc-grid button {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+}
+
+body.dark .calc-grid button:active {
+  background: #e5e7eb;
+}
+
+body.dark .calc-grid .igual {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+}
+
+
+
 
 
