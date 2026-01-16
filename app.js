@@ -275,11 +275,7 @@ async function cargarVentas() {
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
-  const textoEstado =
-    v.estado === "realizado" ? "Realizado" : "Pendiente";
-
-  const claseEstado =
-    v.estado === "realizado" ? "estado-realizado" : "estado-pendiente";
+  const estadoTexto = v.estado === "realizado" ? "Realizado" : "Pendiente";
 
   li.innerHTML = `
     <b>${v.cliente}</b><br>
@@ -288,52 +284,48 @@ function pintarVenta(id, v) {
     Grabado: $${v.precioGrabado}<br>
     <b>Total: $${v.precio}</b>
 
-    <div class="acciones">
-      <button class="primary pagar">Pagado</button>
-      <button class="secondary editar">Editar</button>
-      <button class="estado-btn ${claseEstado}">
-        ${textoEstado} ▸
+    <div class="acciones estado-wrapper">
+      <button class="estado-btn">
+        ${estadoTexto} ▸
       </button>
+
+      <div class="estado-menu hidden">
+        <button data-estado="pendiente">Pendiente</button>
+        <button data-estado="realizado">Realizado</button>
+        <button data-estado="eliminar" class="danger">Eliminar</button>
+      </div>
     </div>
   `;
 
-  // PAGADO
-  li.querySelector(".pagar").onclick = async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-      pagado: true
-    });
-    cargarVentas();
+  // referencias
+  const btnEstado = li.querySelector(".estado-btn");
+  const menu = li.querySelector(".estado-menu");
+
+  // abrir / cerrar menú
+  btnEstado.onclick = () => {
+    menu.classList.toggle("hidden");
   };
 
-  // ESTADO / OPCIONES
-  li.querySelector(".estado-btn").onclick = async () => {
-    const opcion = prompt(
-      "Elige una opción:\n1 - Pendiente\n2 - Realizado\n3 - Eliminar"
-    );
+  // opciones del menú
+  menu.querySelectorAll("button").forEach(btn => {
+    btn.onclick = async () => {
+      const accion = btn.dataset.estado;
 
-    if (opcion === "1") {
-      await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-        estado: "pendiente"
-      });
-    }
-
-    if (opcion === "2") {
-      await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-        estado: "realizado"
-      });
-    }
-
-    if (opcion === "3") {
-      if (confirm("¿Seguro que deseas eliminar la venta?")) {
+      if (accion === "eliminar") {
         await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+      } else {
+        await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+          estado: accion
+        });
       }
-    }
 
-    cargarVentas();
-  };
+      cargarVentas();
+    };
+  });
 
   listaVentas.appendChild(li);
 }
+
 
 // ===============================
 // MENU
@@ -493,6 +485,7 @@ async function cargarGraficaMensual(mesSeleccionado = null) {
     }
   });
 }
+
 
 
 
