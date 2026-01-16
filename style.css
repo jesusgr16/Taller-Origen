@@ -688,3 +688,71 @@ body.dark .estado-menu .danger {
   color: white;
 }
 
+/* ===============================
+   🔥 ESTADO BOTONES UNIFICADOS
+   (IGUALES EN CLARO Y OSCURO)
+================================ */
+
+/* Contenedor del estado */
+.estado-wrapper {
+  width: 100%;
+}
+
+/* Botón principal (Pendiente / Realizado ▸) */
+.estado-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  font-weight: 700;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+}
+
+/* Menú desplegable */
+.estado-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* TODOS los botones del menú */
+.estado-menu button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  font-weight: 700;
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+}
+
+/* Hover */
+.estado-menu button:hover,
+.estado-btn:hover {
+  opacity: 0.9;
+}
+
+/* ❌ SOLO ELIMINAR EN ROJO */
+.estado-menu .danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
+/* ===============================
+   🌙 MODO OSCURO (MISMO DISEÑO)
+================================ */
+body.dark .estado-btn,
+body.dark .estado-menu button {
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+body.dark .estado-menu .danger {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
