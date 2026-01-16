@@ -495,64 +495,90 @@ body.dark #btnAddProducto {
   color: #000000;
 }
 /* ===============================
-   AJUSTE ESPACIOS PRODUCTO
+   ESTADO DESPLEGABLE
 ================================ */
-
-/* evita doble espacio en fila producto */
-.producto-row {
-  margin-bottom: 6px;
+.estado-wrapper {
+  position: relative;
 }
 
-/* el input de producto no debe empujar */
-.producto-row input {
-  margin-bottom: 0;
-}
-
-/* la lista de productos se pega más */
-#listaProductos {
-  margin-top: 4px;
-}
-
-/* botón + integrado */
-#btnAddProducto {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #000000;
-  font-weight: 900;
-}
-
-/* hover */
-#btnAddProducto:hover {
-  background: #000000;
-  color: #ffffff;
-}
-
-/* 🌙 modo oscuro */
-body.dark #btnAddProducto {
-  background: #ffffff;
-  color: #000000;
-}
-
+/* botón estado */
 .estado-btn {
-  padding: 10px;
-  border-radius: 14px;
+  background: #e5e7eb;
+  color: #0f172a;
+  border-radius: 999px;
+  padding: 8px 14px;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.estado-btn:active {
+  transform: scale(0.95);
+}
+
+/* menú desplegable */
+.estado-menu {
+  position: absolute;
+  right: 0;
+  bottom: 48px;
+  width: 160px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  /* animación */
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+/* visible */
+.estado-menu:not(.hidden) {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* botones del menú */
+.estado-menu button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  background: #f1f5f9;
   border: none;
-  transition: 0.2s;
+  cursor: pointer;
 }
 
-.estado-pendiente {
-  background: #e5f0e5;
-  color: #166534;
-  border: 1px solid #16a34a;
+.estado-menu button:hover {
+  background: #e2e8f0;
 }
 
-.estado-realizado {
-  background: #16a34a;
-  color: white;
+/* ===============================
+   🌙 MODO OSCURO
+================================ */
+body.dark .estado-btn {
+  background: #020617;
+  border: 1px solid #334155;
+  color: #e5e7eb;
 }
 
+body.dark .estado-menu {
+  background: #020617;
+  border: 1px solid #334155;
+}
 
+body.dark .estado-menu button {
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+}
 
-
+body.dark .estado-menu button:hover {
+  background: #1e293b;
+}
