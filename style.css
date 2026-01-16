@@ -672,12 +672,19 @@ body.dark .estado-menu button {
   color: black;
 }
 
+/* ===============================
+   🌙 MODO OSCURO – ESTADO REALIZADO
+================================ */
 body.dark .estado-menu .realizado {
-  background: #16a34a;
-  color: white;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+}
+white;
 }
 
 body.dark .estado-menu .danger {
   background: #dc2626;
   color: white;
 }
+
