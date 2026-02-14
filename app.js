@@ -318,40 +318,6 @@ function pintarHistorial(v) {
   listaHistorial.appendChild(li);
 }
 
-  // ===============================
-  // MOSTRAR / OCULTAR MENÚ
-  // ===============================
-  const estadoBtn = li.querySelector(".estado-btn");
-  const estadoMenu = li.querySelector(".estado-menu");
-
-  estadoBtn.onclick = () => {
-    estadoMenu.classList.toggle("show");
-  };
-
-  // ===============================
-  // OPCIONES DE ESTADO
-  // ===============================
-  estadoMenu.querySelectorAll("button").forEach(btn => {
-    btn.onclick = async () => {
-      const opcion = btn.dataset.estado;
-
-      if (opcion === "eliminar") {
-        if (confirm("¿Eliminar esta venta?")) {
-          await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
-        }
-      } else {
-        await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-          estado: opcion
-        });
-      }
-
-      cargarVentas();
-    };
-  });
-
-  listaVentas.appendChild(li);
-}
-
 // ===============================
 // MENU
 // ===============================
@@ -539,6 +505,14 @@ window.calcClear = function () {
 
 window.calcDel = function () {
   calcDisplayEl().value = calcDisplayEl().value.slice(0, -1);
+};
+
+window.calcResult = function () {
+  try {
+    calcDisplayEl().value = eval(calcDisplayEl().value);
+  } catch {
+    calcDisplayEl().value = "Error";
+  }
 };
 
 window.calcResult = function () {
