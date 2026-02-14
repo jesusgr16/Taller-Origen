@@ -149,16 +149,6 @@ precioGrabadoInput.oninput = calcularTotal;
 // ===============================
 // PRODUCTOS
 // ===============================
-function agregarProducto() {
-  const nombre = productoInput.value.trim();
-  if (!nombre) return;
-
-  productos.push({ nombre, cantidad: 1 });
-  productoInput.value = "";
-  renderProductos();
-  calcularTotal();
-}
-
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
@@ -167,30 +157,52 @@ function renderProductos() {
     li.classList.add("producto-item");
 
     li.innerHTML = `
-      <span>${p.nombre}</span>
+      <b>${p.nombre}</b><br>
 
-      <div class="producto-acciones">
-        <input type="number" min="1" value="${p.cantidad}">
-        <button class="btn-eliminar-producto" title="Eliminar producto">🗑️</button>
-      </div>
+      Precio producto:
+      <input type="number" step="0.01" value="${p.precioProducto}"><br>
+
+      Precio grabado:
+      <input type="number" step="0.01" value="${p.precioGrabado}"><br>
+
+      Cantidad:
+      <input type="number" min="1" value="${p.cantidad}"><br>
+
+      <b>Subtotal: $<span class="subtotal">0.00</span></b>
+
+      <button class="btn-eliminar-producto">🗑️</button>
+      <hr>
     `;
 
-    // cambiar cantidad
-    li.querySelector("input").oninput = e => {
-      productos[i].cantidad = Number(e.target.value) || 1;
-      calcularTotal();
-    };
+    const inputs = li.querySelectorAll("input");
+    const subtotalEl = li.querySelector(".subtotal");
 
-    // eliminar producto
+    function actualizar() {
+      p.precioProducto = Number(inputs[0].value) || 0;
+      p.precioGrabado = Number(inputs[1].value) || 0;
+      p.cantidad = Number(inputs[2].value) || 1;
+
+      const subtotal = (p.precioProducto + p.precioGrabado) * p.cantidad;
+      subtotalEl.textContent = subtotal.toFixed(2);
+
+      calcularTotal();
+    }
+
+    inputs.forEach(input => {
+      input.oninput = actualizar;
+    });
+
     li.querySelector(".btn-eliminar-producto").onclick = () => {
       productos.splice(i, 1);
       renderProductos();
       calcularTotal();
     };
 
+    actualizar();
     listaProductosEl.appendChild(li);
   });
 }
+
 
 // ===============================
 // GUARDAR
@@ -568,7 +580,6 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
-
 
 
 
