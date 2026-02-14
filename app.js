@@ -1,4 +1,3 @@
-
 // ===============================
 // FIREBASE IMPORTS
 // ===============================
@@ -28,7 +27,7 @@ import {
 // CONFIG
 // ===============================
 const firebaseConfig = {
-  apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
+  apiKey: "TU_API_KEY",
   authDomain: "taller-origen.firebaseapp.com",
   projectId: "taller-origen",
   storageBucket: "taller-origen.firebasestorage.app",
@@ -64,8 +63,6 @@ const listaHistorial = $("listaHistorial");
 
 const clienteInput = $("cliente");
 const productoInput = $("producto");
-const precioProductoInput = $("precioProducto");
-const precioGrabadoInput = $("precioGrabado");
 const precioTotalInput = $("precioTotal");
 const btnGuardar = $("btnGuardar");
 
@@ -73,21 +70,12 @@ const totalHoyEl = $("totalHoy");
 const totalMesEl = $("totalMes");
 
 const listaProductosEl = $("listaProductos");
-if (btnAddProducto) {
-  btnAddProducto.addEventListener("click", agregarProducto);
-}
-
+const btnAddProducto = $("btnAddProducto");
 const btnAddProductoGrande = $("btnAddProductoGrande");
-
-if (btnAddProductoGrande) {
-  btnAddProductoGrande.onclick = agregarProducto;
-}
-
 
 let userId = null;
 let productos = [];
 let grafica = null;
-
 
 // ===============================
 // AUTH STATE
@@ -110,7 +98,7 @@ onAuthStateChanged(auth, user => {
 });
 
 // ===============================
-// AUTH ACTIONS
+// AUTH
 // ===============================
 btnRegister.onclick = async () => {
   if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
@@ -125,40 +113,26 @@ btnLogin.onclick = async () => {
 btnLogout.onclick = () => signOut(auth);
 
 // ===============================
-// TOTAL
-// ===============================
-function obtenerCantidadTotal() {
-  if (productos.length === 0) return 1;
-  return productos.reduce((acc, p) => acc + (Number(p.cantidad) || 0), 0);
-}
-
-function calcularTotal() {
-  const cantidad = obtenerCantidadTotal();
-  const precioProducto = Number(precioProductoInput.value) || 0;
-  const precioGrabado = Number(precioGrabadoInput.value) || 0;
-
-  const totalProducto = cantidad * precioProducto;
-  const totalGrabado = cantidad * precioGrabado;
-
-  precioTotalInput.value = totalProducto + totalGrabado;
-}
-
-
-precioProductoInput.oninput = calcularTotal;
-precioGrabadoInput.oninput = calcularTotal;
-
-// ===============================
-// PRODUCTOS
+// PRODUCTOS MULTIPLES CON PRECIOS INDIVIDUALES
 // ===============================
 function agregarProducto() {
   const nombre = productoInput.value.trim();
   if (!nombre) return;
 
-  productos.push({ nombre, cantidad: 1 });
+  productos.push({
+    nombre,
+    cantidad: 1,
+    precioProducto: 0,
+    precioGrabado: 0
+  });
+
   productoInput.value = "";
   renderProductos();
   calcularTotal();
 }
+
+if (btnAddProducto) btnAddProducto.onclick = agregarProducto;
+if (btnAddProductoGrande) btnAddProductoGrande.onclick = agregarProducto;
 
 function renderProductos() {
   listaProductosEl.innerHTML = "";
@@ -167,22 +141,43 @@ function renderProductos() {
     const li = document.createElement("li");
     li.classList.add("producto-item");
 
-    li.innerHTML = `
-      <span>${p.nombre}</span>
+    const totalIndividual = p.cantidad * (p.precioProducto + p.precioGrabado);
 
+    li.innerHTML = `
+      <b>${p.nombre}</b>
       <div class="producto-acciones">
-        <input type="number" min="1" value="${p.cantidad}">
-        <button class="btn-eliminar-producto" title="Eliminar producto">🗑️</button>
+        Cant:
+        <input type="number" min="1" value="${p.cantidad}" class="cantidad">
+
+        Prod:
+        <input type="number" min="0" value="${p.precioProducto}" class="precioProducto">
+
+        Grab:
+        <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado">
+
+        <button class="btn-eliminar-producto">🗑️</button>
       </div>
+      <div><b>Total: $${totalIndividual.toFixed(2)}</b></div>
     `;
 
-    // cambiar cantidad
-    li.querySelector("input").oninput = e => {
+    li.querySelector(".cantidad").oninput = e => {
       productos[i].cantidad = Number(e.target.value) || 1;
+      renderProductos();
       calcularTotal();
     };
 
-    // eliminar producto
+    li.querySelector(".precioProducto").oninput = e => {
+      productos[i].precioProducto = Number(e.target.value) || 0;
+      renderProductos();
+      calcularTotal();
+    };
+
+    li.querySelector(".precioGrabado").oninput = e => {
+      productos[i].precioGrabado = Number(e.target.value) || 0;
+      renderProductos();
+      calcularTotal();
+    };
+
     li.querySelector(".btn-eliminar-producto").onclick = () => {
       productos.splice(i, 1);
       renderProductos();
@@ -193,46 +188,49 @@ function renderProductos() {
   });
 }
 
+function calcularTotal() {
+  let totalGeneral = 0;
+
+  productos.forEach(p => {
+    totalGeneral += p.cantidad * (p.precioProducto + p.precioGrabado);
+  });
+
+  precioTotalInput.value = totalGeneral.toFixed(2);
+}
+
 // ===============================
-// GUARDAR
+// GUARDAR VENTA
 // ===============================
 btnGuardar.onclick = async () => {
-  if (!auth.currentUser) return alert("Sesión no lista, espera un momento");
+  if (!auth.currentUser) return alert("Sesión no lista");
 
   const cliente = clienteInput.value.trim();
   if (!cliente) return alert("Ingresa el cliente");
   if (productos.length === 0) return alert("Agrega al menos un producto");
 
-  const producto = productos.map(p => `${p.nombre} x${p.cantidad}`).join(", ");
   const total = Number(precioTotalInput.value) || 0;
 
-  try {
-    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-      cliente,
-      producto,
-      precioProducto: Number(precioProductoInput.value) || 0,
-      precioGrabado: Number(precioGrabadoInput.value) || 0,
-      precio: total,
-      pagado: false,
-      fecha: Timestamp.now()
-    });
+  const productoTexto = productos.map(p =>
+    `${p.nombre} x${p.cantidad} (Prod:$${p.precioProducto} Grab:$${p.precioGrabado})`
+  ).join(", ");
 
-    clienteInput.value = "";
-    precioProductoInput.value = "";
-    precioGrabadoInput.value = "";
-    precioTotalInput.value = "";
-    productos = [];
-    renderProductos();
-    cargarVentas();
+  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+    cliente,
+    producto: productoTexto,
+    precio: total,
+    pagado: false,
+    fecha: Timestamp.now()
+  });
 
-  } catch (e) {
-    console.error("ERROR FIRESTORE:", e);
-    alert(e.message);
-  }
+  clienteInput.value = "";
+  precioTotalInput.value = "";
+  productos = [];
+  renderProductos();
+  cargarVentas();
 };
 
 // ===============================
-// CARGAR VENTAS (FIX DEFINITIVO)
+// CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
   if (!userId) return;
@@ -250,7 +248,9 @@ async function cargarVentas() {
 
   snap.forEach(d => {
     const v = d.data();
-    const fecha = v.fecha?.toDate ? v.fecha.toDate() : new Date();
+    const fecha = v.fecha?.toDate();
+
+    if (!fecha) return;
 
     if (
       fecha.getDate() === ahora.getDate() &&
@@ -271,44 +271,21 @@ async function cargarVentas() {
 }
 
 // ===============================
-// PINTAR
-// ===============================
-// ===============================
-// PINTAR VENTA (FINAL)
+// PINTAR VENTA
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
-  const estado = v.estado || "pendiente";
-
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${v.producto}<br>
-    Producto: $${v.precioProducto}<br>
-    Grabado: $${v.precioGrabado}<br>
     <b>Total: $${v.precio}</b>
-
     <div class="acciones">
       <button class="primary pagar">Pagado</button>
-      <button class="secondary editar">Editar</button>
-
-      <div class="estado-wrapper">
-        <button class="estado-btn ${estado}">
-          ${estado.charAt(0).toUpperCase() + estado.slice(1)} ▸
-        </button>
-
-        <div class="estado-menu">
-          <button data-estado="pendiente">Pendiente</button>
-          <button data-estado="realizado" class="realizado">Realizado</button>
-          <button data-estado="eliminar" class="danger">Eliminar</button>
-        </div>
-      </div>
+      <button class="danger eliminar">Eliminar</button>
     </div>
   `;
 
-  // ===============================
-  // PAGADO
-  // ===============================
   li.querySelector(".pagar").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
       pagado: true
@@ -316,15 +293,30 @@ function pintarVenta(id, v) {
     cargarVentas();
   };
 
-  // ===============================
-  // EDITAR (si lo usas)
-  // ===============================
-  li.querySelector(".editar").onclick = () => {
-    clienteInput.value = v.cliente;
-    precioTotalInput.value = v.precio;
-    ventaEditandoId = id;
-    btnGuardar.textContent = "Actualizar venta";
+  li.querySelector(".eliminar").onclick = async () => {
+    if (confirm("¿Eliminar venta?")) {
+      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+      cargarVentas();
+    }
   };
+
+  listaVentas.appendChild(li);
+}
+
+// ===============================
+// PINTAR HISTORIAL
+// ===============================
+function pintarHistorial(v) {
+  const li = document.createElement("li");
+
+  li.innerHTML = `
+    <b>${v.cliente}</b><br>
+    ${v.producto}<br>
+    <b>Total: $${v.precio}</b>
+  `;
+
+  listaHistorial.appendChild(li);
+}
 
   // ===============================
   // MOSTRAR / OCULTAR MENÚ
@@ -407,20 +399,7 @@ btnDarkMode.onclick = () => {
     ? "☀️ Modo claro"
     : "🌙 Modo oscuro";
 };
-// ===============================
-// PINTAR HISTORIAL (FIX)
-// ===============================
-function pintarHistorial(v) {
-  const li = document.createElement("li");
 
-  li.innerHTML = `
-    <b>${v.cliente}</b><br>
-    ${v.producto}<br>
-    <b>Total: $${v.precio}</b>
-  `;
-
-  listaHistorial.appendChild(li);
-}
 // ===============================
 // GRAFICA LINEAL - SOLO PAGADAS + SELECTOR DE MES
 // ===============================
@@ -569,6 +548,7 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
 
 
 
