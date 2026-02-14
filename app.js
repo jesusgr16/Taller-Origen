@@ -341,7 +341,7 @@ function pintarVenta(id, v) {
   });
 
   listaVentas.appendChild(li);
-}
+
 
 // ===============================
 // MENU
@@ -555,6 +555,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
