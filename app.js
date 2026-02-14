@@ -147,30 +147,40 @@ function agregarProducto() {
   calcularTotal();
 }
 
-// Renderizar productos
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
   productos.forEach((p, i) => {
     const li = document.createElement("li");
-    li.classList.add("producto-item");
 
     li.innerHTML = `
-      <b>${p.nombre}</b><br>
+      <div class="producto-card">
+        <div class="producto-header">
+          <strong>${p.nombre}</strong>
+          <button class="btn-eliminar-producto">🗑️</button>
+        </div>
 
-      Precio producto:
-      <input type="number" step="0.01" value="${p.precioProducto}"><br>
+        <div class="producto-grid">
+          <div>
+            <label>Precio producto</label>
+            <input type="number" step="0.01" value="${p.precioProducto}">
+          </div>
 
-      Precio grabado:
-      <input type="number" step="0.01" value="${p.precioGrabado}"><br>
+          <div>
+            <label>Precio grabado</label>
+            <input type="number" step="0.01" value="${p.precioGrabado}">
+          </div>
 
-      Cantidad:
-      <input type="number" min="1" value="${p.cantidad}"><br>
+          <div>
+            <label>Cantidad</label>
+            <input type="number" min="1" value="${p.cantidad}">
+          </div>
+        </div>
 
-      <b>Subtotal: $<span class="subtotal">0.00</span></b>
-
-      <button class="btn-eliminar-producto">🗑️</button>
-      <hr>
+        <div class="producto-subtotal">
+          Subtotal: $<span class="subtotal">0.00</span>
+        </div>
+      </div>
     `;
 
     const inputs = li.querySelectorAll("input");
@@ -187,9 +197,7 @@ function renderProductos() {
       calcularTotal();
     }
 
-    inputs.forEach(input => {
-      input.oninput = actualizar;
-    });
+    inputs.forEach(input => input.oninput = actualizar);
 
     li.querySelector(".btn-eliminar-producto").onclick = () => {
       productos.splice(i, 1);
@@ -200,17 +208,6 @@ function renderProductos() {
     actualizar();
     listaProductosEl.appendChild(li);
   });
-}
-
-// Calcular total general
-function calcularTotal() {
-  let total = 0;
-
-  productos.forEach(p => {
-    total += (p.precioProducto + p.precioGrabado) * p.cantidad;
-  });
-
-  precioTotalInput.value = total.toFixed(2);
 }
 
 // ===============================
@@ -600,6 +597,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
