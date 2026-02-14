@@ -18,8 +18,6 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-  query,
-  orderBy,
   Timestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -27,7 +25,7 @@ import {
 // CONFIG
 // ===============================
 const firebaseConfig = {
-  apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
+  apiKey: "TU_API_KEY",
   authDomain: "taller-origen.firebaseapp.com",
   projectId: "taller-origen",
   storageBucket: "taller-origen.firebasestorage.app",
@@ -46,51 +44,27 @@ const $ = id => document.getElementById(id);
 
 const loginView = $("login");
 const appView = $("app");
-
 const emailInput = $("email");
 const passwordInput = $("password");
-
 const btnLogin = $("btnLogin");
 const btnRegister = $("btnRegister");
 const btnLogout = $("btnLogout");
-
 const btnMenu = $("btnMenu");
 const menuOverlay = $("menuOverlay");
 const btnDarkMode = $("btnDarkMode");
-
 const listaVentas = $("listaVentas");
-const listaHistorial = $("listaHistorial");
-
 const clienteInput = $("cliente");
 const productoInput = $("producto");
-const precioProductoInput = $("precioProducto");
-const precioGrabadoInput = $("precioGrabado");
 const precioTotalInput = $("precioTotal");
 const btnGuardar = $("btnGuardar");
-
-const totalHoyEl = $("totalHoy");
-const totalMesEl = $("totalMes");
-
 const listaProductosEl = $("listaProductos");
 const btnAddProducto = $("btnAddProducto");
 const btnAddProductoGrande = $("btnAddProductoGrande");
-
-if (btnAddProducto) {
-  btnAddProducto.addEventListener("click", agregarProducto);
-}
-
-if (btnAddProductoGrande) {
-  btnAddProductoGrande.addEventListener("click", agregarProducto);
-}
-
-
-
 
 let userId = null;
 let productos = [];
 let grafica = null;
 let ventaEditandoId = null;
-
 
 // ===============================
 // AUTH STATE
@@ -100,14 +74,12 @@ onAuthStateChanged(auth, user => {
     userId = user.uid;
     loginView.style.display = "none";
     appView.style.display = "block";
-    btnMenu.style.display = "block";
     btnGuardar.disabled = false;
     cargarVentas();
   } else {
     userId = null;
     loginView.style.display = "block";
     appView.style.display = "none";
-    btnMenu.style.display = "none";
     btnGuardar.disabled = true;
   }
 });
@@ -130,7 +102,6 @@ btnLogout.onclick = () => signOut(auth);
 // ===============================
 // PRODUCTOS
 // ===============================
-
 function agregarProducto() {
   const nombre = productoInput.value.trim();
   if (!nombre) return;
@@ -147,6 +118,11 @@ function agregarProducto() {
   calcularTotal();
 }
 
+window.agregarProducto = agregarProducto;
+
+if (btnAddProducto) btnAddProducto.onclick = agregarProducto;
+if (btnAddProductoGrande) btnAddProductoGrande.onclick = agregarProducto;
+
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
@@ -154,33 +130,13 @@ function renderProductos() {
     const li = document.createElement("li");
 
     li.innerHTML = `
-      <div class="producto-card">
-        <div class="producto-header">
-          <strong>${p.nombre}</strong>
-          <button class="btn-eliminar-producto">🗑️</button>
-        </div>
-
-        <div class="producto-grid">
-          <div>
-            <label>Precio producto</label>
-            <input type="number" step="0.01" value="${p.precioProducto}">
-          </div>
-
-          <div>
-            <label>Precio grabado</label>
-            <input type="number" step="0.01" value="${p.precioGrabado}">
-          </div>
-
-          <div>
-            <label>Cantidad</label>
-            <input type="number" min="1" value="${p.cantidad}">
-          </div>
-        </div>
-
-        <div class="producto-subtotal">
-          Subtotal: $<span class="subtotal">0.00</span>
-        </div>
-      </div>
+      <strong>${p.nombre}</strong>
+      <br>
+      Producto: <input type="number" value="${p.precioProducto}">
+      Grabado: <input type="number" value="${p.precioGrabado}">
+      Cantidad: <input type="number" value="${p.cantidad}">
+      <button class="eliminar">Eliminar</button>
+      <div>Subtotal: $<span class="subtotal">0.00</span></div>
     `;
 
     const inputs = li.querySelectorAll("input");
@@ -193,13 +149,12 @@ function renderProductos() {
 
       const subtotal = (p.precioProducto + p.precioGrabado) * p.cantidad;
       subtotalEl.textContent = subtotal.toFixed(2);
-
       calcularTotal();
     }
 
-    inputs.forEach(input => input.oninput = actualizar);
+    inputs.forEach(inp => inp.oninput = actualizar);
 
-    li.querySelector(".btn-eliminar-producto").onclick = () => {
+    li.querySelector(".eliminar").onclick = () => {
       productos.splice(i, 1);
       renderProductos();
       calcularTotal();
@@ -212,377 +167,100 @@ function renderProductos() {
 
 function calcularTotal() {
   let total = 0;
-
   productos.forEach(p => {
     total += (p.precioProducto + p.precioGrabado) * p.cantidad;
   });
-
   precioTotalInput.textContent = "$" + total.toFixed(2);
 }
+
+// ===============================
+// GUARDAR / EDITAR VENTA
+// ===============================
 btnGuardar.onclick = async () => {
-  if (!auth.currentUser) {
-    alert("Sesión no lista, espera un momento");
-    return;
-  }
+  if (!auth.currentUser) return alert("Espera sesión");
 
   const cliente = clienteInput.value.trim();
-  if (!cliente) {
-    alert("Ingresa el cliente");
-    return;
+  if (!cliente) return alert("Ingresa cliente");
+  if (productos.length === 0) return alert("Agrega productos");
+
+  const total = Number(precioTotalInput.textContent.replace("$", "")) || 0;
+
+  if (ventaEditandoId) {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
+      cliente,
+      productos,
+      total
+    });
+    ventaEditandoId = null;
+    btnGuardar.textContent = "Guardar venta";
+  } else {
+    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+      cliente,
+      productos,
+      total,
+      pagado: false,
+      fecha: Timestamp.now()
+    });
   }
 
-  if (productos.length === 0) {
-    alert("Agrega al menos un producto");
-    return;
-  }
-
-  const total = Number(
-    precioTotalInput.textContent.replace("$", "")
-  ) || 0;
-
-  try {
-
-    if (ventaEditandoId) {
-      // ===============================
-      // ACTUALIZAR VENTA
-      // ===============================
-      await updateDoc(
-        doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
-        {
-          cliente,
-          productos,
-          total
-        }
-      );
-
-      ventaEditandoId = null;
-      btnGuardar.textContent = "Guardar venta";
-
-    } else {
-      // ===============================
-      // NUEVA VENTA
-      // ===============================
-      await addDoc(
-        collection(db, `usuarios/${userId}/ventas`),
-        {
-          cliente,
-          productos,
-          total,
-          pagado: false,
-          fecha: Timestamp.now()
-        }
-      );
-    }
-
-    // LIMPIAR FORMULARIO
-    clienteInput.value = "";
-    productoInput.value = "";
-    productos = [];
-    renderProductos();
-    calcularTotal();
-    cargarVentas();
-
-  } catch (e) {
-    console.error("ERROR FIRESTORE:", e);
-    alert(e.message);
-  }
+  clienteInput.value = "";
+  productos = [];
+  renderProductos();
+  calcularTotal();
+  cargarVentas();
 };
 
-
-//pintar//
+// ===============================
+// PINTAR VENTA
+// ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
   const productosTexto = v.productos
-    .map(p =>
-      `${p.nombre} x${p.cantidad} - $${((p.precioProducto + p.precioGrabado) * p.cantidad).toFixed(2)}`
-    )
+    .map(p => `${p.nombre} x${p.cantidad}`)
     .join("<br>");
 
   li.innerHTML = `
-    <b>${v.cliente}</b><br><br>
-    ${productosTexto}<br><br>
-    <b>Total: $${v.total.toFixed(2)}</b>
-
-    <div class="acciones">
-      <button class="primary pagar">Pagado</button>
-      <button class="secondary editar">Editar</button>
-    </div>
+    <b>${v.cliente}</b><br>
+    ${productosTexto}<br>
+    <b>Total: $${v.total}</b>
+    <br>
+    <button class="pagar">Pagado</button>
+    <button class="editar">Editar</button>
+    <button class="eliminar">Eliminar</button>
   `;
 
-  // ===============================
-  // PAGADO
-  // ===============================
   li.querySelector(".pagar").onclick = async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-      pagado: true
-    });
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), { pagado: true });
     cargarVentas();
   };
 
-  // ===============================
-  // EDITAR
-  // ===============================
   li.querySelector(".editar").onclick = () => {
     clienteInput.value = v.cliente;
     productos = v.productos;
     renderProductos();
     calcularTotal();
-
     ventaEditandoId = id;
     btnGuardar.textContent = "Actualizar venta";
   };
 
-  listaVentas.appendChild(li);
-}
-
-  // ===============================
-  // MOSTRAR / OCULTAR MENÚ
-  // ===============================
-  const estadoBtn = li.querySelector(".estado-btn");
-  const estadoMenu = li.querySelector(".estado-menu");
-
-  estadoBtn.onclick = () => {
-    estadoMenu.classList.toggle("show");
-  };
-
-  // ===============================
-  // OPCIONES DE ESTADO
-  // ===============================
-  estadoMenu.querySelectorAll("button").forEach(btn => {
-    btn.onclick = async () => {
-      const opcion = btn.dataset.estado;
-
-      if (opcion === "eliminar") {
-        if (confirm("¿Eliminar esta venta?")) {
-          await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
-        }
-      } else {
-        await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-          estado: opcion
-        });
-      }
-
+  li.querySelector(".eliminar").onclick = async () => {
+    if (confirm("¿Eliminar venta?")) {
+      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
       cargarVentas();
-    };
-  });
+    }
+  };
 
   listaVentas.appendChild(li);
-
-
-// ===============================
-// MENU
-// ===============================
-btnMenu.onclick = () => menuOverlay.classList.add("active");
-
-menuOverlay.onclick = e => {
-  if (e.target === menuOverlay) {
-    menuOverlay.classList.remove("active");
-  }
-};
-
-document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
-    document.getElementById(
-      "vista" +
-      btn.dataset.vista.charAt(0).toUpperCase() +
-      btn.dataset.vista.slice(1)
-    ).style.display = "block";
-
-    if (btn.dataset.vista === "grafica") {
-      cargarGraficaMensual();
-    }
-
-    menuOverlay.classList.remove("active");
-  };
-});
-
-// ===============================
-// MODO OSCURO (FIX DEFINITIVO)
-// ===============================
-const darkSaved = localStorage.getItem("darkMode");
-
-if (darkSaved === "on") {
-  document.body.classList.add("dark");
 }
 
-btnDarkMode.onclick = () => {
-  document.body.classList.toggle("dark");
-
-  const activo = document.body.classList.contains("dark");
-  localStorage.setItem("darkMode", activo ? "on" : "off");
-
-  btnDarkMode.textContent = activo
-    ? "☀️ Modo claro"
-    : "🌙 Modo oscuro";
-};
 // ===============================
-// PINTAR HISTORIAL (FIX)
+// CARGAR VENTAS
 // ===============================
-function pintarHistorial(v) {
-  const li = document.createElement("li");
-
-  li.innerHTML = `
-    <b>${v.cliente}</b><br>
-    ${v.producto}<br>
-    <b>Total: $${v.precio}</b>
-  `;
-
-  listaHistorial.appendChild(li);
-
-// ===============================
-// GRAFICA LINEAL - SOLO PAGADAS + SELECTOR DE MES
-// ===============================
-async function cargarGraficaMensual(mesSeleccionado = null) {
-  if (!userId) return;
-
-  const canvas = document.getElementById("graficaVentas");
-  const selector = document.getElementById("selectorMes");
-  if (!canvas || !selector) return;
-
-  // Llenar selector solo una vez
-  if (selector.options.length === 0) {
-    const meses = [
-      "Enero","Febrero","Marzo","Abril","Mayo","Junio",
-      "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"
-    ];
-
-    meses.forEach((m, i) => {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = m;
-      selector.appendChild(opt);
-    });
-
-    selector.value = new Date().getMonth();
-
-    selector.onchange = () => {
-      cargarGraficaMensual(Number(selector.value));
-    };
-  }
-
-  const mes = mesSeleccionado !== null
-    ? mesSeleccionado
-    : Number(selector.value);
-
-  const añoActual = new Date().getFullYear();
-  const ventasPorDia = {};
-  let totalMes = 0;
-
-  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
-  const snap = await getDocs(ventasRef);
-
+async function cargarVentas() {
+  listaVentas.innerHTML = "";
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
   snap.forEach(d => {
-    const v = d.data();
-
-    // 🔒 SOLO VENTAS PAGADAS
-    if (!v.pagado) return;
-
-    const fecha = v.fecha?.toDate ? v.fecha.toDate() : null;
-    if (!fecha) return;
-
-    if (
-      fecha.getMonth() === mes &&
-      fecha.getFullYear() === añoActual
-    ) {
-      const dia = fecha.getDate();
-      const precio = Number(v.precio) || 0;
-
-      ventasPorDia[dia] = (ventasPorDia[dia] || 0) + precio;
-      totalMes += precio;
-    }
-  });
-
-  const dias = Object.keys(ventasPorDia)
-    .map(Number)
-    .sort((a, b) => a - b);
-
-  const totales = dias.map(d => ventasPorDia[d]);
-
-  // Mostrar total arriba
-  const titulo = document.querySelector("#vistaGrafica h2");
-  if (titulo) {
-    titulo.textContent = `Total del mes: $${totalMes}`;
-  }
-
-  if (grafica) grafica.destroy();
-
-  grafica = new Chart(canvas, {
-    type: "line",
-    data: {
-      labels: dias.map(d => `Día ${d}`),
-      datasets: [{
-        label: "Ventas pagadas",
-        data: totales,
-        tension: 0.35,
-        borderWidth: 3,
-        pointRadius: 5
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true }
-      }
-    }
+    pintarVenta(d.id, d.data());
   });
 }
-
-// ===============================
-// 🧮 CALCULADORA INTERNA
-// ===============================
-function calcDisplay() {
-  return document.getElementById("calcDisplay");
-}
-
-function calcAdd(v) {
-  calcDisplay().value += v;
-}
-
-function calcClear() {
-  calcDisplay().value = "";
-}
-
-function calcDel() {
-  calcDisplay().value = calcDisplay().value.slice(0, -1);
-}
-
-function calcResult() {
-  try {
-    calcDisplay().value = eval(calcDisplay().value);
-  } catch {
-    calcDisplay().value = "Error";
-  }
-}
-// ===============================
-// 🧮 CALCULADORA (GLOBAL)
-// ===============================
-const calcDisplayEl = () => document.getElementById("calcDisplay");
-
-window.calcAdd = function (v) {
-  calcDisplayEl().value += v;
-};
-
-window.calcClear = function () {
-  calcDisplayEl().value = "";
-};
-
-window.calcDel = function () {
-  calcDisplayEl().value = calcDisplayEl().value.slice(0, -1);
-};
-
-window.calcResult = function () {
-  try {
-    calcDisplayEl().value = eval(calcDisplayEl().value);
-  } catch {
-    calcDisplayEl().value = "Error";
-  }
-};
-
-}
-window.agregarProducto = agregarProducto;
-
-
-
-
