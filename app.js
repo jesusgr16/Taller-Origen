@@ -127,29 +127,6 @@ btnLogin.onclick = async () => {
 btnLogout.onclick = () => signOut(auth);
 
 // ===============================
-// TOTAL
-// ===============================
-function obtenerCantidadTotal() {
-  if (productos.length === 0) return 1;
-  return productos.reduce((acc, p) => acc + (Number(p.cantidad) || 0), 0);
-}
-
-function calcularTotal() {
-  const cantidad = obtenerCantidadTotal();
-  const precioProducto = Number(precioProductoInput.value) || 0;
-  const precioGrabado = Number(precioGrabadoInput.value) || 0;
-
-  const totalProducto = cantidad * precioProducto;
-  const totalGrabado = cantidad * precioGrabado;
-
-  precioTotalInput.value = totalProducto + totalGrabado;
-}
-
-
-precioProductoInput.oninput = calcularTotal;
-precioGrabadoInput.oninput = calcularTotal;
-
-// ===============================
 // PRODUCTOS
 // ===============================
 
@@ -616,6 +593,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
