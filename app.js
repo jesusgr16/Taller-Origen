@@ -263,9 +263,6 @@ btnGuardar.onclick = async () => {
     alert(e.message);
   }
 };
-//////////////////
- //Pintar venta//
-/////////////////
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
@@ -279,15 +276,11 @@ function pintarVenta(id, v) {
     <b>${v.cliente}</b><br><br>
     ${productosTexto}<br><br>
     <b>Total: $${v.total.toFixed(2)}</b>
+
+    <div class="acciones">
+      <button class="primary pagar">Pagado</button>
+    </div>
   `;
-
-  listaVentas.appendChild(li);
-}
-
-// ===============================
-// PINTAR
-// ===============================
-
 
   // ===============================
   // PAGADO
@@ -298,6 +291,9 @@ function pintarVenta(id, v) {
     });
     cargarVentas();
   };
+
+  listaVentas.appendChild(li);
+}
 
   // ===============================
   // EDITAR (si lo usas)
@@ -555,5 +551,6 @@ window.calcResult = function () {
 
 }
 window.agregarProducto = agregarProducto;
+
 
 
