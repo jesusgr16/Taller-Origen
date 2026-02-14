@@ -213,34 +213,40 @@ function calcularTotal() {
   precioTotalInput.value = total.toFixed(2);
 }
 
-
 // ===============================
-// GUARDAR
+// GUARDAR (SISTEMA NUEVO)
 // ===============================
 btnGuardar.onclick = async () => {
-  if (!auth.currentUser) return alert("Sesión no lista, espera un momento");
+  if (!auth.currentUser) {
+    alert("Sesión no lista, espera un momento");
+    return;
+  }
 
   const cliente = clienteInput.value.trim();
-  if (!cliente) return alert("Ingresa el cliente");
-  if (productos.length === 0) return alert("Agrega al menos un producto");
+  if (!cliente) {
+    alert("Ingresa el cliente");
+    return;
+  }
 
-  const producto = productos.map(p => `${p.nombre} x${p.cantidad}`).join(", ");
+  if (productos.length === 0) {
+    alert("Agrega al menos un producto");
+    return;
+  }
+
   const total = Number(precioTotalInput.value) || 0;
 
   try {
     await addDoc(collection(db, `usuarios/${userId}/ventas`), {
       cliente,
-      producto,
-      precioProducto: Number(precioProductoInput.value) || 0,
-      precioGrabado: Number(precioGrabadoInput.value) || 0,
-      precio: total,
+      productos,          // 👈 SE GUARDA EL ARRAY COMPLETO
+      total,
       pagado: false,
       fecha: Timestamp.now()
     });
 
+    // LIMPIAR FORMULARIO
     clienteInput.value = "";
-    precioProductoInput.value = "";
-    precioGrabadoInput.value = "";
+    productoInput.value = "";
     precioTotalInput.value = "";
     productos = [];
     renderProductos();
@@ -251,6 +257,7 @@ btnGuardar.onclick = async () => {
     alert(e.message);
   }
 };
+
 
 // ===============================
 // CARGAR VENTAS (FIX DEFINITIVO)
@@ -593,6 +600,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
