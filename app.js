@@ -403,7 +403,7 @@ function pintarHistorial(v) {
   `;
 
   listaHistorial.appendChild(li);
-}
+
 // ===============================
 // GRAFICA LINEAL - SOLO PAGADAS + SELECTOR DE MES
 // ===============================
@@ -555,6 +555,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
