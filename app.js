@@ -287,38 +287,7 @@ function pintarVenta(id, v) {
 // ===============================
 // PINTAR
 // ===============================
-// ===============================
-// PINTAR VENTA (FINAL)
-// ===============================
-function pintarVenta(id, v) {
-  const li = document.createElement("li");
 
-  const estado = v.estado || "pendiente";
-
-  li.innerHTML = `
-    <b>${v.cliente}</b><br>
-    ${v.producto}<br>
-    Producto: $${v.precioProducto}<br>
-    Grabado: $${v.precioGrabado}<br>
-    <b>Total: $${v.precio}</b>
-
-    <div class="acciones">
-      <button class="primary pagar">Pagado</button>
-      <button class="secondary editar">Editar</button>
-
-      <div class="estado-wrapper">
-        <button class="estado-btn ${estado}">
-          ${estado.charAt(0).toUpperCase() + estado.slice(1)} ▸
-        </button>
-
-        <div class="estado-menu">
-          <button data-estado="pendiente">Pendiente</button>
-          <button data-estado="realizado" class="realizado">Realizado</button>
-          <button data-estado="eliminar" class="danger">Eliminar</button>
-        </div>
-      </div>
-    </div>
-  `;
 
   // ===============================
   // PAGADO
@@ -586,6 +555,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
