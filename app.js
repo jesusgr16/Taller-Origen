@@ -27,7 +27,7 @@ import {
 // CONFIG
 // ===============================
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
+  apiKey: "AIzaSyABcOe4tsNjieYYEo3HwoUNxSqMhwvGJK0",
   authDomain: "taller-origen.firebaseapp.com",
   projectId: "taller-origen",
   storageBucket: "taller-origen.firebasestorage.app",
@@ -522,6 +522,7 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
 
 
 
