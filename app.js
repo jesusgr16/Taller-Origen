@@ -49,17 +49,20 @@ const passwordInput = $("password");
 const btnLogin = $("btnLogin");
 const btnRegister = $("btnRegister");
 const btnLogout = $("btnLogout");
-const btnMenu = $("btnMenu");
-const menuOverlay = $("menuOverlay");
-const btnDarkMode = $("btnDarkMode");
+
 const listaVentas = $("listaVentas");
+const listaHistorial = $("listaHistorial");
+
 const clienteInput = $("cliente");
 const productoInput = $("producto");
 const precioTotalInput = $("precioTotal");
 const btnGuardar = $("btnGuardar");
+
+const totalHoyEl = $("totalHoy");
+const totalMesEl = $("totalMes");
+
 const listaProductosEl = $("listaProductos");
-const btnAddProducto = $("btnAddProducto");
-const btnAddProductoGrande = $("btnAddProductoGrande");
+const btnAddProducto = $("btnAddProductoGrande");
 
 let userId = null;
 let productos = [];
@@ -67,33 +70,25 @@ let grafica = null;
 let ventaEditandoId = null;
 
 // ===============================
-// AUTH STATE
+// AUTH
 // ===============================
 onAuthStateChanged(auth, user => {
   if (user) {
     userId = user.uid;
     loginView.style.display = "none";
     appView.style.display = "block";
-    btnGuardar.disabled = false;
     cargarVentas();
   } else {
-    userId = null;
     loginView.style.display = "block";
     appView.style.display = "none";
-    btnGuardar.disabled = true;
   }
 });
 
-// ===============================
-// AUTH ACTIONS
-// ===============================
 btnRegister.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
   await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
 btnLogin.onclick = async () => {
-  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
   await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
 };
 
@@ -102,6 +97,9 @@ btnLogout.onclick = () => signOut(auth);
 // ===============================
 // PRODUCTOS
 // ===============================
+btnAddProducto.onclick = agregarProducto;
+window.agregarProducto = agregarProducto;
+
 function agregarProducto() {
   const nombre = productoInput.value.trim();
   if (!nombre) return;
@@ -118,11 +116,6 @@ function agregarProducto() {
   calcularTotal();
 }
 
-window.agregarProducto = agregarProducto;
-
-if (btnAddProducto) btnAddProducto.onclick = agregarProducto;
-if (btnAddProductoGrande) btnAddProductoGrande.onclick = agregarProducto;
-
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
@@ -130,8 +123,7 @@ function renderProductos() {
     const li = document.createElement("li");
 
     li.innerHTML = `
-      <strong>${p.nombre}</strong>
-      <br>
+      <strong>${p.nombre}</strong><br>
       Producto: <input type="number" value="${p.precioProducto}">
       Grabado: <input type="number" value="${p.precioGrabado}">
       Cantidad: <input type="number" value="${p.cantidad}">
@@ -147,8 +139,9 @@ function renderProductos() {
       p.precioGrabado = Number(inputs[1].value) || 0;
       p.cantidad = Number(inputs[2].value) || 1;
 
-      const subtotal = (p.precioProducto + p.precioGrabado) * p.cantidad;
-      subtotalEl.textContent = subtotal.toFixed(2);
+      subtotalEl.textContent =
+        ((p.precioProducto + p.precioGrabado) * p.cantidad).toFixed(2);
+
       calcularTotal();
     }
 
@@ -174,16 +167,14 @@ function calcularTotal() {
 }
 
 // ===============================
-// GUARDAR / EDITAR VENTA
+// GUARDAR
 // ===============================
 btnGuardar.onclick = async () => {
-  if (!auth.currentUser) return alert("Espera sesión");
-
   const cliente = clienteInput.value.trim();
   if (!cliente) return alert("Ingresa cliente");
   if (productos.length === 0) return alert("Agrega productos");
 
-  const total = Number(precioTotalInput.textContent.replace("$", "")) || 0;
+  const total = Number(precioTotalInput.textContent.replace("$", ""));
 
   if (ventaEditandoId) {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`), {
@@ -211,7 +202,7 @@ btnGuardar.onclick = async () => {
 };
 
 // ===============================
-// PINTAR VENTA
+// PINTAR VENTAS
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
@@ -223,8 +214,7 @@ function pintarVenta(id, v) {
   li.innerHTML = `
     <b>${v.cliente}</b><br>
     ${productosTexto}<br>
-    <b>Total: $${v.total}</b>
-    <br>
+    <b>Total: $${v.total}</b><br>
     <button class="pagar">Pagado</button>
     <button class="editar">Editar</button>
     <button class="eliminar">Eliminar</button>
@@ -255,12 +245,93 @@ function pintarVenta(id, v) {
 }
 
 // ===============================
-// CARGAR VENTAS
+// CARGAR VENTAS + TOTALES
 // ===============================
 async function cargarVentas() {
   listaVentas.innerHTML = "";
+  listaHistorial.innerHTML = "";
+
   const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+
+  let totalHoy = 0;
+  let totalMes = 0;
+  const hoy = new Date();
+
   snap.forEach(d => {
-    pintarVenta(d.id, d.data());
+    const v = d.data();
+    const fecha = v.fecha?.toDate();
+    if (!fecha) return;
+
+    if (!v.pagado) {
+      pintarVenta(d.id, v);
+    } else {
+      const li = document.createElement("li");
+      li.innerHTML = `<b>${v.cliente}</b> - $${v.total}`;
+      listaHistorial.appendChild(li);
+    }
+
+    if (v.pagado) {
+      if (
+        fecha.getDate() === hoy.getDate() &&
+        fecha.getMonth() === hoy.getMonth() &&
+        fecha.getFullYear() === hoy.getFullYear()
+      ) {
+        totalHoy += v.total;
+      }
+
+      if (
+        fecha.getMonth() === hoy.getMonth() &&
+        fecha.getFullYear() === hoy.getFullYear()
+      ) {
+        totalMes += v.total;
+      }
+    }
+  });
+
+  totalHoyEl.textContent = "$" + totalHoy.toFixed(2);
+  totalMesEl.textContent = "$" + totalMes.toFixed(2);
+
+  cargarGrafica();
+}
+
+// ===============================
+// GRAFICA
+// ===============================
+async function cargarGrafica() {
+  const canvas = document.getElementById("graficaVentas");
+  if (!canvas) return;
+
+  const snap = await getDocs(collection(db, `usuarios/${userId}/ventas`));
+
+  const dias = {};
+  snap.forEach(d => {
+    const v = d.data();
+    if (!v.pagado) return;
+    const fecha = v.fecha?.toDate();
+    if (!fecha) return;
+    const dia = fecha.getDate();
+    dias[dia] = (dias[dia] || 0) + v.total;
+  });
+
+  const labels = Object.keys(dias);
+  const data = Object.values(dias);
+
+  if (grafica) grafica.destroy();
+
+  grafica = new Chart(canvas, {
+    type: "line",
+    data: {
+      labels: labels.map(d => "Día " + d),
+      datasets: [{
+        label: "Ventas pagadas",
+        data: data,
+        borderWidth: 3,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
   });
 }
