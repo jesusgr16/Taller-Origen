@@ -63,48 +63,79 @@
 
   <main class="contenido">
 
-  <section id="vistaVentas" class="vista">
-  <h2>Ventas pendientes</h2>
+    <!-- ===============================
+         VISTA VENTAS
+    ================================ -->
+    <section id="vistaVentas" class="vista">
+      <h2>Ventas pendientes</h2>
 
-  <div id="resumen">
-    <p>Hoy: <b id="totalHoy">0</b></p>
-    <p>Mes: <b id="totalMes">0</b></p>
-  </div>
+      <div id="resumen">
+        <p>Hoy: <b id="totalHoy">0</b></p>
+        <p>Mes: <b id="totalMes">0</b></p>
+      </div>
 
-  <input type="text" id="busqueda" placeholder="Buscar cliente">
+      <input
+        type="text"
+        id="busqueda"
+        placeholder="Buscar cliente"
+      >
 
-  <div class="formulario">
+      <div class="formulario">
 
-    <input type="text" id="cliente" placeholder="Cliente">
+        <input type="text" id="cliente" placeholder="Cliente">
 
-    <div class="producto-row">
-      <input type="text" id="producto" placeholder="Producto">
-      <button type="button" id="btnAddProducto" class="secondary">
-        +
-      </button>
-    </div>
-
-    <!-- LISTA DE PRODUCTOS -->
-    <ul id="listaProductos" class="lista-productos"></ul>
-
-    <!-- TOTAL AUTOMÁTICO -->
-   <div class="total-container">
-  Total: <span id="precioTotal">$0.00</span>
+      <div class="producto-row">
+  <input
+    type="text"
+    id="producto"
+    placeholder="Producto"
+  >
+  <button
+    type="button"
+    id="btnAddProducto"
+    class="secondary"
+  >
+    +
+  </button>
 </div>
 
-    <button
-      id="btnGuardar"
-      type="button"
-      class="primary"
-    >
-      Guardar venta
-    </button>
 
-  </div>
+        <!-- LISTA DE PRODUCTOS -->
+        <ul id="listaProductos" class="lista-productos"></ul>
 
-  <ul id="listaVentas"></ul>
-</section>
+        <div class="precios-grid">
+          <input
+            type="number"
+            id="precioProducto"
+            placeholder="Precio del producto"
+          >
+          <input
+            type="number"
+            id="precioGrabado"
+            placeholder="Precio del grabado"
+          >
+        </div>
 
+        <!-- TOTAL AUTOMÁTICO -->
+        <input
+          type="number"
+          id="precioTotal"
+          placeholder="Total"
+          readonly
+        >
+
+        <button
+          id="btnGuardar"
+          type="button"
+          class="primary"
+        >
+          Guardar venta
+        </button>
+
+      </div>
+
+      <ul id="listaVentas"></ul>
+    </section>
 
     <!-- ===============================
          VISTA HISTORIAL
@@ -261,9 +292,6 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
-
-
-
 
 
 
