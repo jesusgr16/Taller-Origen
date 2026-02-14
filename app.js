@@ -71,16 +71,17 @@ const btnGuardar = $("btnGuardar");
 const totalHoyEl = $("totalHoy");
 const totalMesEl = $("totalMes");
 
-const listaProductosEl = $("listaProductos");
+const btnAddProducto = document.getElementById("btnAddProducto");
+const btnAddProductoGrande = document.getElementById("btnAddProductoGrande");
+
 if (btnAddProducto) {
   btnAddProducto.addEventListener("click", agregarProducto);
 }
 
-const btnAddProductoGrande = $("btnAddProductoGrande");
-
 if (btnAddProductoGrande) {
-  btnAddProductoGrande.onclick = agregarProducto;
+  btnAddProductoGrande.addEventListener("click", agregarProducto);
 }
+
 
 
 let userId = null;
@@ -580,6 +581,10 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
+
+window.agregarProducto = agregarProducto;
+
 
 
 
