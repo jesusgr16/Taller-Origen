@@ -63,79 +63,51 @@
 
   <main class="contenido">
 
-    <!-- ===============================
-         VISTA VENTAS
-    ================================ -->
-    <section id="vistaVentas" class="vista">
-      <h2>Ventas pendientes</h2>
+  <section id="vistaVentas" class="vista">
+  <h2>Ventas pendientes</h2>
 
-      <div id="resumen">
-        <p>Hoy: <b id="totalHoy">0</b></p>
-        <p>Mes: <b id="totalMes">0</b></p>
-      </div>
+  <div id="resumen">
+    <p>Hoy: <b id="totalHoy">0</b></p>
+    <p>Mes: <b id="totalMes">0</b></p>
+  </div>
 
-      <input
-        type="text"
-        id="busqueda"
-        placeholder="Buscar cliente"
-      >
+  <input type="text" id="busqueda" placeholder="Buscar cliente">
 
-      <div class="formulario">
+  <div class="formulario">
 
-        <input type="text" id="cliente" placeholder="Cliente">
+    <input type="text" id="cliente" placeholder="Cliente">
 
-      <div class="producto-row">
-  <input
-    type="text"
-    id="producto"
-    placeholder="Producto"
-  >
-  <button
-    type="button"
-    id="btnAddProducto"
-    class="secondary"
-  >
-    +
-  </button>
-</div>
+    <div class="producto-row">
+      <input type="text" id="producto" placeholder="Producto">
+      <button type="button" id="btnAddProducto" class="secondary">
+        +
+      </button>
+    </div>
 
+    <!-- LISTA DE PRODUCTOS -->
+    <ul id="listaProductos" class="lista-productos"></ul>
 
-        <!-- LISTA DE PRODUCTOS -->
-        <ul id="listaProductos" class="lista-productos"></ul>
+    <!-- TOTAL AUTOMÁTICO -->
+    <input
+      type="number"
+      id="precioTotal"
+      placeholder="Total"
+      readonly
+    >
 
-        <div class="precios-grid">
-          <input
-            type="number"
-            id="precioProducto"
-            placeholder="Precio del producto"
-          >
-          <input
-            type="number"
-            id="precioGrabado"
-            placeholder="Precio del grabado"
-          >
-        </div>
+    <button
+      id="btnGuardar"
+      type="button"
+      class="primary"
+    >
+      Guardar venta
+    </button>
 
-        <!-- TOTAL AUTOMÁTICO -->
-        <input
-          type="number"
-          id="precioTotal"
-          placeholder="Total"
-          readonly
-        >
+  </div>
 
-        <button
-          id="btnGuardar"
-          type="button"
-          class="primary"
-        >
-          Guardar venta
-        </button>
+  <ul id="listaVentas"></ul>
+</section>
 
-      </div>
-
-      <ul id="listaVentas"></ul>
-    </section>
 
     <!-- ===============================
          VISTA HISTORIAL
@@ -292,6 +264,7 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
 
 
 
