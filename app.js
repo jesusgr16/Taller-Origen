@@ -556,17 +556,3 @@ window.calcResult = function () {
 
 window.agregarProducto = agregarProducto;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
