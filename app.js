@@ -71,8 +71,9 @@ const btnGuardar = $("btnGuardar");
 const totalHoyEl = $("totalHoy");
 const totalMesEl = $("totalMes");
 
-const btnAddProducto = document.getElementById("btnAddProducto");
-const btnAddProductoGrande = document.getElementById("btnAddProductoGrande");
+const listaProductosEl = $("listaProductos");
+const btnAddProducto = $("btnAddProducto");
+const btnAddProductoGrande = $("btnAddProductoGrande");
 
 if (btnAddProducto) {
   btnAddProducto.addEventListener("click", agregarProducto);
@@ -81,6 +82,7 @@ if (btnAddProducto) {
 if (btnAddProductoGrande) {
   btnAddProductoGrande.addEventListener("click", agregarProducto);
 }
+
 
 
 
@@ -150,6 +152,25 @@ precioGrabadoInput.oninput = calcularTotal;
 // ===============================
 // PRODUCTOS
 // ===============================
+
+// Agregar producto
+function agregarProducto() {
+  const nombre = productoInput.value.trim();
+  if (!nombre) return;
+
+  productos.push({
+    nombre,
+    precioProducto: 0,
+    precioGrabado: 0,
+    cantidad: 1
+  });
+
+  productoInput.value = "";
+  renderProductos();
+  calcularTotal();
+}
+
+// Renderizar productos
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
@@ -202,6 +223,17 @@ function renderProductos() {
     actualizar();
     listaProductosEl.appendChild(li);
   });
+}
+
+// Calcular total general
+function calcularTotal() {
+  let total = 0;
+
+  productos.forEach(p => {
+    total += (p.precioProducto + p.precioGrabado) * p.cantidad;
+  });
+
+  precioTotalInput.value = total.toFixed(2);
 }
 
 
@@ -584,6 +616,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
