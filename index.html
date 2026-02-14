@@ -88,12 +88,9 @@
     <ul id="listaProductos" class="lista-productos"></ul>
 
     <!-- TOTAL AUTOMÁTICO -->
-    <input
-      type="number"
-      id="precioTotal"
-      placeholder="Total"
-      readonly
-    >
+   <div class="total-container">
+  Total: <span id="precioTotal">$0.00</span>
+</div>
 
     <button
       id="btnGuardar"
@@ -264,6 +261,7 @@ if ("serviceWorker" in navigator) {
 
 </body>
 </html>
+
 
 
 
