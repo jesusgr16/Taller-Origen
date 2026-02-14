@@ -89,6 +89,7 @@ if (btnAddProductoGrande) {
 let userId = null;
 let productos = [];
 let grafica = null;
+let ventaEditandoId = null;
 
 
 // ===============================
@@ -218,9 +219,6 @@ function calcularTotal() {
 
   precioTotalInput.textContent = "$" + total.toFixed(2);
 }
-///////////////
-//Guardad//
-///////////
 btnGuardar.onclick = async () => {
   if (!auth.currentUser) {
     alert("Sesión no lista, espera un momento");
@@ -243,14 +241,40 @@ btnGuardar.onclick = async () => {
   ) || 0;
 
   try {
-    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-      cliente,
-      productos,
-      total,
-      pagado: false,
-      fecha: Timestamp.now()
-    });
 
+    if (ventaEditandoId) {
+      // ===============================
+      // ACTUALIZAR VENTA
+      // ===============================
+      await updateDoc(
+        doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
+        {
+          cliente,
+          productos,
+          total
+        }
+      );
+
+      ventaEditandoId = null;
+      btnGuardar.textContent = "Guardar venta";
+
+    } else {
+      // ===============================
+      // NUEVA VENTA
+      // ===============================
+      await addDoc(
+        collection(db, `usuarios/${userId}/ventas`),
+        {
+          cliente,
+          productos,
+          total,
+          pagado: false,
+          fecha: Timestamp.now()
+        }
+      );
+    }
+
+    // LIMPIAR FORMULARIO
     clienteInput.value = "";
     productoInput.value = "";
     productos = [];
@@ -263,6 +287,9 @@ btnGuardar.onclick = async () => {
     alert(e.message);
   }
 };
+
+
+//pintar//
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
@@ -279,6 +306,7 @@ function pintarVenta(id, v) {
 
     <div class="acciones">
       <button class="primary pagar">Pagado</button>
+      <button class="secondary editar">Editar</button>
     </div>
   `;
 
@@ -292,18 +320,21 @@ function pintarVenta(id, v) {
     cargarVentas();
   };
 
-  listaVentas.appendChild(li);
-}
-
   // ===============================
-  // EDITAR (si lo usas)
+  // EDITAR
   // ===============================
   li.querySelector(".editar").onclick = () => {
     clienteInput.value = v.cliente;
-    precioTotalInput.value = v.precio;
+    productos = v.productos;
+    renderProductos();
+    calcularTotal();
+
     ventaEditandoId = id;
     btnGuardar.textContent = "Actualizar venta";
   };
+
+  listaVentas.appendChild(li);
+}
 
   // ===============================
   // MOSTRAR / OCULTAR MENÚ
@@ -551,6 +582,7 @@ window.calcResult = function () {
 
 }
 window.agregarProducto = agregarProducto;
+
 
 
 
