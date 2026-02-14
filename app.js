@@ -130,7 +130,6 @@ btnLogout.onclick = () => signOut(auth);
 // PRODUCTOS
 // ===============================
 
-// Agregar producto
 function agregarProducto() {
   const nombre = productoInput.value.trim();
   if (!nombre) return;
@@ -210,9 +209,18 @@ function renderProductos() {
   });
 }
 
-// ===============================
-// GUARDAR (SISTEMA NUEVO)
-// ===============================
+function calcularTotal() {
+  let total = 0;
+
+  productos.forEach(p => {
+    total += (p.precioProducto + p.precioGrabado) * p.cantidad;
+  });
+
+  precioTotalInput.textContent = "$" + total.toFixed(2);
+}
+///////////////
+//Guardad//
+///////////
 btnGuardar.onclick = async () => {
   if (!auth.currentUser) {
     alert("Sesión no lista, espera un momento");
@@ -230,23 +238,24 @@ btnGuardar.onclick = async () => {
     return;
   }
 
-  const total = Number(precioTotalInput.value) || 0;
+  const total = Number(
+    precioTotalInput.textContent.replace("$", "")
+  ) || 0;
 
   try {
     await addDoc(collection(db, `usuarios/${userId}/ventas`), {
       cliente,
-      productos,          // 👈 SE GUARDA EL ARRAY COMPLETO
+      productos,
       total,
       pagado: false,
       fecha: Timestamp.now()
     });
 
-    // LIMPIAR FORMULARIO
     clienteInput.value = "";
     productoInput.value = "";
-    precioTotalInput.value = "";
     productos = [];
     renderProductos();
+    calcularTotal();
     cargarVentas();
 
   } catch (e) {
@@ -254,45 +263,25 @@ btnGuardar.onclick = async () => {
     alert(e.message);
   }
 };
+//////////////////
+ //Pintar venta//
+/////////////////
+function pintarVenta(id, v) {
+  const li = document.createElement("li");
 
+  const productosTexto = v.productos
+    .map(p =>
+      `${p.nombre} x${p.cantidad} - $${((p.precioProducto + p.precioGrabado) * p.cantidad).toFixed(2)}`
+    )
+    .join("<br>");
 
-// ===============================
-// CARGAR VENTAS (FIX DEFINITIVO)
-// ===============================
-async function cargarVentas() {
-  if (!userId) return;
+  li.innerHTML = `
+    <b>${v.cliente}</b><br><br>
+    ${productosTexto}<br><br>
+    <b>Total: $${v.total.toFixed(2)}</b>
+  `;
 
-  listaVentas.innerHTML = "";
-  listaHistorial.innerHTML = "";
-
-  let hoy = 0;
-  let mes = 0;
-  const ahora = new Date();
-
-  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
-  const q = query(ventasRef, orderBy("fecha", "asc"));
-  const snap = await getDocs(q);
-
-  snap.forEach(d => {
-    const v = d.data();
-    const fecha = v.fecha?.toDate ? v.fecha.toDate() : new Date();
-
-    if (
-      fecha.getDate() === ahora.getDate() &&
-      fecha.getMonth() === ahora.getMonth() &&
-      fecha.getFullYear() === ahora.getFullYear()
-    ) hoy++;
-
-    if (
-      fecha.getMonth() === ahora.getMonth() &&
-      fecha.getFullYear() === ahora.getFullYear()
-    ) mes++;
-
-    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
-  });
-
-  totalHoyEl.textContent = hoy;
-  totalMesEl.textContent = mes;
+  listaVentas.appendChild(li);
 }
 
 // ===============================
@@ -597,6 +586,7 @@ window.calcResult = function () {
 
 
 window.agregarProducto = agregarProducto;
+
 
 
 
