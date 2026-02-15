@@ -58,8 +58,8 @@ const btnMenu = $("btnMenu");
 const menuOverlay = $("menuOverlay");
 const btnDarkMode = $("btnDarkMode");
 
-const listaVentas = document.getElementById("listaVentas");
-const listaHistorial = document.getElementById("listaHistorial");
+const listaVentas = $("listaVentas");
+const listaHistorial = $("listaHistorial");
 
 const clienteInput = $("cliente");
 const productoInput = $("producto");
@@ -76,6 +76,7 @@ const btnAddProductoGrande = $("btnAddProductoGrande");
 let userId = null;
 let productos = [];
 let grafica = null;
+
 // ===============================
 // AUTH STATE
 // ===============================
@@ -235,85 +236,110 @@ function actualizar() {
 // ===============================
 // GUARDAR VENTA
 // ===============================
-btnGuardar.addEventListener("click", async () => {
-
-  if (!userId) return alert("Debes iniciar sesión");
+btnGuardar.onclick = async () => {
+  if (!auth.currentUser) return alert("Sesión no lista");
 
   const cliente = clienteInput.value.trim();
-  const producto = productoInput.value.trim();
-  const precio = Number(precioInput.value);
+  if (!cliente) return alert("Ingresa el cliente");
+  if (productos.length === 0) return alert("Agrega al menos un producto");
 
-  if (!cliente || !producto || !precio) {
-    return alert("Completa todos los campos");
-  }
+  const total = Number(precioTotalInput.value) || 0;
 
-  await addDoc(
-    collection(db, `usuarios/${userId}/ventas`),
-    {
-      cliente: cliente,
-      producto: producto,
-      precio: precio,
-      pagado: false,
-      fecha: Timestamp.now()
-    }
-  );
+  const productoTexto = productos.map(p =>
+    `${p.nombre} x${p.cantidad} (Prod:$${p.precioProducto} Grab:$${p.precioGrabado})`
+  ).join(", ");
+
+  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+    cliente,
+    producto: productoTexto,
+    precio: total,
+    pagado: false,
+    fecha: Timestamp.now()
+  });
 
   clienteInput.value = "";
-  productoInput.value = "";
-  precioInput.value = "";
-
+  precioTotalInput.value = "";
+  productos = [];
+  renderProductos();
   cargarVentas();
-});
-
+};
 
 // ===============================
 // CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
-
   if (!userId) return;
 
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
+  let hoy = 0;
+  let mes = 0;
+  const ahora = new Date();
+
   const ventasRef = collection(db, `usuarios/${userId}/ventas`);
   const q = query(ventasRef, orderBy("fecha", "asc"));
   const snap = await getDocs(q);
 
-  console.log("Ventas encontradas:", snap.size);
+  snap.forEach(d => {
+    const v = d.data();
+    const fecha = v.fecha?.toDate();
 
-  snap.forEach(docSnap => {
-    const v = docSnap.data();
+    if (!fecha) return;
 
-    if (v.pagado) {
-      pintarHistorial(v);
-    } else {
-      const li = pintarVenta(docSnap.id, v);
-      listaVentas.appendChild(li);
-    }
+    if (
+      fecha.getDate() === ahora.getDate() &&
+      fecha.getMonth() === ahora.getMonth() &&
+      fecha.getFullYear() === ahora.getFullYear()
+    ) hoy++;
+
+    if (
+      fecha.getMonth() === ahora.getMonth() &&
+      fecha.getFullYear() === ahora.getFullYear()
+    ) mes++;
+
+    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
   });
-}
 
+  totalHoyEl.textContent = hoy;
+  totalMesEl.textContent = mes;
+}
 
 // ===============================
 // PINTAR VENTA
 // ===============================
-function pintarVenta(id, v) {
-
+function listaVentas.appendChild(pintarVenta(id, venta));
   const li = document.createElement("li");
 
   li.innerHTML = `
     <strong>${v.cliente}</strong><br>
     ${v.producto}<br>
-    <b>Total: $${v.precio}</b>
+    Producto: $${v.precioProducto}<br>
+    Grabado: $${v.precioGrabado}<br>
+    <b>Total: $${v.total}</b>
 
     <div class="acciones">
+
       <button class="btn-pagado">Pagado</button>
+
       <button class="btn-editar">Editar</button>
+
+      <div class="dropdown">
+        <button class="btn-acciones">
+          Acciones <span class="flecha">›</span>
+        </button>
+
+        <div class="menu-acciones">
+          <button class="opcion pendiente">Pendiente</button>
+          <button class="opcion realizado">Realizado</button>
+          <button class="opcion eliminar">Eliminar</button>
+        </div>
+      </div>
+
     </div>
   `;
 
-  return li;
+  return li; // ← importante
 }
 
 
@@ -321,17 +347,17 @@ function pintarVenta(id, v) {
 // PINTAR HISTORIAL
 // ===============================
 function pintarHistorial(v) {
-
   const li = document.createElement("li");
 
   li.innerHTML = `
-    <strong>${v.cliente}</strong><br>
+    <b>${v.cliente}</b><br>
     ${v.producto}<br>
     <b>Total: $${v.precio}</b>
   `;
 
   listaHistorial.appendChild(li);
 }
+
 // ===============================
 // MENU
 // ===============================
@@ -551,12 +577,6 @@ window.calcResult = function () {
     }
   });
 });
-
-
-
-
-
-
 
 
 
