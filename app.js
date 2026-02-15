@@ -337,7 +337,7 @@ function pintarVenta(id, v) {
 
   return li;
 }
-/ Luego cuando cargas ventas
+//Luego cuando cargas ventas
 for (let id in ventas) {
    listaVentas.appendChild(pintarVenta(id, ventas[id]));
 }
@@ -576,6 +576,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
