@@ -2285,6 +2285,133 @@ body.dark li {
   color: #111 !important;
 }
 
+/* ===== RESET SUAVE ===== */
+body {
+  background: #f2f2f7 !important;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+  display: flex;
+  justify-content: center;
+}
+
+#app {
+  max-width: 430px;
+  width: 100%;
+  padding: 20px;
+}
+
+/* ===== RESUMEN ===== */
+#resumen {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+#resumen p {
+  flex: 1;
+  background: #000;
+  color: white;
+  padding: 18px;
+  border-radius: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ===== INPUTS ===== */
+input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid #d1d1d6;
+  margin-bottom: 14px;
+  background: white;
+  font-size: 16px;
+}
+
+/* ===== BOTÓN GUARDAR ===== */
+button[type="submit"],
+#guardarVenta {
+  width: 100%;
+  padding: 16px;
+  background: #000;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-weight: 600;
+  margin: 15px 0 25px 0;
+  cursor: pointer;
+}
+
+/* ===== CARDS ===== */
+li {
+  background: #f9f9fb !important;
+  padding: 22px;
+  border-radius: 24px;
+  margin-bottom: 22px;
+  border: 1px solid #e5e5ea;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+li strong {
+  font-size: 18px;
+  color: #000;
+}
+
+li p {
+  margin: 4px 0;
+  color: #333;
+}
+
+/* ===== ACCIONES ===== */
+.acciones {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.acciones button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+/* ===== BOTÓN PAGADO ===== */
+.pagar {
+  background: white;
+  border: 1px solid #000;
+  color: #000;
+}
+
+/* ===== BOTÓN EDITAR ===== */
+.editar {
+  background: #e5e5ea;
+  color: #000;
+}
+
+/* ===== BOTÓN REALIZADO ===== */
+.realizado,
+.estado-realizado {
+  background: #1e9e4a;
+  color: white;
+}
+
+/* ===== BOTÓN ACCIONES (SI LO USAS) ===== */
+.estado-btn {
+  background: #000;
+  color: white;
+}
+
+/* ===== MENÚ ACCIONES ===== */
+.estado-menu {
+  display: none;
+}
+
+.estado-menu.show {
+  display: flex;
+}
+
 
 
 
