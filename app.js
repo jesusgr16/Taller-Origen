@@ -356,12 +356,21 @@ async function cargarVentas() {
   // ===============================
   // BOTÓN EDITAR → subir al formulario
   // ===============================
-  li.querySelector(".btn-editar").addEventListener("click", () => {
-    clienteInput.value = v.cliente;
-    productoInput.value = v.producto;
-    precioProductoInput.value = v.precioProducto;
-    precioGrabadoInput.value = v.precioGrabado;
+li.querySelector(".btn-editar").addEventListener("click", () => {
+
+  // Rellenar inputs
+  clienteInput.value = v.cliente;
+  productoInput.value = v.producto;
+  precioProductoInput.value = v.precioProducto;
+  precioGrabadoInput.value = v.precioGrabado;
+
+  // Subir pantalla al formulario
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
   });
+
+});
 
   // ===============================
   // BOTÓN PENDIENTE
@@ -631,5 +640,6 @@ async function cargarVentas() {
       }
     });
   });
+
 
 
