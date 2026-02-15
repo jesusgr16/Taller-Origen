@@ -133,7 +133,6 @@ function agregarProducto() {
 
 if (btnAddProducto) btnAddProducto.onclick = agregarProducto;
 if (btnAddProductoGrande) btnAddProductoGrande.onclick = agregarProducto;
-
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
@@ -142,36 +141,36 @@ function renderProductos() {
     li.classList.add("producto-item");
 
     li.innerHTML = `
-      <div class="fila-producto">
-        <span class="nombre">${p.nombre}</span>
+      <div class="producto-nombre">${p.nombre}</div>
 
-        <label>
-          Cant:
-          <input type="number" min="1" value="${p.cantidad}" class="cantidad">
-        </label>
+      <div class="producto-detalles">
+        <div class="campo">
+          <label for="cantidad-${i}">Cant:</label>
+          <input id="cantidad-${i}" type="number" min="1" value="${p.cantidad}" class="cantidad">
+        </div>
 
-        <label>
-          Prod:
-          <input type="number" min="0" value="${p.precioProducto}" class="precioProducto">
-        </label>
+        <div class="campo">
+          <label for="prod-${i}">Prod:</label>
+          <input id="prod-${i}" type="number" min="0" value="${p.precioProducto}" class="precioProducto">
+        </div>
 
-        <label>
-          Grab:
-          <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado">
-        </label>
+        <div class="campo">
+          <label for="grab-${i}">Grab:</label>
+          <input id="grab-${i}" type="number" min="0" value="${p.precioGrabado}" class="precioGrabado">
+        </div>
 
-        <span class="total-individual">
-          $${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}
-        </span>
+        <button class="btn-eliminar-producto" title="Eliminar producto">🗑️</button>
+      </div>
 
-        <button class="btn-eliminar-producto">🗑️</button>
+      <div class="producto-subtotal">
+        Subtotal: <b>$${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}</b>
       </div>
     `;
 
     const cantidadInput = li.querySelector(".cantidad");
     const prodInput = li.querySelector(".precioProducto");
     const grabInput = li.querySelector(".precioGrabado");
-    const totalSpan = li.querySelector(".total-individual");
+    const subtotalDiv = li.querySelector(".producto-subtotal b");
 
     function actualizar() {
       p.cantidad = Number(cantidadInput.value) || 1;
@@ -179,7 +178,7 @@ function renderProductos() {
       p.precioGrabado = Number(grabInput.value) || 0;
 
       const total = p.cantidad * (p.precioProducto + p.precioGrabado);
-      totalSpan.textContent = `$${total.toFixed(2)}`;
+      subtotalDiv.textContent = `$${total.toFixed(2)}`;
 
       calcularTotal();
     }
@@ -197,6 +196,7 @@ function renderProductos() {
     listaProductosEl.appendChild(li);
   });
 }
+
 
 function calcularTotal() {
   let totalGeneral = 0;
@@ -532,6 +532,7 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
 
 
 
