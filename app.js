@@ -315,13 +315,14 @@ async function cargarVentas() {
   // PINTAR VENTA
   // ===============================
   function pintarVenta(id, v) {
+  const li = document.createElement("li");
 
-    const li = document.createElement("li");
-
-    li.innerHTML = `
+  li.innerHTML = `
     <strong>${v.cliente}</strong><br>
     ${v.producto}<br>
-    <b>Total: $${v.precio}</b>
+    Producto: $${v.precioProducto}<br>
+    Grabado: $${v.precioGrabado}<br>
+    <b>Total: $${v.total}</b>
 
     <div class="acciones">
       <button class="btn-pagado">Pagado</button>
@@ -341,9 +342,60 @@ async function cargarVentas() {
     </div>
   `;
 
-    return li;
-  }
+  // ===============================
+  // BOTÓN PAGADO → mover a historial
+  // ===============================
+  li.querySelector(".btn-pagado").addEventListener("click", async () => {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+      pagado: true
+    });
 
+    cargarVentas(); // refresca lista
+  });
+
+  // ===============================
+  // BOTÓN EDITAR → subir al formulario
+  // ===============================
+  li.querySelector(".btn-editar").addEventListener("click", () => {
+    clienteInput.value = v.cliente;
+    productoInput.value = v.producto;
+    precioProductoInput.value = v.precioProducto;
+    precioGrabadoInput.value = v.precioGrabado;
+  });
+
+  // ===============================
+  // BOTÓN PENDIENTE
+  // ===============================
+  li.querySelector(".pendiente").addEventListener("click", async () => {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+      estado: "pendiente"
+    });
+    li.style.borderLeft = "5px solid orange";
+  });
+
+  // ===============================
+  // BOTÓN REALIZADO
+  // ===============================
+  li.querySelector(".realizado").addEventListener("click", async () => {
+    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+      estado: "realizado"
+    });
+    li.style.borderLeft = "5px solid green";
+  });
+
+  // ===============================
+  // BOTÓN ELIMINAR
+  // ===============================
+  li.querySelector(".eliminar").addEventListener("click", async () => {
+    const confirmar = confirm("¿Eliminar esta venta?");
+    if (!confirmar) return;
+
+    await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
+    li.remove();
+  });
+
+  return li;
+}
 
   // ===============================
   // PINTAR HISTORIAL
@@ -579,4 +631,5 @@ async function cargarVentas() {
       }
     });
   });
+
 
