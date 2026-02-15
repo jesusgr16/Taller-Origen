@@ -348,65 +348,68 @@ async function cargarVentas() {
     totalHoyEl.textContent = hoy;
     totalMesEl.textContent = mes;
   }
-
-  // ===============================
-// PINTAR VENTA
-// ===============================
 function pintarVenta(id, v) {
-  // Convertimos a array si solo existe un producto
-const productos = v.productos
-  ? v.productos
-  : [{
-      nombre: v.producto,
-      cantidad: v.cantidad,
-      precioProducto: v.precioProducto,
-      precioGrabado: v.precioGrabado
-    }];
 
-let productosHTML = "";
+  const li = document.createElement("li");
+  li.classList.add("card-venta");
 
-productos.forEach(p => {
-  const totalProducto = p.cantidad * (p.precioProducto + p.precioGrabado);
+  // 🔹 Convertimos a array si solo hay un producto
+  const productos = v.productos
+    ? v.productos
+    : [{
+        nombre: v.producto,
+        cantidad: v.cantidad,
+        precioProducto: v.precioProducto,
+        precioGrabado: v.precioGrabado
+      }];
 
-  productosHTML += `
-    <div class="producto-item">
-      <div class="producto-nombre">
-        ${p.nombre} x${p.cantidad}
+  let productosHTML = "";
+
+  productos.forEach(p => {
+    const totalProducto = p.cantidad * (p.precioProducto + p.precioGrabado);
+
+    productosHTML += `
+      <div class="producto-item">
+        <div class="producto-nombre">
+          ${p.nombre} x${p.cantidad}
+        </div>
+        <div>Producto: $${p.precioProducto}</div>
+        <div>Grabado: $${p.precioGrabado}</div>
+        <div class="producto-total">
+          Total: $${totalProducto.toFixed(2)}
+        </div>
       </div>
-      <div>Producto: $${p.precioProducto}</div>
-      <div>Grabado: $${p.precioGrabado}</div>
-      <div class="producto-total">
-        Total: $${totalProducto.toFixed(2)}
+    `;
+  });
+
+  li.innerHTML = `
+    <div class="venta-contenido">
+      <div class="cliente-nombre">${v.cliente || ""}</div>
+
+      <div class="productos-container">
+        ${productosHTML}
+      </div>
+    </div>
+
+    <div class="acciones">
+      <button class="btn-pagado">Pagado</button>
+      <button class="btn-editar">Editar</button>
+
+      <div class="dropdown">
+        <button class="btn-acciones">Acciones</button>
+
+        <div class="menu-acciones">
+          <button class="pendiente">Pendiente</button>
+          <button class="realizado">Realizado</button>
+          <button class="eliminar">Eliminar</button>
+        </div>
       </div>
     </div>
   `;
-});
 
-li.innerHTML = `
-  <div class="venta-contenido">
-    <div class="cliente-nombre">${v.cliente}</div>
-
-    <div class="productos-container">
-      ${productosHTML}
-    </div>
-  </div>
-
-  <div class="acciones">
-    <button class="btn-pagado">Pagado</button>
-    <button class="btn-editar">Editar</button>
-
-    <div class="dropdown">
-      <button class="btn-acciones">Acciones</button>
-
-      <div class="menu-acciones">
-        <button class="pendiente">Pendiente</button>
-        <button class="realizado">Realizado</button>
-        <button class="eliminar">Eliminar</button>
-      </div>
-    </div>
-  </div>
-`;
-
+  // ===============================
+  // EVENTOS
+  // ===============================
 
   // PAGADO
   li.querySelector(".btn-pagado").onclick = async () => {
@@ -415,27 +418,24 @@ li.innerHTML = `
     });
     cargarVentas();
   };
-// EDITAR
-li.querySelector(".btn-editar").onclick = () => {
 
-  // Guardamos qué venta estamos editando
-  ventaEditandoId = id;
+  // EDITAR (por ahora solo primer producto)
+  li.querySelector(".btn-editar").onclick = () => {
+    ventaEditandoId = id;
 
-  // Cambiar a vista ventas si estás en otra
-  document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
-  document.getElementById("vistaVentas").style.display = "block";
+    document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
+    document.getElementById("vistaVentas").style.display = "block";
 
-  // Rellenar campos
-  clienteInput.value = v.cliente;
-  document.getElementById("producto").value = v.producto;
-  document.getElementById("precioProducto").value = v.precioProducto;
-  document.getElementById("precioGrabado").value = v.precioGrabado;
-  document.getElementById("cantidad").value = v.cantidad;
+    const primerProducto = productos[0];
 
-  // Subir arriba suave
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+    clienteInput.value = v.cliente || "";
+    document.getElementById("producto").value = primerProducto.nombre || "";
+    document.getElementById("precioProducto").value = primerProducto.precioProducto || "";
+    document.getElementById("precioGrabado").value = primerProducto.precioGrabado || "";
+    document.getElementById("cantidad").value = primerProducto.cantidad || "";
 
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // PENDIENTE
   li.querySelector(".pendiente").onclick = async () => {
@@ -694,6 +694,7 @@ li.querySelector(".btn-editar").onclick = () => {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
