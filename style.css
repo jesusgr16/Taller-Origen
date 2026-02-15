@@ -1288,6 +1288,85 @@ const q = query(ventasRef, orderBy("fecha", "asc"));
   color: #fff;
 }
 
+/* CONTENEDOR DE ACCIONES */
+.acciones {
+  margin-top: 15px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* BOTÓN ACCIONES */
+.btn-acciones {
+  background: #fff;
+  color: #000;
+  border: 1.5px solid #000;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+/* MINI MENU */
+.menu-acciones {
+  display: none;
+  position: absolute;
+  top: 45px; /* 🔥 debajo del botón */
+  right: 0;
+  background: #111;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+  min-width: 140px;
+}
+
+/* CUANDO ESTÁ ACTIVO */
+.menu-acciones.active {
+  display: flex;
+}
+
+.menu-acciones button {
+  border-radius: 18px;
+  padding: 8px 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* PENDIENTE - AMARILLO */
+.menu-acciones .pendiente {
+  background: #facc15;
+  color: #000;
+}
+
+/* REALIZADO - VERDE */
+.menu-acciones .realizado {
+  background: #22c55e;
+  color: #fff;
+}
+
+/* ELIMINAR - ROJO */
+.menu-acciones .eliminar {
+  background: #ef4444;
+  color: #fff;
+}
+
+btnAcciones.onclick = (e) => {
+  e.stopPropagation();
+  menu.classList.toggle("active");
+};
+
+#listaVentas {
+  margin-top: 30px; /* 🔥 separación limpia */
+}
+
+#btnGuardar {
+  margin-bottom: 25px; /* 🔥 espacio debajo */
+}
+
 
 
 
