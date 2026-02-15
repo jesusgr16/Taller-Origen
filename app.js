@@ -310,33 +310,34 @@ async function cargarVentas() {
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
+li.innerHTML = `
+  <strong>${venta.cliente}</strong><br>
+  ${venta.producto}<br>
+  Producto: $${venta.precioProducto}<br>
+  Grabado: $${venta.precioGrabado}<br>
+  <b>Total: $${venta.total}</b>
 
-  li.innerHTML = `
-    <b>${v.cliente}</b><br>
-    ${v.producto}<br>
-    <b>Total: $${v.precio}</b>
-    <div class="acciones">
-      <button class="primary pagar">Pagado</button>
-      <button class="danger eliminar">Eliminar</button>
+  <div class="acciones">
+
+    <button class="btn-pagado">Pagado</button>
+
+    <button class="btn-editar">Editar</button>
+
+    <div class="dropdown">
+      <button class="btn-acciones">
+        Acciones <span class="flecha">›</span>
+      </button>
+
+      <div class="menu-acciones">
+        <button class="opcion pendiente">Pendiente</button>
+        <button class="opcion realizado">Realizado</button>
+        <button class="opcion eliminar">Eliminar</button>
+      </div>
     </div>
-  `;
 
-  li.querySelector(".pagar").onclick = async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-      pagado: true
-    });
-    cargarVentas();
-  };
+  </div>
+`;
 
-  li.querySelector(".eliminar").onclick = async () => {
-    if (confirm("¿Eliminar venta?")) {
-      await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
-      cargarVentas();
-    }
-  };
-
-  listaVentas.appendChild(li);
-}
 
 // ===============================
 // PINTAR HISTORIAL
@@ -557,6 +558,22 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
+  document.addEventListener("click", function(e) {
+  const dropdowns = document.querySelectorAll(".dropdown");
+
+  dropdowns.forEach(drop => {
+    const menu = drop.querySelector(".menu-acciones");
+
+    if (drop.contains(e.target)) {
+      menu.style.display =
+        menu.style.display === "flex" ? "none" : "flex";
+    } else {
+      menu.style.display = "none";
+    }
+  });
+});
+
 
 
 
