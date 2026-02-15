@@ -1,21 +1,23 @@
 /* =====================================================
-   🎨 SISTEMA iOS STYLE
+   💳 TALLER ORIGEN — BANKING APP DESIGN
 ===================================================== */
+
 :root {
-  --bg: #f2f2f7;
+  --bg: #f5f6fa;
   --card: #ffffff;
-  --primary: #000000;
-  --accent: #007aff;
-  --danger: #ff3b30;
-  --text: #111111;
-  --muted: #8e8e93;
-  --radius: 22px;
-  --shadow: 0 8px 30px rgba(0,0,0,0.08);
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #111111;
+  --accent: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 16px;
+  --shadow-soft: 0 8px 30px rgba(0,0,0,0.06);
+  --shadow-strong: 0 20px 60px rgba(0,0,0,0.12);
 }
 
-/* =====================================================
-   RESET
-===================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -27,304 +29,282 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
                system-ui, sans-serif;
   background: var(--bg);
-  padding: 24px;
   color: var(--text);
+  padding: 20px;
   transition: 0.3s ease;
 }
 
 /* =====================================================
-   CONTENEDORES
+   HEADER ESTILO APP BANCARIA
 ===================================================== */
-#login,
-#app {
-  max-width: 520px;
-  margin: auto;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 28px;
-  animation: fadeIn 0.3s ease;
+
+.bank-header {
+  margin-bottom: 28px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.bank-header small {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 14px;
 }
 
-/* =====================================================
-   TITULOS
-===================================================== */
-h2 {
-  text-align: center;
-  font-size: 24px;
+.bank-header h2 {
+  font-size: 30px;
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-top: 4px;
 }
 
 /* =====================================================
-   INPUTS iOS
+   RESUMEN TARJETAS
 ===================================================== */
-input, select {
-  width: 100%;
-  padding: 16px;
-  border-radius: 16px;
-  border: none;
-  background: #f2f2f7;
-  font-size: 16px;
-  margin-bottom: 14px;
-  transition: 0.2s ease;
-}
 
-input:focus,
-select:focus {
-  outline: none;
-  background: #e5e5ea;
-}
-
-/* =====================================================
-   BOTONES iOS
-===================================================== */
-button {
-  border: none;
-  border-radius: 16px;
-  padding: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  background: var(--primary);
-  color: white;
-}
-
-button:active {
-  transform: scale(0.95);
-  opacity: 0.9;
-}
-
-/* Botones secundarios */
-.btn-soft {
-  background: #f2f2f7;
-  color: var(--text);
-}
-
-/* Danger */
-.btn-danger {
-  background: var(--danger);
-}
-
-/* =====================================================
-   RESUMEN
-===================================================== */
 #resumen {
   display: flex;
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 25px;
 }
 
 #resumen p {
   flex: 1;
-  background: black;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, #111, #2b2b2b);
   color: white;
-  padding: 18px;
-  border-radius: 18px;
-  text-align: center;
   font-weight: 700;
+  font-size: 18px;
+  box-shadow: var(--shadow-strong);
+  transition: transform 0.2s ease;
+}
+
+#resumen p:active {
+  transform: scale(0.97);
 }
 
 /* =====================================================
-   CARDS DE VENTA
+   FORM INPUTS ELEGANTES
 ===================================================== */
+
+input {
+  width: 100%;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid #e5e7eb;
+  background: white;
+  font-size: 16px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+  outline: none;
+}
+
+/* =====================================================
+   BOTONES PREMIUM
+===================================================== */
+
+button {
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* BOTONES ACCIÓN */
+
+.btn-pagado {
+  flex: 1;
+  background: var(--success);
+  color: white;
+}
+
+.btn-editar {
+  flex: 1;
+  background: var(--accent);
+  color: white;
+}
+
+/* =====================================================
+   LISTA DE VENTAS (CARDS)
+===================================================== */
+
 ul {
   list-style: none;
-  margin-top: 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 li {
-  background: white;
-  padding: 18px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  background: var(--card);
+  padding: 22px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  animation: fadeUp 0.3s ease;
   transition: 0.2s ease;
 }
 
 li:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+}
+
+li strong {
+  font-size: 18px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* =====================================================
    ACCIONES
 ===================================================== */
+
 .acciones {
   display: flex;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.acciones button {
-  flex: 1;
-  border-radius: 14px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
 /* =====================================================
-   ESTADO DESPLEGABLE iOS
+   DROPDOWN MODERNO
 ===================================================== */
-.estado-wrapper {
+
+.dropdown {
   position: relative;
   flex: 1;
 }
 
-.estado-btn {
-  background: #f2f2f7;
-  color: var(--text);
+.btn-acciones {
   width: 100%;
+  background: #f3f4f6;
+  color: var(--text);
 }
 
-.estado-menu {
+.menu-acciones {
   position: absolute;
   left: 0;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-height: 0;
+  gap: 10px;
   opacity: 0;
-  overflow: hidden;
-  transition: all 0.25s ease;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: 0.25s ease;
 }
 
-.estado-menu.show {
-  max-height: 200px;
+.dropdown.open .menu-acciones {
   opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
 }
 
-.estado-menu button {
-  background: #f2f2f7;
-  color: var(--text);
+.menu-acciones button {
+  border-radius: var(--radius-md);
+  padding: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
 }
 
-.estado-menu .realizado {
-  background: #34c759;
+.menu-acciones .pendiente {
+  background: #facc15;
+}
+
+.menu-acciones .realizado {
+  background: var(--success);
   color: white;
 }
 
-.estado-menu .danger {
+.menu-acciones .eliminar {
   background: var(--danger);
   color: white;
 }
 
 /* =====================================================
-   BOTÓN +
+   MENÚ TIPO BANKING SHEET
 ===================================================== */
-.producto-row {
+
+#menuOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 999;
+}
+
+#menuOverlay.active {
   display: flex;
-  gap: 10px;
-  align-items: center;
 }
 
-#producto {
-  flex: 1;
-  margin-bottom: 0;
-}
-
-#btnAddProducto {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: white;
-  color: black;
-  font-size: 22px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
-
-/* =====================================================
-   CALCULADORA
-===================================================== */
-.calculadora {
-  margin-top: 18px;
-}
-
-#calcDisplay {
-  width: 100%;
-  padding: 18px;
-  font-size: 24px;
-  border-radius: 18px;
-  border: none;
-  background: #f2f2f7;
-  text-align: right;
-  margin-bottom: 14px;
-}
-
-.calc-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.calc-grid button {
-  padding: 16px;
-  border-radius: 16px;
-  background: #f2f2f7;
-  color: var(--text);
-}
-
-.calc-grid .igual {
-  background: black;
-  color: white;
-  grid-row: span 2;
-}
-
-.calc-grid .cero {
-  grid-column: span 2;
-}
-
-/* =====================================================
-   MENÚ NAVEGACIÓN iOS
-===================================================== */
 .menu-panel {
   background: white;
-  border-radius: 26px;
-  padding: 20px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  width: 100%;
+  max-width: 520px;
+  border-radius: 30px 30px 0 0;
+  padding: 28px;
+  box-shadow: var(--shadow-strong);
+  animation: slideUp 0.35s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
 .menu-item {
-  background: #f2f2f7;
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 12px;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background: #f3f4f6;
+  margin-bottom: 14px;
   font-weight: 600;
+  text-align: center;
+  transition: 0.2s ease;
+}
+
+.menu-item:active {
+  transform: scale(0.97);
 }
 
 /* =====================================================
-   🌙 MODO OSCURO iOS
+   MODO OSCURO PREMIUM
 ===================================================== */
+
 body.dark {
-  background: #000;
+  background: #0b0b0d;
   color: white;
 }
 
-body.dark #login,
-body.dark #app,
 body.dark li,
 body.dark .menu-panel {
-  background: #1c1c1e;
+  background: #1a1a1d;
 }
 
-body.dark input,
-body.dark select,
-body.dark #calcDisplay,
-body.dark .calc-grid button,
-body.dark .estado-btn,
-body.dark .estado-menu button,
-body.dark .menu-item {
-  background: #2c2c2e;
+body.dark input {
+  background: #2a2a2e;
+  border: 1px solid #333;
   color: white;
 }
 
-body.dark .calc-grid .igual {
-  background: white;
-  color: black;
+body.dark .btn-acciones {
+  background: #2a2a2e;
+  color: white;
+}
+
+body.dark .menu-acciones button {
+  background: #2a2a2e;
+  color: white;
 }
