@@ -1,1891 +1,310 @@
-
-
-/* ===============================
-   VARIABLES
-================================ */
-:root {
-  --bg: #ffffff;
-  --card: #ffffff;
-  --primary: #000000;
-  --primary-soft: #f1f5f9;
-  --accent: #000000;
-  --accent-soft: rgba(0,0,0,0.15);
-  --danger: #dc2626;
-  --text: #000000;
-  --muted: #6b7280;
-  --radius: 20px;
-  --shadow: 0 20px 45px rgba(0,0,0,0.12);
-}
-
-/* ===============================
-   RESET
-================================ */
+/* =========================
+   RESET GLOBAL
+========================= */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-/* ===============================
-   BODY
-================================ */
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: #ffffff;
-  min-height: 100vh;
-  padding: 24px;
-  color: var(--text);
-  transition: background 0.3s, color 0.3s;
+  color: #000000;
+  transition: 0.3s ease;
 }
 
-/* ===============================
-   CONTENEDORES
-================================ */
-#login,
-#app {
+/* =========================
+   CONTENEDOR PRINCIPAL
+========================= */
+.contenido {
   max-width: 520px;
   margin: auto;
-  background: var(--card);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  padding: 30px;
-  animation: fadeIn 0.35s ease;
+  padding: 25px 20px 90px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ===============================
-   TEXTOS
-================================ */
-h2 {
-  font-size: 24px;
-  font-weight: 800;
-  margin-bottom: 22px;
-  text-align: center;
-}
-
-/* ===============================
-   INPUTS
-================================ */
-input {
-  width: 100%;
-  padding: 15px 16px;
-  border-radius: 16px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
-  margin-bottom: 18px;
-  font-size: 15px;
-  color: var(--text);
-}
-
-input::placeholder {
-  color: var(--muted);
-}
-
-input:focus {
-  outline: none;
-  border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
-}
-
-/* ===============================
-   BOTONES
-================================ */
-button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 16px;
-  border: 1px solid #000000;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all .15s ease;
-  background: #000000;
-  color: #ffffff;
-}
-
-button:active {
-  transform: scale(0.96);
-}
-
-.primary {
-  background: #000000;
-  color: #ffffff;
-}
-
-.secondary {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #000000;
-}
-
-.danger {
-  background: #dc2626;
-  color: #ffffff;
-  border: none;
-}
-
-/* ===============================
-   RESUMEN (HOY / MES)
-================================ */
-#resumen {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-#resumen p {
-  background: #000000;
-  border-radius: 16px;
-  padding: 16px;
-  text-align: center;
-  font-weight: 800;
-  color: #ffffff;
-}
-
-/* ===============================
-   FORMULARIO
-================================ */
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.precios-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-#precioTotal {
-  background: #f3f4f6;
-  font-weight: 700;
-  text-align: center;
-}
-
-/* ===============================
-   LISTAS
-================================ */
-ul {
-  list-style: none;
-  margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-li {
-  background: #ffffff;
-  padding: 16px;
-  border-radius: 18px;
-  border: 1px solid #e5e7eb;
-}
-
-/* acciones */
-.acciones {
-  display: flex;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.acciones button {
-  flex: 1;
-  padding: 10px;
-  border-radius: 14px;
-  font-size: 14px;
-}
-
-/* ===============================
-   MENÚ FLOTANTE
-================================ */
-.menu-btn {
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: #000000;
-  color: #ffffff;
-  z-index: 2000;
-  width: auto;
-  font-size: 14px;
-}
-
-/* overlay */
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: none;
-  z-index: 1999;
-}
-
-.menu-overlay.active {
-  display: block;
-}
-
-/* panel */
-.menu-panel {
-  position: absolute;
-  left: 16px;
-  bottom: 90px;
-  width: 240px;
-  background: #ffffff;
-  border-radius: 22px;
-  padding: 18px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-}
-
-.menu-item {
-  width: 100%;
-  padding: 13px 14px;
-  border-radius: 14px;
-  background: #ffffff;
-  margin-bottom: 12px;
-  font-weight: 600;
-  border: 1px solid #000000;
-  color: #000000;
-}
-
-/* ===============================
-   🌙 MODO OSCURO
-================================ */
-body.dark {
-  background: #000000;
-  color: #ffffff;
-}
-
-body.dark #login,
-body.dark #app {
-  background: #000000;
-  border: 1px solid #333333;
-}
-
-body.dark input {
-  background: #000000;
-  border: 1px solid #555555;
-  color: #ffffff;
-}
-
-body.dark input::placeholder {
-  color: #9ca3af;
-}
-
-body.dark #precioTotal {
-  background: #000000;
-  border: 1px solid #555555;
-  color: #ffffff;
-}
-
-body.dark li {
-  background: #000000;
-  border: 1px solid #555555;
-}
-
-body.dark button {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
-}
-
-body.dark .secondary {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #ffffff;
-}
-
-body.dark .menu-panel {
-  background: #000000;
-  border: 1px solid #555555;
-}
-
-body.dark .menu-item {
-  background: #000000;
-  border: 1px solid #ffffff;
-  color: #ffffff;
-}
-
-body.dark .menu-overlay {
-  background: rgba(0,0,0,0.85);
-}
-
-/* ===============================
+/* =========================
    LOGO
-================================ */
-.brand {
+========================= */
+.logo-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.logo-header img {
+  width: 70px;
+  border-radius: 18px;
+  margin-bottom: 6px;
+}
+
+.logo-header span {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* =========================
+   TITULOS
+========================= */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* =========================
+   RESUMEN (Hoy / Mes)
+========================= */
+#resumen {
   display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 12px;
   margin-bottom: 20px;
 }
 
-.logo-header img {
-  width: 120px;
-  height: auto;
-  max-width: 100%;
-  object-fit: contain;
-}
-
-.brand span {
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.logo-header span {
-  display: none;
-}
-
-/* ===============================
-   LISTA DE PRODUCTOS
-================================ */
-.lista-productos li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid #000000;
-}
-
-.lista-productos input {
-  width: 60px;
-  padding: 6px;
-  border-radius: 10px;
+#resumen p {
+  flex: 1;
+  background: #000;
+  color: #fff;
+  padding: 14px;
+  border-radius: 30px;
   text-align: center;
-}
-
-/* ===============================
-   GRAFICA
-================================ */
-#graficaVentas {
-  width: 100% !important;
-  height: 260px !important;
-  margin-top: 20px;
-}
-
-/* ===============================
-   SELECTOR DE MES
-================================ */
-#selectorMes {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  font-size: 15px;
   font-weight: 600;
-  border: 1px solid #e5e7eb;
-  background: #f9fbfd;
-  color: #0f172a;
-  margin-top: 16px;
+  font-size: 15px;
 }
 
-#selectorMes:focus {
+/* =========================
+   INPUTS
+========================= */
+input {
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 14px;
+  border-radius: 20px;
+  border: 1.5px solid #000;
+  background: #fff;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+input:focus {
   outline: none;
-  border-color: #000000;
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
+  transform: scale(1.01);
 }
 
-body.dark #selectorMes {
-  background: #000000;
-  border: 1px solid #555555;
-  color: #ffffff;
-}
-
-/* ===============================
-   PRODUCTO + BOTON ELIMINAR
-================================ */
-.producto-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.producto-acciones {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-eliminar-producto {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  color: #dc2626;
-  padding: 4px;
-}
-
-.btn-eliminar-producto:active {
-  transform: scale(0.9);
-}
-
-body.dark .btn-eliminar-producto {
-  color: #f87171;
-}
-
-/* =====================================================
-   🔥 AJUSTES VISUALES (NUEVO – SIN TOCAR LO ANTERIOR)
-===================================================== */
-
-/* Reduce espacios excesivos entre campos */
-.formulario > * {
-  margin-bottom: 10px;
-}
-
-/* Botón + más discreto y ordenado */
-#btnAddProducto {
-  max-width: 56px;
-  padding: 10px;
-  font-size: 18px;
-  margin-left: 8px;
-}
-
-/* Alinea input + botón */
+/* =========================
+   PRODUCTO + BOTON
+========================= */
 .producto-row {
   display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-/* Elimina sensación de botón gigante */
-.btn-agregar-grande {
-  display: none;
-}
-/* ===============================
-   FIX DEFINITIVO BOTÓN AGREGAR ➕
-   (NO TOCAR NADA MÁS)
-================================ */
-
-.producto-row {
-  display: flex;
-  align-items: center;
   gap: 12px;
 }
 
-#producto {
-  flex: 1;
-  margin-bottom: 0 !important;
-}
-
-#btnAddProducto {
-  all: unset;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  border-radius: 50%;
-  border: 1px solid #000000;
-  background: #ffffff;
-  color: #000000;
+.btn-mas-suave {
+  width: 60px;
+  border-radius: 20px;
+  border: 1.5px solid #000;
+  background: #000;
+  color: #fff;
   font-size: 22px;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  transition: 0.2s;
 }
 
-#btnAddProducto:active {
-  transform: scale(0.9);
+.btn-mas-suave:hover {
+  transform: scale(1.05);
 }
 
-body.dark #btnAddProducto {
-  background: #ffffff;
-  color: #000000;
-}
-/* ===============================
-   ESTADO DESPLEGABLE
-================================ */
-.estado-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.estado-btn {
-  width: 100%;
-  border-radius: 14px;
-  background: #e5e7eb;
-  font-weight: 700;
-}
-
-.estado-btn.realizado {
-  background: #16a34a;
-  color: white;
-}
-
-.estado-btn.pendiente {
-  background: #e5e7eb;
-}
-
-.estado-menu {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.25s ease, opacity 0.25s ease;
-  opacity: 0;
-  margin-top: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.estado-menu.show {
-  max-height: 200px;
-  opacity: 1;
-}
-
-.estado-menu button {
-  padding: 10px;
-  border-radius: 12px;
+/* =========================
+   BOTONES GENERALES
+========================= */
+button {
+  border-radius: 30px;
+  padding: 14px;
   font-weight: 600;
+  border: 1.5px solid #000;
+  transition: 0.2s;
 }
 
-.estado-menu .realizado {
-  background: #16a34a;
-  color: white;
-}
-
-/* ===============================
-   🌙 MODO OSCURO
-================================ */
-body.dark .estado-btn {
-  background: #020617;
-  border: 1px solid #334155;
-  color: #e5e7eb;
-}
-
-body.dark .estado-menu button {
-  background: #020617;
-  border: 1px solid #334155;
-  color: #e5e7eb;
-}
-
-body.dark .estado-menu .realizado {
-  background: #166534;
-}
-
-/* ===============================
-   ACCIONES (3 BOTONES IGUALES)
-================================ */
-.acciones {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.acciones button {
-  height: 46px;
-  border-radius: 14px;
-  font-weight: 700;
+.primary {
+  background: #000;
+  color: #fff;
   width: 100%;
 }
 
-/* ===============================
-   BOTONES PRINCIPALES
-================================ */
-.pagar {
-  background: white;
-  color: black;
-}
-
-.editar {
-  background: white;
-  color: black;
-  border: 1px solid #e5e7eb;
-}
-
-/* ===============================
-   ESTADO (BOTÓN PRINCIPAL)
-================================ */
-.estado-wrapper {
-  position: relative;
-}
-
-.estado-btn {
-  background: white;
-  color: black;
-  border: 1px solid #e5e7eb;
-}
-
-/* ===============================
-   MENÚ DESPLEGABLE (ABAJO)
-================================ */
-.estado-menu {
-  position: absolute;
-  left: 0;
-  top: calc(100% + 8px);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: all 0.25s ease;
-}
-
-.estado-menu.show {
-  max-height: 300px;
-  opacity: 1;
-}
-
-/* BOTONES DEL MENÚ */
-.estado-menu button {
-  width: 100%;
-  height: 42px;
-  border-radius: 12px;
-  font-weight: 700;
-}
-
-/* ===============================
-   COLORES
-================================ */
-.estado-menu .realizado {
-  background: #16a34a;
-  color: white;
-}
-
-.estado-menu .danger {
-  background: #dc2626;
-  color: white;
-}
-/* ===============================
-   🌙 MODO OSCURO
-================================ */
-body.dark .pagar,
-body.dark .editar,
-body.dark .estado-btn {
-  background: white;
-  color: black;
-}
-
-body.dark .editar,
-body.dark .estado-btn {
-  border: none;
-}
-
-body.dark .estado-menu button {
-  background: white;
-  color: black;
-}
-
-/* ===============================
-   🌙 MODO OSCURO – ESTADO REALIZADO
-================================ */
-body.dark .estado-menu .realizado {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
-}
-white;
-}
-
-body.dark .estado-menu .danger {
-  background: #dc2626;
-  color: white;
-}
-
-/* ===============================
-   🔥 ESTADO BOTONES UNIFICADOS
-   (IGUALES EN CLARO Y OSCURO)
-================================ */
-
-/* Contenedor del estado */
-.estado-wrapper {
+.secondary {
+  background: #fff;
+  color: #000;
   width: 100%;
 }
 
-/* Botón principal (Pendiente / Realizado ▸) */
-.estado-btn {
-  width: 100%;
-  padding: 12px;
-  border-radius: 14px;
-  font-weight: 700;
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #000000;
+.primary:hover,
+.secondary:hover {
+  transform: scale(1.02);
 }
 
-/* Menú desplegable */
-.estado-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+/* =========================
+   LISTAS
+========================= */
+.lista-productos {
+  list-style: none;
+  margin-bottom: 15px;
 }
 
-/* TODOS los botones del menú */
-.estado-menu button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 14px;
-  font-weight: 700;
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #000000;
+.lista-productos li {
+  padding: 14px;
+  border-radius: 22px;
+  border: 1.5px solid #000;
+  margin-bottom: 10px;
 }
 
-/* Hover */
-.estado-menu button:hover,
-.estado-btn:hover {
-  opacity: 0.9;
+/* =========================
+   TOTAL
+========================= */
+#precioTotal {
+  background: #000;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
 }
 
-/* ❌ SOLO ELIMINAR EN ROJO */
-.estado-menu .danger {
-  background: #dc2626;
-  border-color: #dc2626;
-  color: #ffffff;
-}
-
-/* ===============================
-   🌙 MODO OSCURO (MISMO DISEÑO)
-================================ */
-body.dark .estado-btn,
-body.dark .estado-menu button {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #ffffff;
-}
-
-body.dark .estado-menu .danger {
-  background: #dc2626;
-  border-color: #dc2626;
-}
-/* ===============================
-   🧮 CALCULADORA
-================================ */
-.calculadora {
-  background: var(--card);
-  border-radius: 20px;
+/* =========================
+   CARDS VENTAS
+========================= */
+#listaVentas li,
+#listaHistorial li {
+  border: 1.5px solid #000;
+  border-radius: 28px;
   padding: 18px;
-  margin-top: 16px;
+  margin-bottom: 18px;
+}
+
+/* =========================
+   CALCULADORA
+========================= */
+.calculadora {
+  max-width: 420px;
+  margin: auto;
 }
 
 #calcDisplay {
-  width: 100%;
-  padding: 14px;
+  padding: 18px;
   font-size: 22px;
+  border-radius: 25px;
+  border: 1.5px solid #000;
   text-align: right;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
   margin-bottom: 12px;
-  font-weight: 700;
 }
 
 .calc-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .calc-grid button {
-  padding: 14px;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
+  padding: 20px;
+  font-size: 18px;
+  border-radius: 25px;
+  background: #fff;
 }
 
 .calc-grid .igual {
-  grid-row: span 2;
+  background: #000;
+  color: #fff;
 }
 
 .calc-grid .cero {
   grid-column: span 2;
 }
 
-/* 🌙 MODO OSCURO */
-body.dark #calcDisplay {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #555555;
-}
-
-/* ===============================
-   🧮 CALCULADORA – MODO OSCURO FIX
-================================ */
-body.dark .calculadora {
-  background: #000000;
-  border: 1px solid #333333;
-}
-
-body.dark #calcDisplay {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #555555;
-}
-
-body.dark .calc-grid button {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
-}
-
-body.dark .calc-grid button:active {
-  background: #e5e7eb;
-}
-
-body.dark .calc-grid .igual {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
-}
-/* Efecto tap estilo iOS */
-button,
-.calc-grid button {
-  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
-}
-
-button:active,
-.calc-grid button:active {
-  transform: scale(0.94);
-}
-button,
-.calc-grid button {
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-}
-
-body.dark button,
-body.dark .calc-grid button {
-  box-shadow: 0 6px 18px rgba(255,255,255,0.08);
-}
-@keyframes iosFadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Para cards, listas, calculadora */
-li,
-.calc-container,
-.menu-panel {
-  animation: iosFadeUp 0.25s ease-out;
-}
-.calc-display {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.calc-display:focus-within {
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.2);
-  transform: scale(1.01);
-}
-.calc-display {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.calc-display:focus-within {
-  box-shadow: 0 0 0 4px rgba(37,99,235,0.2);
-  transform: scale(1.01);
-}
-.calc-grid .igual {
-  transition: transform 0.15s ease, background 0.15s ease;
-}
-
-.calc-grid .igual:active {
-  transform: scale(0.9);
-}
-.estado-menu {
-  transition: max-height 0.25s cubic-bezier(.4,0,.2,1),
-              opacity 0.25s ease,
-              transform 0.25s ease;
-  transform: translateY(-4px);
-}
-
-.estado-menu.show {
-  transform: translateY(0);
-}
-
-.lista-productos {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.producto-card {
-  border: 1px solid #ddd;
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 12px;
-  background: #fff;
-}
-
-.producto-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 16px;
-}
-
-.producto-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.producto-grid label {
-  font-size: 12px;
-  color: #666;
-}
-
-.producto-grid input {
-  width: 100%;
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  text-align: center;
-}
-
-.producto-subtotal {
-  margin-top: 12px;
-  text-align: right;
-  font-weight: bold;
-  font-size: 15px;
-}
-
-.btn-eliminar-producto {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-#precioTotal {
-  font-size: 22px;
-  font-weight: bold;
-  text-align: center;
-}
-.lista-productos {
-  list-style: none;
-  padding: 0;
-}
-
-.producto-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 12px;
-}
-
-.producto-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.producto-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.producto-grid label {
-  font-size: 12px;
-  color: #555;
-}
-
-.producto-grid input {
-  width: 100%;
-  padding: 6px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  text-align: center;
-}
-
-.producto-subtotal {
-  margin-top: 10px;
-  text-align: right;
-  font-weight: bold;
-}
-
-.btn-eliminar-producto {
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-.total-container {
-  background: #f3f3f3;
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: right;
-  margin-top: 12px;
-}
-
-.producto-item {
-  margin-bottom: 12px;
-}
-
-.fila-producto {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-}
-
-.fila-producto input {
-  width: 60px;
-}
-
-.total-individual {
-  font-weight: bold;
-  min-width: 70px;
-}
-
-.producto-item {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 12px 15px;
-  margin-bottom: 12px;
-  background: #fafafa;
-  max-width: 400px;
-}
-
-.producto-nombre {
-  font-weight: 700;
-  font-size: 1.2em;
-  text-align: center;
-  margin-bottom: 12px;
-  color: #222;
-}
-
-.producto-detalles {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9em;
-  color: #555;
-  min-width: 60px;
-}
-
-.campo label {
-  margin-bottom: 4px;
-  user-select: none;
-}
-
-.campo input {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 4px 6px;
-  font-size: 1em;
-  text-align: center;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.btn-eliminar-producto {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.3em;
-  color: #b33;
-  padding: 4px 8px;
-  border-radius: 5px;
-  transition: background-color 0.2s ease;
-  align-self: flex-end;
-}
-
-.btn-eliminar-producto:hover {
-  background-color: #fdd;
-}
-
-.producto-subtotal {
-  text-align: center;
-  font-weight: 600;
-  font-size: 1em;
-  color: #222;
-  border-top: 1px solid #ddd;
-  padding-top: 8px;
-}
-
-.producto-item {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 14px 18px;
-  margin-bottom: 15px;
-  background: #fff;
-  max-width: 480px;
-  box-shadow: 0 2px 5px rgb(0 0 0 / 0.05);
-}
-
-.producto-nombre {
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: #222;
-  text-align: center;
-  margin-bottom: 14px;
-}
-
-.producto-detalles {
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.95rem;
-  color: #444;
-  min-width: 70px;
-}
-
-.campo label {
-  margin-bottom: 6px;
-  user-select: none;
-}
-
-.input-estandar {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 1rem;
-  text-align: center;
-  background-color: #fafafa;
-  transition: border-color 0.2s ease;
-}
-
-.input-estandar:focus {
-  outline: none;
-  border-color: #3b82f6; /* azul o el color que uses */
-  background-color: #fff;
-}
-
-.boton-icono {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: #a00;
-  padding: 6px 8px;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.boton-icono:hover {
-  background-color: #fdd;
-}
-
-.producto-subtotal {
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin-top: 12px;
-  color: #222;
-}
-
-/* CARD */
-.producto-card {
-  background: #f5f5f5;
-  padding: 18px;
-  border-radius: 18px;
-  margin-bottom: 18px;
-}
-
-/* NOMBRE CENTRADO ARRIBA */
-.producto-nombre-centro {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 18px;
-}
-
-/* FILA HORIZONTAL ORDENADA */
-.producto-fila {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-/* CAMPOS */
-.campo {
-  display: flex;
-  flex-direction: column;
-  min-width: 90px;
-  flex: 1;
-}
-
-.campo span {
-  font-size: 12px;
-  margin-bottom: 6px;
-  color: #666;
-}
-
-/* INPUTS SUAVES */
-.input-suave {
-  padding: 8px;
-  border-radius: 12px;
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  text-align: center;
-  outline: none;
-  transition: 0.2s;
-}
-
-.input-suave:focus {
-  border-color: #9ca3af;
-}
-
-/* SUBTOTAL */
-.subtotal-box b {
-  padding: 8px;
-  background: #e5e7eb;
-  border-radius: 12px;
-  text-align: center;
-}
-
-/* BOTON ELIMINAR */
-.btn-suave {
-  background: #e5e7eb;
-  border: none;
-  padding: 8px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.btn-suave:hover {
-  background: #d1d5db;
-}
-.btn-mas-suave {
-  width: 45px;
-  height: 45px;
-  border-radius: 14px;
-  border: 1px solid #d1d5db;
-  background: #f3f4f6;
-  font-size: 22px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.btn-mas-suave:hover {
-  background: #e5e7eb;
-}
-
-
-
-/* ===============================
-   🌙 MODO OSCURO PRODUCTOS
-=================================*/
-
-body.dark .producto-card {
-  background: #1f1f1f;
-  border: 1px solid #2c2c2c;
-}
-
-body.dark .producto-nombre-centro {
-  color: #ffffff;
-}
-
-body.dark .campo span {
-  color: #bdbdbd;
-}
-
-body.dark .input-suave {
-  background: #111;
-  border: 1px solid #333;
-  color: #ffffff;
-}
-
-body.dark .input-suave:focus {
-  border-color: #555;
-}
-
-body.dark .subtotal-box b {
-  background: #2a2a2a;
-  color: #ffffff;
-}
-
-body.dark .btn-suave {
-  background: #2a2a2a;
-  color: white;
-}
-
-body.dark .btn-suave:hover {
-  background: #3a3a3a;
-}
-.producto-item {
-  background: #ffffff;
-  border-radius: 25px;
-  padding: 20px;
-  margin: 20px 0;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.input-estandar {
-  background: #0d0d0d;
-  border: 1px solid #2a2a2a;
-  color: #fff;
-  border-radius: 10px;
-  padding: 8px;
-  width: 100%;
-}
-
-.input-estandar:focus {
-  outline: none;
-  border: 1px solid #444;
-}
-.producto-subtotal {
-  margin-top: 12px;
-  background: #1a1a1a;
-  padding: 8px;
-  border-radius: 12px;
-  text-align: center;
-  color: #fff;
-  font-weight: 600;
-}
-
-.btn-eliminar-producto {
-  background: transparent;
-  border: 1px solid #333;
-  border-radius: 12px;
-  padding: 6px 10px; /* MÁS pequeño */
-  font-size: 14px;   /* antes seguramente estaba más grande */
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.btn-eliminar-producto:hover {
-  background: #1f1f1f;
-}
-
-.btn-eliminar-producto {
-  background: rgba(0,0,0,0.05);
-  border: none;
-  border-radius: 12px;
-  width: 110px;
-  height: 38px;
-  font-size: 15px;
-  cursor: pointer;
-}
-body.dark .btn-eliminar-producto {
-  border: 1px solid #555;
-  color: #fff;
-}
-
-body.dark .btn-eliminar-producto:hover {
-  border-color: #e53935;
-  color: #e53935;
-}
-
-
-/* ============================= */
-/* CONTENEDOR BOTONES */
-/* ============================= */
-
-.acciones {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* ============================= */
-/* BOTÓN PAGADO */
-/* ============================= */
-
-.btn-pagado {
+/* =========================
+   BOTON MENU
+========================= */
+.menu-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
   background: #000;
   color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
+  padding: 16px 22px;
+  border-radius: 50px;
 }
 
-.btn-pagado:hover {
-  opacity: 0.8;
-}
-
-/* ============================= */
-/* BOTÓN EDITAR */
-/* ============================= */
-
-.btn-editar {
-  background: transparent;
-  border: 2px solid #000;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.btn-editar:hover {
-  background: #f2f2f2;
-}
-
-/* MODO OSCURO EDITAR */
-body.dark .btn-editar {
-  border: 2px solid #fff;
-  color: #fff;
-}
-
-body.dark .btn-editar:hover {
-  background: #2a2a2a;
-}
-
-/* ============================= */
-/* DROPDOWN ACCIONES */
-/* ============================= */
-
-.dropdown {
-  position: relative;
-}
-
-.btn-acciones {
-  background: #e53935; /* rojo */
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.2s ease;
-}
-
-.btn-acciones:hover {
-  opacity: 0.85;
-}
-
-.flecha {
-  font-size: 18px;
-  transition: transform 0.3s ease;
-}
-
-/* ROTAR FLECHA CUANDO ESTÁ ACTIVO */
-.dropdown.active .flecha {
-  transform: rotate(90deg);
-}
-
-/* ============================= */
-/* MENÚ FLOTANTE */
-/* ============================= */
-
-.menu-acciones {
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+/* =========================
+   MENU OVERLAY
+========================= */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
   display: none;
-  flex-direction: column;
-  min-width: 160px;
-  overflow: hidden;
-  z-index: 100;
-  animation: fadeIn 0.2s ease;
+  justify-content: flex-end;
 }
 
-/* MODO OSCURO MENU */
-body.dark .menu-acciones {
-  background: #1e1e1e;
+.menu-panel {
+  width: 260px;
+  background: #fff;
+  padding: 25px;
+  height: 100%;
+  border-left: 1.5px solid #000;
 }
 
-/* ============================= */
-/* OPCIONES DEL MENU */
-/* ============================= */
-
-.opcion {
-  padding: 12px 15px;
-  border: none;
-  background: transparent;
-  text-align: left;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
+.menu-item {
+  width: 100%;
+  margin-bottom: 12px;
+  background: #fff;
+  color: #000;
 }
 
-.opcion:hover {
-  background: rgba(0,0,0,0.05);
-}
-
-body.dark .opcion:hover {
-  background: rgba(255,255,255,0.05);
-}
-
-/* ============================= */
-/* COLORES ESTADO */
-/* ============================= */
-
-.opcion.realizado {
-  color: #2e7d32; /* verde */
-}
-
-.opcion.pendiente {
-  color: #f9a825; /* amarillo */
-}
-
-.opcion.eliminar {
-  color: #e53935; /* rojo */
-}
-
-/* ============================= */
-/* BOTONES DE ESTADO VISUAL */
-/* ============================= */
-
-.estado-realizado {
-  background: #2e7d32 !important;
-  color: white !important;
-}
-
-.estado-pendiente {
-  background: #f9a825 !important;
-  color: white !important;
-}
-
-.estado-eliminar {
-  background: #e53935 !important;
-  color: white !important;
-}
-
-/* ============================= */
-/* ANIMACIÓN */
-/* ============================= */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-/* ===============================
-   MODO OSCURO GENERAL
-=================================*/
+/* =========================
+   MODO OSCURO (REVERSIVO)
+========================= */
 body.dark {
   background: #000;
   color: #fff;
 }
 
-/* ===============================
-   LISTA DE VENTAS
-=================================*/
-li {
-  background: #111;
-  padding: 20px;
-  border-radius: 20px;
-  margin-bottom: 15px;
-  list-style: none;
-  border: 1px solid #222;
-}
-
-/* ===============================
-   CONTENEDOR DE BOTONES
-=================================*/
-.acciones {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-  flex-wrap: wrap;
-}
-
-/* ===============================
-   BOTÓN PAGADO
-=================================*/
-.btn-pagado {
+body.dark input {
   background: #000;
   color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 15px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.2s;
+  border: 1.5px solid #fff;
 }
 
-/* ===============================
-   BOTÓN EDITAR
-=================================*/
-.btn-editar {
-  background: #1f1f1f;
-  color: #fff;
-  border: 2px solid #444;
-  padding: 12px 20px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.2s;
+body.dark button {
+  border: 1.5px solid #fff;
 }
 
-/* ===============================
-   BOTÓN ACCIONES
-=================================*/
-.btn-acciones {
-  background: #000;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: 0.2s;
+body.dark .primary {
+  background: #fff;
+  color: #000;
 }
 
-/* ===============================
-   EFECTOS HOVER
-=================================*/
-.btn-pagado:hover,
-.btn-editar:hover,
-.btn-acciones:hover {
-  opacity: 0.85;
-  transform: scale(0.97);
-}
-
-/* ===============================
-   DROPDOWN
-=================================*/
-.dropdown {
-  position: relative;
-}
-
-.menu-acciones {
-  display: none;
-  position: absolute;
-  top: 45px;
-  right: 0;
-  background: #1a1a1a;
-  border-radius: 15px;
-  padding: 10px;
-  min-width: 150px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-  flex-direction: column;
-  gap: 8px;
-}
-
-.dropdown:hover .menu-acciones {
-  display: flex;
-}
-
-.opcion {
-  background: #222;
-  color: #fff;
-  border: none;
-  padding: 8px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.opcion:hover {
-  background: #333;
-}
-
-/* ===============================
-   COLORES ESTADO
-=================================*/
-.pendiente {
-  border-left: 5px solid orange;
-}
-
-.realizado {
-  border-left: 5px solid green;
-}
-
-/* ===============================
-   TARJETA DE VENTA
-=================================*/
-li {
-  list-style: none;
-  background: linear-gradient(145deg, #0f0f0f, #151515);
-  color: #fff;
-  padding: 25px;
-  border-radius: 25px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  transition: 0.3s ease;
-  border: 1px solid #1f1f1f;
-}
-
-li:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-}
-
-/* ===============================
-   TITULO CLIENTE
-=================================*/
-li strong {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-/* ===============================
-   CONTENEDOR BOTONES
-=================================*/
-.acciones {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* ===============================
-   BOTONES BASE
-=================================*/
-button {
-  padding: 12px 20px;
-  border-radius: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.25s ease;
-  font-size: 14px;
-}
-
-/* ===============================
-   BOTÓN PAGADO
-=================================*/
-.btn-pagado {
+body.dark .secondary {
   background: #000;
   color: #fff;
 }
 
-.btn-pagado:hover {
-  background: #111;
-  transform: scale(0.96);
+body.dark #resumen p {
+  background: #fff;
+  color: #000;
 }
 
-/* ===============================
-   BOTÓN EDITAR
-=================================*/
-.btn-editar {
-  background: transparent;
-  border: 2px solid #444;
-  color: #fff;
+body.dark #precioTotal {
+  background: #fff;
+  color: #000;
 }
 
-.btn-editar:hover {
-  background: #222;
-  border-color: #666;
+body.dark #listaVentas li,
+body.dark #listaHistorial li,
+body.dark .lista-productos li {
+  border: 1.5px solid #fff;
 }
 
-/* ===============================
-   BOTÓN ACCIONES
-=================================*/
-.btn-acciones {
+body.dark .menu-btn {
+  background: #fff;
+  color: #000;
+}
+
+body.dark .menu-panel {
   background: #000;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  border-left: 1.5px solid #fff;
 }
-
-.btn-acciones:hover {
-  background: #111;
-}
-
-/* ===============================
-   DROPDOWN
-=================================*/
-.dropdown {
-  position: relative;
-}
-
-.menu-acciones {
-  position: absolute;
-  top: 60px;
-  right: 0;
-  background: linear-gradient(145deg, #121212, #1b1b1b);
-  border-radius: 20px;
-  padding: 15px;
-  min-width: 200px;
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-  animation: fadeIn 0.2s ease-in-out;
-  z-index: 50;
-}
-
-.dropdown:hover .menu-acciones {
-  display: flex;
-}
-
-/* ===============================
-   OPCIONES DEL DROPDOWN
-=================================*/
-.opcion {
-  background: #1c1c1c;
-  padding: 10px 15px;
-  border-radius: 12px;
-  text-align: left;
-  font-weight: 500;
-}
-
-.opcion:hover {
-  background: #2a2a2a;
-}
-
-.opcion.pendiente {
-  color: orange;
-}
-
-.opcion.realizado {
-  color: #00d26a;
-}
-
-.opcion.eliminar {
-  color: #ff4d4d;
-}
-
-/* ===============================
-   ESTADOS VISUALES EN TARJETA
-=================================*/
-.estado-pendiente {
-  border-left: 6px solid orange;
-}
-
-.estado-realizado {
-  border-left: 6px solid #00d26a;
-}
-
-/* ===============================
-   ANIMACIÓN
-=================================*/
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-
-
-
-
-
