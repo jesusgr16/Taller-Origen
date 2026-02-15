@@ -1716,6 +1716,173 @@ li {
   border-left: 5px solid green;
 }
 
+/* ===============================
+   TARJETA DE VENTA
+=================================*/
+li {
+  list-style: none;
+  background: linear-gradient(145deg, #0f0f0f, #151515);
+  color: #fff;
+  padding: 25px;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  transition: 0.3s ease;
+  border: 1px solid #1f1f1f;
+}
+
+li:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+/* ===============================
+   TITULO CLIENTE
+=================================*/
+li strong {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ===============================
+   CONTENEDOR BOTONES
+=================================*/
+.acciones {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ===============================
+   BOTONES BASE
+=================================*/
+button {
+  padding: 12px 20px;
+  border-radius: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.25s ease;
+  font-size: 14px;
+}
+
+/* ===============================
+   BOTÓN PAGADO
+=================================*/
+.btn-pagado {
+  background: #000;
+  color: #fff;
+}
+
+.btn-pagado:hover {
+  background: #111;
+  transform: scale(0.96);
+}
+
+/* ===============================
+   BOTÓN EDITAR
+=================================*/
+.btn-editar {
+  background: transparent;
+  border: 2px solid #444;
+  color: #fff;
+}
+
+.btn-editar:hover {
+  background: #222;
+  border-color: #666;
+}
+
+/* ===============================
+   BOTÓN ACCIONES
+=================================*/
+.btn-acciones {
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-acciones:hover {
+  background: #111;
+}
+
+/* ===============================
+   DROPDOWN
+=================================*/
+.dropdown {
+  position: relative;
+}
+
+.menu-acciones {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: linear-gradient(145deg, #121212, #1b1b1b);
+  border-radius: 20px;
+  padding: 15px;
+  min-width: 200px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  animation: fadeIn 0.2s ease-in-out;
+  z-index: 50;
+}
+
+.dropdown:hover .menu-acciones {
+  display: flex;
+}
+
+/* ===============================
+   OPCIONES DEL DROPDOWN
+=================================*/
+.opcion {
+  background: #1c1c1c;
+  padding: 10px 15px;
+  border-radius: 12px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.opcion:hover {
+  background: #2a2a2a;
+}
+
+.opcion.pendiente {
+  color: orange;
+}
+
+.opcion.realizado {
+  color: #00d26a;
+}
+
+.opcion.eliminar {
+  color: #ff4d4d;
+}
+
+/* ===============================
+   ESTADOS VISUALES EN TARJETA
+=================================*/
+.estado-pendiente {
+  border-left: 6px solid orange;
+}
+
+.estado-realizado {
+  border-left: 6px solid #00d26a;
+}
+
+/* ===============================
+   ANIMACIÓN
+=================================*/
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 
 
 
