@@ -154,17 +154,17 @@ function renderProductos() {
     <div class="producto-campos">
 
       <div class="campo">
-        <label>Cantidad</label>
+        <label>Cantidades:</label>
         <input type="number" min="1" value="${p.cantidad}" class="cantidad">
       </div>
 
       <div class="campo">
-        <label>Precio producto</label>
+        <label>Precio del producto:</label>
         <input type="number" min="0" value="${p.precioProducto}" class="precioProducto">
       </div>
 
       <div class="campo">
-        <label>Precio grabado</label>
+        <label>Precio del grabado:</label>
         <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado">
       </div>
 
@@ -324,10 +324,15 @@ async function cargarVentas() {
   function pintarVenta(id, v) {
   const li = document.createElement("li");
 
-  li.innerHTML = `
-    <strong>${v.cliente}</strong><br>
-    ${v.producto}<br>
-    <b>Total: $${v.precio}</b>
+    info.innerHTML = `
+  <div class="producto-nombre">${producto.nombre} x${producto.cantidad}</div>
+  <div>Producto: $${producto.precioProducto}</div>
+  <div>Grabado: $${producto.precioGrabado}</div>
+  <div class="producto-total">
+    Total: $${(producto.cantidad * (producto.precioProducto + producto.precioGrabado)).toFixed(2)}
+  </div>
+`;
+
 
     <div class="acciones">
       <button class="btn-pagado">Pagado</button>
@@ -615,6 +620,7 @@ async function cargarVentas() {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
