@@ -325,13 +325,16 @@ async function cargarVentas() {
   const li = document.createElement("li");
 
     info.innerHTML = `
-  <div class="producto-nombre">${producto.nombre} x${producto.cantidad}</div>
+  <div class="producto-nombre">
+    ${producto.nombre} x${producto.cantidad}
+  </div>
   <div>Producto: $${producto.precioProducto}</div>
   <div>Grabado: $${producto.precioGrabado}</div>
   <div class="producto-total">
     Total: $${(producto.cantidad * (producto.precioProducto + producto.precioGrabado)).toFixed(2)}
   </div>
 `;
+
 
 
     <div class="acciones">
@@ -620,6 +623,7 @@ async function cargarVentas() {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
