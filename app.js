@@ -266,8 +266,6 @@ btnGuardar.onclick = async () => {
 // CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
-  if (!userId) return;
-
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
@@ -275,9 +273,12 @@ async function cargarVentas() {
   let mes = 0;
   const ahora = new Date();
 
-  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
+  // 🔥 CORREGIDO: colección raíz
+  const ventasRef = collection(db, "ventas");
   const q = query(ventasRef, orderBy("fecha", "asc"));
   const snap = await getDocs(q);
+
+  console.log("Ventas encontradas:", snap.size);
 
   snap.forEach(d => {
     const v = d.data();
@@ -296,48 +297,16 @@ async function cargarVentas() {
       fecha.getFullYear() === ahora.getFullYear()
     ) mes++;
 
-    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
+    if (v.pagado) {
+      pintarHistorial(v);
+    } else {
+      const li = pintarVenta(d.id, v);
+      listaVentas.appendChild(li); // 🔥 ESTO FALTABA
+    }
   });
 
   totalHoyEl.textContent = hoy;
   totalMesEl.textContent = mes;
-}
-
-// ===============================
-// PINTAR VENTA
-// Referencia al UL
-const listaVentas = document.getElementById("listaVentas");
-
-// PINTAR VENTA
-function pintarVenta(id, v) {
-  const li = document.createElement("li");
-
-  li.innerHTML = `
-    <strong>${v.cliente}</strong><br>
-    ${v.producto}<br>
-    Producto: $${v.precioProducto}<br>
-    Grabado: $${v.precioGrabado}<br>
-    <b>Total: $${v.total}</b>
-
-    <div class="acciones">
-      <button class="btn-pagado">Pagado</button>
-      <button class="btn-editar">Editar</button>
-
-      <div class="dropdown">
-        <button class="btn-acciones">
-          Acciones <span class="flecha">›</span>
-        </button>
-
-        <div class="menu-acciones">
-          <button class="opcion pendiente">Pendiente</button>
-          <button class="opcion realizado">Realizado</button>
-          <button class="opcion eliminar">Eliminar</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  return li;
 }
 
 
@@ -575,6 +544,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
