@@ -310,33 +310,37 @@ async function cargarVentas() {
 // ===============================
 function pintarVenta(id, v) {
   const li = document.createElement("li");
-li.innerHTML = `
-  <strong>${venta.cliente}</strong><br>
-  ${venta.producto}<br>
-  Producto: $${venta.precioProducto}<br>
-  Grabado: $${venta.precioGrabado}<br>
-  <b>Total: $${venta.total}</b>
 
-  <div class="acciones">
+  li.innerHTML = `
+    <strong>${v.cliente}</strong><br>
+    ${v.producto}<br>
+    Producto: $${v.precioProducto}<br>
+    Grabado: $${v.precioGrabado}<br>
+    <b>Total: $${v.total}</b>
 
-    <button class="btn-pagado">Pagado</button>
+    <div class="acciones">
 
-    <button class="btn-editar">Editar</button>
+      <button class="btn-pagado">Pagado</button>
 
-    <div class="dropdown">
-      <button class="btn-acciones">
-        Acciones <span class="flecha">›</span>
-      </button>
+      <button class="btn-editar">Editar</button>
 
-      <div class="menu-acciones">
-        <button class="opcion pendiente">Pendiente</button>
-        <button class="opcion realizado">Realizado</button>
-        <button class="opcion eliminar">Eliminar</button>
+      <div class="dropdown">
+        <button class="btn-acciones">
+          Acciones <span class="flecha">›</span>
+        </button>
+
+        <div class="menu-acciones">
+          <button class="opcion pendiente">Pendiente</button>
+          <button class="opcion realizado">Realizado</button>
+          <button class="opcion eliminar">Eliminar</button>
+        </div>
       </div>
-    </div>
 
-  </div>
-`;
+    </div>
+  `;
+
+  return li; // ← importante
+}
 
 
 // ===============================
@@ -573,6 +577,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
