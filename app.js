@@ -183,7 +183,8 @@ function renderProductos() {
     const cantidadInput = li.querySelector(".cantidad");
     const prodInput = li.querySelector(".precioProducto");
     const grabInput = li.querySelector(".precioGrabado");
-    const subtotalDiv = li.querySelector(".producto-subtotal b");
+    const subtotalDiv = li.querySelector(".subtotal-box b");
+
 
     function actualizar() {
       p.cantidad = Number(cantidadInput.value) || 1;
@@ -219,6 +220,17 @@ function calcularTotal() {
   });
 
   precioTotalInput.value = totalGeneral.toFixed(2);
+}
+
+function actualizar() {
+  p.cantidad = Number(cantidadInput.value) || 1;
+  p.precioProducto = Number(prodInput.value) || 0;
+  p.precioGrabado = Number(grabInput.value) || 0;
+
+  const total = p.cantidad * (p.precioProducto + p.precioGrabado);
+  subtotalDiv.textContent = `$${total.toFixed(2)}`;
+
+  calcularTotal();
 }
 
 // ===============================
@@ -545,6 +557,7 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
 
 
 
