@@ -279,7 +279,7 @@ async function cargarVentas() {
   const ahora = new Date();
 
   const ventasRef = collection(db, `usuarios/${userId}/ventas`);
-  const q = query(ventasRef, orderBy("fecha", "asc"));
+ const q = query(ventasRef, orderBy("fecha", "desc"));
   const snap = await getDocs(q);
 
   snap.forEach(d => {
@@ -320,18 +320,14 @@ async function cargarVentas() {
   li.innerHTML = `
     <strong>${v.cliente}</strong><br>
     ${v.producto}<br>
-    Producto: $${v.precioProducto}<br>
-    Grabado: $${v.precioGrabado}<br>
-    <b>Total: $${v.total}</b>
+    <b>Total: $${v.precio}</b>
 
     <div class="acciones">
       <button class="btn-pagado">Pagado</button>
       <button class="btn-editar">Editar</button>
 
       <div class="dropdown">
-        <button class="btn-acciones">
-          Acciones <span class="flecha">›</span>
-        </button>
+        <button class="btn-acciones">Acciones</button>
 
         <div class="menu-acciones">
           <button class="opcion pendiente">Pendiente</button>
@@ -342,65 +338,52 @@ async function cargarVentas() {
     </div>
   `;
 
-  // ===============================
-  // BOTÓN PAGADO → mover a historial
-  // ===============================
-  li.querySelector(".btn-pagado").addEventListener("click", async () => {
+  // PAGADO
+  li.querySelector(".btn-pagado").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
       pagado: true
     });
+    cargarVentas();
+  };
 
-    cargarVentas(); // refresca lista
-  });
+  // EDITAR
+  li.querySelector(".btn-editar").onclick = () => {
+    clienteInput.value = v.cliente;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-  // ===============================
-  // BOTÓN EDITAR → subir al formulario
-  // ===============================
-li.querySelector(".btn-editar").addEventListener("click", () => {
-
-  // Rellenar inputs
-  clienteInput.value = v.cliente;
-  productoInput.value = v.producto;
-  precioProductoInput.value = v.precioProducto;
-  precioGrabadoInput.value = v.precioGrabado;
-
-  // Subir pantalla al formulario
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-});
-
-  // ===============================
-  // BOTÓN PENDIENTE
-  // ===============================
-  li.querySelector(".pendiente").addEventListener("click", async () => {
+  // PENDIENTE
+  li.querySelector(".pendiente").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
       estado: "pendiente"
     });
-    li.style.borderLeft = "5px solid orange";
-  });
+  };
 
-  // ===============================
-  // BOTÓN REALIZADO
-  // ===============================
-  li.querySelector(".realizado").addEventListener("click", async () => {
+  // REALIZADO
+  li.querySelector(".realizado").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
       estado: "realizado"
     });
-    li.style.borderLeft = "5px solid green";
-  });
+  };
 
-  // ===============================
-  // BOTÓN ELIMINAR
-  // ===============================
-  li.querySelector(".eliminar").addEventListener("click", async () => {
-    const confirmar = confirm("¿Eliminar esta venta?");
-    if (!confirmar) return;
-
+  // ELIMINAR
+  li.querySelector(".eliminar").onclick = async () => {
+    if (!confirm("¿Eliminar esta venta?")) return;
     await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
-    li.remove();
+    cargarVentas();
+  };
+
+  // 👉 ACCIONES DROPDOWN CORRECTO
+  const btnAcciones = li.querySelector(".btn-acciones");
+  const menu = li.querySelector(".menu-acciones");
+
+  btnAcciones.onclick = (e) => {
+    e.stopPropagation();
+    menu.classList.toggle("active");
+  };
+
+  document.addEventListener("click", () => {
+    menu.classList.remove("active");
   });
 
   return li;
@@ -626,20 +609,7 @@ li.querySelector(".btn-editar").addEventListener("click", () => {
     }
   };
 
-  document.addEventListener("click", function (e) {
-    const dropdowns = document.querySelectorAll(".dropdown");
 
-    dropdowns.forEach(drop => {
-      const menu = drop.querySelector(".menu-acciones");
-
-      if (drop.contains(e.target)) {
-      drop.classList.toggle("open");
-
-      } else {
-        menu.style.display = "none";
-      }
-    });
-  });
 
 
 
