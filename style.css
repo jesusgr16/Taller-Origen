@@ -1422,6 +1422,45 @@ li {
   color: white;
 }
 
+.productos-container {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.producto-item {
+  min-width: 230px;
+  flex: 0 0 auto;
+  background: white;
+  padding: 15px;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.cliente-nombre {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.producto-nombre {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.producto-total {
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+.acciones {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 
 
 
