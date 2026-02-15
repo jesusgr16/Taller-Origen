@@ -58,7 +58,6 @@ const btnMenu = $("btnMenu");
 const menuOverlay = $("menuOverlay");
 const btnDarkMode = $("btnDarkMode");
 
-const listaVentas = $("listaVentas");
 const listaHistorial = $("listaHistorial");
 
 const clienteInput = $("cliente");
@@ -76,6 +75,21 @@ const btnAddProductoGrande = $("btnAddProductoGrande");
 let userId = null;
 let productos = [];
 let grafica = null;
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const ventasRef = ref(db, "ventas");
+
+onValue(ventasRef, (snapshot) => {
+  listaVentas.innerHTML = "";
+
+  snapshot.forEach((child) => {
+    const id = child.key;
+    const venta = child.val();
+
+    listaVentas.appendChild(pintarVenta(id, venta));
+  });
+});
+
 
 // ===============================
 // AUTH STATE
@@ -307,6 +321,10 @@ async function cargarVentas() {
 
 // ===============================
 // PINTAR VENTA
+// Referencia al UL
+const listaVentas = document.getElementById("listaVentas");
+
+// PINTAR VENTA
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
@@ -337,10 +355,7 @@ function pintarVenta(id, v) {
 
   return li;
 }
-//Luego cuando cargas ventas
-for (let id in ventas) {
-   listaVentas.appendChild(pintarVenta(id, ventas[id]));
-}
+
 
 // ===============================
 // PINTAR HISTORIAL
@@ -576,6 +591,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
