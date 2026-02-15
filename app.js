@@ -144,37 +144,40 @@ function renderProductos() {
     li.innerHTML = `
   <div class="producto-card">
 
-    <div class="producto-nombre-centro">
+    <!-- TITULO ARRIBA -->
+    <div class="producto-titulo">
       ${p.nombre}
     </div>
 
-    <div class="producto-fila">
+    <!-- CAMPOS -->
+    <div class="producto-campos">
 
       <div class="campo">
-        <span>Cantidad</span>
-        <input type="number" min="1" value="${p.cantidad}" class="cantidad input-suave" />
-      </div>
-
-      <div class="campo">
-        <span>Precio producto</span>
-        <input type="number" min="0" value="${p.precioProducto}" class="precioProducto input-suave" />
+        <label>Cantidad</label>
+        <input type="number" min="1" value="${p.cantidad}" class="cantidad">
       </div>
 
       <div class="campo">
-        <span>Precio grabado</span>
-        <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado input-suave" />
+        <label>Precio producto</label>
+        <input type="number" min="0" value="${p.precioProducto}" class="precioProducto">
       </div>
 
-      <div class="campo subtotal-box">
-        <span>Subtotal</span>
-        <b>$${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}</b>
+      <div class="campo">
+        <label>Precio grabado</label>
+        <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado">
       </div>
 
-      <div class="campo eliminar-box">
-        <span>Eliminar</span>
-        <button class="btn-eliminar-producto btn-suave">🗑️</button>
-      </div>
+    </div>
 
+    <!-- SUBTOTAL -->
+    <div class="subtotal-box">
+      <span>Subtotal</span>
+      <strong>$${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}</strong>
+    </div>
+
+    <!-- ELIMINAR -->
+    <div class="eliminar-box">
+      <button class="btn-eliminar-producto">🗑 Eliminar</button>
     </div>
 
   </div>
@@ -608,6 +611,7 @@ async function cargarVentas() {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
