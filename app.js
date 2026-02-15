@@ -305,42 +305,34 @@ async function cargarVentas() {
   totalMesEl.textContent = mes;
 }
 
-// ===============================
-// PINTAR VENTA
-// ===============================
-listaVentas.appendChild(pintarVenta(id, venta));
+async function cargarVentas() {
 
-  const li = document.createElement("li");
+  if (!userId) return;
 
-  li.innerHTML = `
-    <strong>${v.cliente}</strong><br>
-    ${v.producto}<br>
-    Producto: $${v.precioProducto}<br>
-    Grabado: $${v.precioGrabado}<br>
-    <b>Total: $${v.total}</b>
+  listaVentas.innerHTML = "";
+  listaHistorial.innerHTML = "";
 
-    <div class="acciones">
+  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
+  const q = query(ventasRef, orderBy("fecha", "asc"));
+  const snap = await getDocs(q);
 
-      <button class="btn-pagado">Pagado</button>
+  snap.forEach(docSnap => {
 
-      <button class="btn-editar">Editar</button>
+    const v = docSnap.data();
 
-      <div class="dropdown">
-        <button class="btn-acciones">
-          Acciones <span class="flecha">›</span>
-        </button>
+    if (v.pagado) {
 
-        <div class="menu-acciones">
-          <button class="opcion pendiente">Pendiente</button>
-          <button class="opcion realizado">Realizado</button>
-          <button class="opcion eliminar">Eliminar</button>
-        </div>
-      </div>
+      pintarHistorial(v);
 
-    </div>
-  `;
+    } else {
 
-  return li; // ← importante
+      // 🔥 AQUI VA LO QUE ME PREGUNTASTE
+      const li = pintarVenta(docSnap.id, v);
+      listaVentas.appendChild(li);
+
+    }
+
+  });
 }
 
 
@@ -578,6 +570,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
