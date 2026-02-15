@@ -308,7 +308,8 @@ async function cargarVentas() {
 // ===============================
 // PINTAR VENTA
 // ===============================
-function listaVentas.appendChild(pintarVenta(id, venta));
+listaVentas.appendChild(pintarVenta(id, venta));
+
   const li = document.createElement("li");
 
   li.innerHTML = `
@@ -577,6 +578,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
