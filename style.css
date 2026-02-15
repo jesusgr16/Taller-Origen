@@ -596,5 +596,139 @@ body:not(.dark) .primary {
               border 0.25s ease;
 }
 
+/* =========================
+   CARD DE VENTA PREMIUM
+========================= */
+#listaVentas li,
+#listaHistorial li {
+  position: relative;
+  background: #ffffff;
+  border-radius: 32px;
+  padding: 24px 22px 80px 22px;
+  margin-bottom: 22px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+/* MODO OSCURO */
+body.dark #listaVentas li,
+body.dark #listaHistorial li {
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* =========================
+   TEXTO DENTRO DE CARD
+========================= */
+#listaVentas li strong,
+#listaHistorial li strong {
+  font-size: 18px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+#listaVentas li {
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+/* TOTAL MÁS DESTACADO */
+#listaVentas li b {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* =========================
+   CONTENEDOR BOTONES INFERIOR
+========================= */
+#listaVentas li .acciones,
+#listaHistorial li .acciones {
+  position: absolute;
+  bottom: 18px;
+  left: 22px;
+  display: flex;
+  gap: 12px;
+}
+
+/* BOTONES BASE */
+#listaVentas li button,
+#listaHistorial li button {
+  padding: 10px 18px;
+  border-radius: 22px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid #000;
+  background: transparent;
+  transition: 0.2s ease;
+}
+
+/* MODO OSCURO BOTONES */
+body.dark #listaVentas li button,
+body.dark #listaHistorial li button {
+  border: 1px solid #fff;
+}
+
+/* HOVER SUAVE */
+#listaVentas li button:hover {
+  transform: scale(1.05);
+}
+
+/* =========================
+   ESTADO LATERAL DERECHO
+========================= */
+#listaVentas li .estado-lateral {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* BOTONES DE ESTADO */
+.estado-lateral button {
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+}
+
+/* PENDIENTE */
+.btn-pendiente {
+  background: #000;
+  color: #fff;
+}
+
+/* REALIZADO */
+.btn-realizado {
+  background: #16a34a;
+  color: #fff;
+}
+
+/* ELIMINAR */
+.btn-eliminar {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* MODO OSCURO AJUSTES */
+body.dark .btn-pendiente {
+  background: #fff;
+  color: #000;
+}
+
+/* =========================
+   EFECTO ELEVACIÓN SUAVE
+========================= */
+#listaVentas li:hover {
+  transform: translateY(-3px);
+}
+
+
 
 
