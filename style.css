@@ -1332,6 +1332,49 @@ body.dark .btn-suave:hover {
   background: #3a3a3a;
 }
 
+.producto-item {
+  background: #111; /* más oscuro */
+  border: 1px solid #222;
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+.input-estandar {
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  border-radius: 10px;
+  padding: 8px;
+  width: 100%;
+}
 
+.input-estandar:focus {
+  outline: none;
+  border: 1px solid #444;
+}
+.producto-subtotal {
+  margin-top: 12px;
+  background: #1a1a1a;
+  padding: 8px;
+  border-radius: 12px;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-eliminar-producto {
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 6px 10px; /* MÁS pequeño */
+  font-size: 14px;   /* antes seguramente estaba más grande */
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-eliminar-producto:hover {
+  background: #1f1f1f;
+}
 
 
