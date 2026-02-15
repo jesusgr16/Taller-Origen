@@ -1,15 +1,16 @@
 /* =====================================================
-   VARIABLES
+   🎨 SISTEMA iOS STYLE
 ===================================================== */
 :root {
-  --bg: #ffffff;
+  --bg: #f2f2f7;
   --card: #ffffff;
   --primary: #000000;
-  --danger: #dc2626;
-  --text: #000000;
-  --muted: #6b7280;
-  --radius: 20px;
-  --shadow: 0 20px 45px rgba(0,0,0,0.12);
+  --accent: #007aff;
+  --danger: #ff3b30;
+  --text: #111111;
+  --muted: #8e8e93;
+  --radius: 22px;
+  --shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
 /* =====================================================
@@ -19,15 +20,13 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* =====================================================
-   BODY
-===================================================== */
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               system-ui, sans-serif;
   background: var(--bg);
-  min-height: 100vh;
   padding: 24px;
   color: var(--text);
   transition: 0.3s ease;
@@ -41,151 +40,151 @@ body {
   max-width: 520px;
   margin: auto;
   background: var(--card);
-  border-radius: 24px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
-  padding: 30px;
+  padding: 28px;
   animation: fadeIn 0.3s ease;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* =====================================================
-   TEXTOS
+   TITULOS
 ===================================================== */
 h2 {
-  font-size: 24px;
-  font-weight: 800;
-  margin-bottom: 22px;
   text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
 /* =====================================================
-   INPUTS
+   INPUTS iOS
 ===================================================== */
 input, select {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  font-size: 15px;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: #f2f2f7;
+  font-size: 16px;
   margin-bottom: 14px;
+  transition: 0.2s ease;
 }
 
 input:focus,
 select:focus {
   outline: none;
-  border-color: #000;
-  box-shadow: 0 0 0 3px rgba(0,0,0,0.15);
+  background: #e5e5ea;
 }
 
 /* =====================================================
-   BOTONES GENERALES
+   BOTONES iOS
 ===================================================== */
 button {
-  width: 100%;
+  border: none;
+  border-radius: 16px;
   padding: 14px;
-  border-radius: 14px;
-  border: 1px solid #000;
-  background: #000;
-  color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.15s ease;
+  transition: all 0.15s ease;
+  background: var(--primary);
+  color: white;
 }
 
 button:active {
   transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* Botones secundarios */
+.btn-soft {
+  background: #f2f2f7;
+  color: var(--text);
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--danger);
 }
 
 /* =====================================================
    RESUMEN
 ===================================================== */
 #resumen {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 14px;
   margin-bottom: 20px;
 }
 
 #resumen p {
-  background: #000;
-  color: #fff;
-  padding: 16px;
-  border-radius: 14px;
+  flex: 1;
+  background: black;
+  color: white;
+  padding: 18px;
+  border-radius: 18px;
   text-align: center;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 /* =====================================================
-   FORMULARIO
-===================================================== */
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.precios-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-/* =====================================================
-   LISTAS
+   CARDS DE VENTA
 ===================================================== */
 ul {
   list-style: none;
   margin-top: 18px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 li {
-  background: #fff;
-  padding: 16px;
-  border-radius: 18px;
-  border: 1px solid #e5e7eb;
-  animation: fadeIn 0.25s ease;
+  background: white;
+  padding: 18px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: 0.2s ease;
+}
+
+li:hover {
+  transform: translateY(-2px);
 }
 
 /* =====================================================
-   ACCIONES (3 BOTONES IGUALES)
+   ACCIONES
 ===================================================== */
 .acciones {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 10px;
   margin-top: 14px;
 }
 
 .acciones button {
-  height: 46px;
+  flex: 1;
+  border-radius: 14px;
 }
 
 /* =====================================================
-   ESTADO DESPLEGABLE
+   ESTADO DESPLEGABLE iOS
 ===================================================== */
 .estado-wrapper {
   position: relative;
-  width: 100%;
+  flex: 1;
 }
 
 .estado-btn {
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
+  background: #f2f2f7;
+  color: var(--text);
+  width: 100%;
 }
 
 .estado-menu {
   position: absolute;
-  top: calc(100% + 8px);
   left: 0;
+  top: calc(100% + 8px);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -193,27 +192,31 @@ li {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition: 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .estado-menu.show {
-  max-height: 300px;
+  max-height: 200px;
   opacity: 1;
 }
 
 .estado-menu button {
-  background: #000;
-  color: #fff;
-  border: 1px solid #000;
+  background: #f2f2f7;
+  color: var(--text);
+}
+
+.estado-menu .realizado {
+  background: #34c759;
+  color: white;
 }
 
 .estado-menu .danger {
   background: var(--danger);
-  border-color: var(--danger);
+  color: white;
 }
 
 /* =====================================================
-   BOTÓN AGREGAR PRODUCTO (+)
+   BOTÓN +
 ===================================================== */
 .producto-row {
   display: flex;
@@ -227,57 +230,49 @@ li {
 }
 
 #btnAddProducto {
-  all: unset;
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid #000;
-  background: #fff;
-  color: #000;
+  background: white;
+  color: black;
   font-size: 22px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-#btnAddProducto:active {
-  transform: scale(0.9);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 /* =====================================================
    CALCULADORA
 ===================================================== */
 .calculadora {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 18px;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 #calcDisplay {
   width: 100%;
-  padding: 14px;
-  font-size: 22px;
+  padding: 18px;
+  font-size: 24px;
+  border-radius: 18px;
+  border: none;
+  background: #f2f2f7;
   text-align: right;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  margin-bottom: 12px;
-  font-weight: 700;
+  margin-bottom: 14px;
 }
 
 .calc-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
 .calc-grid button {
-  padding: 14px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #f2f2f7;
+  color: var(--text);
 }
 
 .calc-grid .igual {
+  background: black;
+  color: white;
   grid-row: span 2;
 }
 
@@ -286,76 +281,50 @@ li {
 }
 
 /* =====================================================
-   MENÚ FLOTANTE
+   MENÚ NAVEGACIÓN iOS
 ===================================================== */
-.menu-btn {
-  position: fixed;
-  left: 16px;
-  bottom: 16px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  background: #000;
-  color: #fff;
-  width: auto;
-  font-size: 14px;
-}
-
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: none;
-}
-
-.menu-overlay.active {
-  display: block;
-}
-
 .menu-panel {
-  position: absolute;
-  left: 16px;
-  bottom: 90px;
-  width: 240px;
-  background: #fff;
-  border-radius: 22px;
-  padding: 18px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  background: white;
+  border-radius: 26px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.menu-item {
+  background: #f2f2f7;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
 }
 
 /* =====================================================
-   🌙 MODO OSCURO
+   🌙 MODO OSCURO iOS
 ===================================================== */
 body.dark {
   background: #000;
-  color: #fff;
+  color: white;
 }
 
 body.dark #login,
 body.dark #app,
-body.dark .calculadora,
 body.dark li,
 body.dark .menu-panel {
-  background: #000;
-  border: 1px solid #333;
+  background: #1c1c1e;
 }
 
 body.dark input,
 body.dark select,
-body.dark #calcDisplay {
-  background: #000;
-  color: #fff;
-  border: 1px solid #555;
-}
-
-body.dark button,
+body.dark #calcDisplay,
+body.dark .calc-grid button,
+body.dark .estado-btn,
 body.dark .estado-menu button,
-body.dark .estado-btn {
-  background: #000;
-  color: #fff;
-  border: 1px solid #fff;
+body.dark .menu-item {
+  background: #2c2c2e;
+  color: white;
 }
 
-body.dark .estado-menu .danger {
-  background: var(--danger);
-  border-color: var(--danger);
+body.dark .calc-grid .igual {
+  background: white;
+  color: black;
 }
