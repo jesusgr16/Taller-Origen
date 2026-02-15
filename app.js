@@ -307,7 +307,7 @@ async function cargarVentas() {
 
   totalHoyEl.textContent = hoy;
   totalMesEl.textContent = mes;
-}
+};
 
 // ===============================
 // PINTAR VENTA
@@ -577,6 +577,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
