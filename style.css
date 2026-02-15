@@ -1504,7 +1504,6 @@ body.dark .btn-editar:hover {
   display: none;
   flex-direction: column;
   min-width: 160px;
-  overflow: hidden;
   z-index: 100;
   animation: fadeIn 0.2s ease;
 }
@@ -1882,6 +1881,252 @@ button {
   to { opacity: 1; transform: translateY(0); }
 }
 
+
+/* =====================================================
+   🎨 iOS CLEAN UI
+===================================================== */
+
+:root {
+  --bg: #f2f2f7;
+  --card: #ffffff;
+  --primary: #000000;
+  --accent: #007aff;
+  --danger: #ff3b30;
+  --text: #111111;
+  --muted: #8e8e93;
+}
+
+/* ================= RESET ================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               system-ui, sans-serif;
+  background: var(--bg);
+  display: flex;
+  justify-content: center;
+}
+
+/* ================= APP CONTAINER ================= */
+
+#login,
+#app {
+  width: 100%;
+  max-width: 430px; /* tamaño tipo iPhone */
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* ================= TITULOS ================= */
+
+h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* ================= RESUMEN ================= */
+
+#resumen {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+#resumen p {
+  flex: 1;
+  background: linear-gradient(135deg,#1c1c1e,#2c2c2e);
+  color: white;
+  padding: 18px;
+  border-radius: 22px;
+  font-weight: 600;
+}
+
+/* ================= INPUTS ================= */
+
+input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid #e5e5ea;
+  background: white;
+  font-size: 16px;
+  margin-bottom: 14px;
+  transition: 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
+}
+
+/* ================= BOTONES ================= */
+
+button {
+  border-radius: 18px;
+  padding: 14px;
+  font-weight: 600;
+  border: none;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* ================= LISTA ================= */
+
+ul {
+  list-style: none;
+  margin-top: 20px;
+}
+
+li {
+  background: var(--card);
+  padding: 22px;
+  border-radius: 26px;
+  margin-bottom: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+/* ================= ACCIONES ================= */
+
+.acciones {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.acciones button {
+  flex: 1;
+}
+
+/* Botones específicos */
+
+.pagar {
+  background: black;
+  color: white;
+}
+
+.editar {
+  background: #f2f2f7;
+  color: #111;
+}
+
+.estado-btn {
+  background: #f2f2f7;
+  color: #111;
+}
+
+/* ================= MENU ACCIONES ================= */
+
+.estado-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.estado-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  padding: 8px;
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 9999;
+}
+
+.estado-menu.show {
+  display: flex;
+}
+
+.estado-menu button {
+  background: #f2f2f7;
+  color: #111;
+}
+
+.estado-menu .realizado {
+  background: #34c759;
+  color: white;
+}
+
+.estado-menu .danger {
+  background: var(--danger);
+  color: white;
+}
+
+/* ================= PRODUCTO + ================= */
+
+.producto-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#producto {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+#btnAddProducto {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: white;
+  color: black;
+  font-size: 22px;
+  border: 1px solid #e5e5ea;
+}
+
+/* ================= MODO OSCURO ================= */
+
+body.dark {
+  background: #000;
+  color: white;
+}
+
+body.dark li {
+  background: #1c1c1e;
+}
+
+body.dark input {
+  background: #2c2c2e;
+  border: 1px solid #3a3a3c;
+  color: white;
+}
+
+body.dark .editar,
+body.dark .estado-btn {
+  background: #2c2c2e;
+  color: white;
+}
+
+body.dark .estado-menu {
+  background: #1c1c1e;
+}
+
+body.dark .estado-menu button {
+  background: #2c2c2e;
+  color: white;
+}
 
 
 
