@@ -1335,7 +1335,7 @@ body.dark .btn-suave:hover {
 .producto-item {
   background: #111; /* más oscuro */
   border: 1px solid #222;
-  border-radius: 20px;
+  border-radius: 5px;
   padding: 18px;
   margin-bottom: 20px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
@@ -1376,5 +1376,6 @@ body.dark .btn-suave:hover {
 .btn-eliminar-producto:hover {
   background: #1f1f1f;
 }
+
 
 
