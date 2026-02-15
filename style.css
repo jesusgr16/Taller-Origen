@@ -1155,14 +1155,22 @@ body.dark .subtotal-box {
    SUBTOTAL
 ================================ */
 .subtotal-box {
-  margin-top: 14px;
-  padding: 14px 16px;
-  border-radius: 18px;
+  margin-top: 18px;
+  padding: 10px 14px;        /* 🔥 más pequeño */
+  border-radius: 16px;
+  background: #f2f2f2;
   display: flex;
   justify-content: space-between;
-  font-weight: 600;
-  font-size: 15px;
+  align-items: center;
+  font-size: 13px;           /* texto más pequeño */
+  font-weight: 500;
 }
+
+.subtotal-box strong {
+  font-size: 22px;           /* 🔥 número más grande */
+  font-weight: 800;
+}
+
 .acciones {
   display: flex;
   gap: 12px;
@@ -1208,9 +1216,11 @@ const q = query(ventasRef, orderBy("fecha", "asc"));
   border-radius: 25px;
   padding: 22px;
   margin-top: 18px;
-  border: 1.5px solid #000;
+  border: 1px solid rgba(0,0,0,0.15);  /* 🔥 más fino */
   background: #fff;
 }
+border: 1px solid rgba(0,0,0,0.08);
+
 
 /* ===============================
    TITULO GRANDE ARRIBA
@@ -1460,6 +1470,7 @@ li {
   gap: 10px;
   align-items: center;
 }
+
 
 
 
