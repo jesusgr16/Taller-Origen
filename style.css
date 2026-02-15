@@ -1,6 +1,16 @@
 /* =====================================================
    💳 TALLER ORIGEN — BANKING APP DESIGN
 ===================================================== */
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f2f2f7;
+  display: flex;
+  justify-content: center;
+}
 
 :root {
   --bg: #f5f6fa;
@@ -333,4 +343,92 @@ body {
     padding: 25px;
   }
 }
+
+#login,
+#app {
+  width: 100%;
+  max-width: 430px; /* tamaño tipo iPhone */
+  min-height: 100vh;
+  background: #f2f2f7;
+  padding: 24px;
+}
+li {
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 22px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+#resumen {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+#resumen p {
+  flex: 1;
+  background: linear-gradient(135deg,#1c1c1e,#2c2c2e);
+  color: white;
+  padding: 20px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+input {
+  background: #ffffff;
+  border: 1px solid #e5e5ea;
+  border-radius: 18px;
+  padding: 18px;
+  font-size: 16px;
+  margin-bottom: 14px;
+}
+
+input:focus {
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0,122,255,0.15);
+}
+button {
+  border-radius: 18px;
+  padding: 14px;
+  font-weight: 600;
+  border: none;
+  background: #000;
+  color: white;
+  transition: all 0.15s ease;
+}
+
+button:active {
+  transform: scale(0.96);
+}
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.acciones button {
+  flex: 1;
+}
+.estado-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.estado-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  padding: 8px;
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.estado-menu.show {
+  display: flex;
+}
+
 
