@@ -633,13 +633,14 @@ li.querySelector(".btn-editar").addEventListener("click", () => {
       const menu = drop.querySelector(".menu-acciones");
 
       if (drop.contains(e.target)) {
-        menu.style.display =
-          menu.style.display === "flex" ? "none" : "flex";
+      drop.classList.toggle("open");
+
       } else {
         menu.style.display = "none";
       }
     });
   });
+
 
 
 
