@@ -729,6 +729,63 @@ body.dark .btn-pendiente {
   transform: translateY(-3px);
 }
 
+/* =========================
+   CONTENEDOR DE BOTONES
+========================= */
+#listaVentas li .acciones {
+  position: absolute;
+  bottom: 22px;
+  left: 22px;
+  right: 22px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+/* =========================
+   BOTONES MÁS GRANDES Y LIMPIOS
+========================= */
+#listaVentas li .acciones button {
+  flex: 1;
+  padding: 14px 0;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 26px;
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1.5px solid #000000 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: 0.2s ease;
+}
+
+/* Hover elegante */
+#listaVentas li .acciones button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* =========================
+   MODO OSCURO (REVERSIVO REAL)
+========================= */
+body.dark #listaVentas li .acciones button {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #ffffff !important;
+  box-shadow: 0 4px 18px rgba(255,255,255,0.08);
+}
+
+body.dark #listaVentas li .acciones button:hover {
+  box-shadow: 0 8px 25px rgba(255,255,255,0.15);
+}
+
+/* =========================
+   MÁS ESPACIO INTERIOR EN CARD
+========================= */
+#listaVentas li {
+  padding-bottom: 95px !important;
+}
+
+
 
 
 
