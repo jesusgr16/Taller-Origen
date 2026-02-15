@@ -75,22 +75,6 @@ const btnAddProductoGrande = $("btnAddProductoGrande");
 let userId = null;
 let productos = [];
 let grafica = null;
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-const ventasRef = ref(db, "ventas");
-
-onValue(ventasRef, (snapshot) => {
-  listaVentas.innerHTML = "";
-
-  snapshot.forEach((child) => {
-    const id = child.key;
-    const venta = child.val();
-
-    listaVentas.appendChild(pintarVenta(id, venta));
-  });
-});
-
-
 // ===============================
 // AUTH STATE
 // ===============================
@@ -591,6 +575,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
