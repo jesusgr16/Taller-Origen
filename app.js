@@ -58,7 +58,8 @@ const btnMenu = $("btnMenu");
 const menuOverlay = $("menuOverlay");
 const btnDarkMode = $("btnDarkMode");
 
-const listaHistorial = $("listaHistorial");
+const listaVentas = document.getElementById("listaVentas");
+const listaHistorial = document.getElementById("listaHistorial");
 
 const clienteInput = $("cliente");
 const productoInput = $("producto");
@@ -234,79 +235,85 @@ function actualizar() {
 // ===============================
 // GUARDAR VENTA
 // ===============================
-btnGuardar.onclick = async () => {
-  if (!auth.currentUser) return alert("Sesión no lista");
+btnGuardar.addEventListener("click", async () => {
+
+  if (!userId) return alert("Debes iniciar sesión");
 
   const cliente = clienteInput.value.trim();
-  if (!cliente) return alert("Ingresa el cliente");
-  if (productos.length === 0) return alert("Agrega al menos un producto");
+  const producto = productoInput.value.trim();
+  const precio = Number(precioInput.value);
 
-  const total = Number(precioTotalInput.value) || 0;
+  if (!cliente || !producto || !precio) {
+    return alert("Completa todos los campos");
+  }
 
-  const productoTexto = productos.map(p =>
-    `${p.nombre} x${p.cantidad} (Prod:$${p.precioProducto} Grab:$${p.precioGrabado})`
-  ).join(", ");
-
-  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-    cliente,
-    producto: productoTexto,
-    precio: total,
-    pagado: false,
-    fecha: Timestamp.now()
-  });
+  await addDoc(
+    collection(db, `usuarios/${userId}/ventas`),
+    {
+      cliente: cliente,
+      producto: producto,
+      precio: precio,
+      pagado: false,
+      fecha: Timestamp.now()
+    }
+  );
 
   clienteInput.value = "";
-  precioTotalInput.value = "";
-  productos = [];
-  renderProductos();
+  productoInput.value = "";
+  precioInput.value = "";
+
   cargarVentas();
-};
+});
+
 
 // ===============================
 // CARGAR VENTAS
 // ===============================
 async function cargarVentas() {
+
+  if (!userId) return;
+
   listaVentas.innerHTML = "";
   listaHistorial.innerHTML = "";
 
-  let hoy = 0;
-  let mes = 0;
-  const ahora = new Date();
-
-  // 🔥 CORREGIDO: colección raíz
-  const ventasRef = collection(db, "ventas");
+  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
   const q = query(ventasRef, orderBy("fecha", "asc"));
   const snap = await getDocs(q);
 
   console.log("Ventas encontradas:", snap.size);
 
-  snap.forEach(d => {
-    const v = d.data();
-    const fecha = v.fecha?.toDate();
-
-    if (!fecha) return;
-
-    if (
-      fecha.getDate() === ahora.getDate() &&
-      fecha.getMonth() === ahora.getMonth() &&
-      fecha.getFullYear() === ahora.getFullYear()
-    ) hoy++;
-
-    if (
-      fecha.getMonth() === ahora.getMonth() &&
-      fecha.getFullYear() === ahora.getFullYear()
-    ) mes++;
+  snap.forEach(docSnap => {
+    const v = docSnap.data();
 
     if (v.pagado) {
       pintarHistorial(v);
     } else {
-      const li = pintarVenta(d.id, v);
-      listaVentas.appendChild(li); // 🔥 ESTO FALTABA
+      const li = pintarVenta(docSnap.id, v);
+      listaVentas.appendChild(li);
     }
   });
+}
 
-  totalHoyEl.textContent = hoy;
-  totalMesEl.textContent = mes;
+
+// ===============================
+// PINTAR VENTA
+// ===============================
+function pintarVenta(id, v) {
+
+  const li = document.createElement("li");
+
+  li.innerHTML = `
+    <strong>${v.cliente}</strong><br>
+    ${v.producto}<br>
+    <b>Total: $${v.precio}</b>
+
+    <div class="acciones">
+      <button class="btn-pagado">Pagado</button>
+      <button class="btn-editar">Editar</button>
+    </div>
+  `;
+
+  return li;
 }
 
 
@@ -314,17 +321,17 @@ async function cargarVentas() {
 // PINTAR HISTORIAL
 // ===============================
 function pintarHistorial(v) {
+
   const li = document.createElement("li");
 
   li.innerHTML = `
-    <b>${v.cliente}</b><br>
+    <strong>${v.cliente}</strong><br>
     ${v.producto}<br>
     <b>Total: $${v.precio}</b>
   `;
 
   listaHistorial.appendChild(li);
 }
-
 // ===============================
 // MENU
 // ===============================
@@ -544,6 +551,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
