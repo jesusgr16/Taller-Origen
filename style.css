@@ -1586,6 +1586,137 @@ body.dark .opcion:hover {
     transform: translateY(0);
   }
 }
+/* ===============================
+   MODO OSCURO GENERAL
+=================================*/
+body.dark {
+  background: #000;
+  color: #fff;
+}
+
+/* ===============================
+   LISTA DE VENTAS
+=================================*/
+li {
+  background: #111;
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+  list-style: none;
+  border: 1px solid #222;
+}
+
+/* ===============================
+   CONTENEDOR DE BOTONES
+=================================*/
+.acciones {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+/* ===============================
+   BOTÓN PAGADO
+=================================*/
+.btn-pagado {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* ===============================
+   BOTÓN EDITAR
+=================================*/
+.btn-editar {
+  background: #1f1f1f;
+  color: #fff;
+  border: 2px solid #444;
+  padding: 12px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* ===============================
+   BOTÓN ACCIONES
+=================================*/
+.btn-acciones {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* ===============================
+   EFECTOS HOVER
+=================================*/
+.btn-pagado:hover,
+.btn-editar:hover,
+.btn-acciones:hover {
+  opacity: 0.85;
+  transform: scale(0.97);
+}
+
+/* ===============================
+   DROPDOWN
+=================================*/
+.dropdown {
+  position: relative;
+}
+
+.menu-acciones {
+  display: none;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: #1a1a1a;
+  border-radius: 15px;
+  padding: 10px;
+  min-width: 150px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dropdown:hover .menu-acciones {
+  display: flex;
+}
+
+.opcion {
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.opcion:hover {
+  background: #333;
+}
+
+/* ===============================
+   COLORES ESTADO
+=================================*/
+.pendiente {
+  border-left: 5px solid orange;
+}
+
+.realizado {
+  border-left: 5px solid green;
+}
+
+
 
 
 
