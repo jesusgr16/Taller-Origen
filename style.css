@@ -1024,6 +1024,30 @@ li,
   margin-top: 12px;
 }
 
+.producto-item {
+  margin-bottom: 12px;
+}
+
+.fila-producto {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.fila-producto input {
+  width: 60px;
+}
+
+.total-individual {
+  font-weight: bold;
+  min-width: 70px;
+}
+
+
 
 
 
