@@ -71,11 +71,25 @@ const totalMesEl = $("totalMes");
 const listaProductosEl = $("listaProductos");
 const btnAddProducto = $("btnAddProducto");
 const btnAddProductoGrande = $("btnAddProductoGrande");
+
 let userId = null;
 let productos = [];
 let grafica = null;
+import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const listaVentas = $("listaVentas"); // ← referencia correcta
+const ventasRef = ref(db, "ventas");
+
+onValue(ventasRef, (snapshot) => {
+  listaVentas.innerHTML = "";
+
+  snapshot.forEach((child) => {
+    const id = child.key;
+    const venta = child.val();
+
+    listaVentas.appendChild(pintarVenta(id, venta));
+  });
+});
+
 
 // ===============================
 // AUTH STATE
@@ -96,6 +110,142 @@ onAuthStateChanged(auth, user => {
     btnGuardar.disabled = true;
   }
 });
+
+// ===============================
+// AUTH
+// ===============================
+btnRegister.onclick = async () => {
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
+  await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+};
+
+btnLogin.onclick = async () => {
+  if (!emailInput.value || !passwordInput.value) return alert("Completa los campos");
+  await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+};
+
+btnLogout.onclick = () => signOut(auth);
+
+// ===============================
+// PRODUCTOS MULTIPLES CON PRECIOS INDIVIDUALES
+// ===============================
+function agregarProducto() {
+  const nombre = productoInput.value.trim();
+  if (!nombre) return;
+
+  productos.push({
+    nombre,
+    cantidad: 1,
+    precioProducto: 0,
+    precioGrabado: 0
+  });
+
+  productoInput.value = "";
+  renderProductos();
+  calcularTotal();
+}
+
+if (btnAddProducto) btnAddProducto.onclick = agregarProducto;
+if (btnAddProductoGrande) btnAddProductoGrande.onclick = agregarProducto;
+function renderProductos() {
+  listaProductosEl.innerHTML = "";
+
+  productos.forEach((p, i) => {
+    const li = document.createElement("li");
+    li.classList.add("producto-item");
+
+   li.innerHTML = `
+  <div class="producto-card">
+
+    <div class="producto-nombre-centro">
+      ${p.nombre}
+    </div>
+
+    <div class="producto-fila">
+
+      <div class="campo">
+        <span>Cantidad</span>
+        <input type="number" min="1" value="${p.cantidad}" class="cantidad input-suave" />
+      </div>
+
+      <div class="campo">
+        <span>Precio producto</span>
+        <input type="number" min="0" value="${p.precioProducto}" class="precioProducto input-suave" />
+      </div>
+
+      <div class="campo">
+        <span>Precio grabado</span>
+        <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado input-suave" />
+      </div>
+
+      <div class="campo subtotal-box">
+        <span>Subtotal</span>
+        <b>$${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}</b>
+      </div>
+
+      <div class="campo eliminar-box">
+        <span>Eliminar</span>
+        <button class="btn-eliminar-producto btn-suave">🗑️</button>
+      </div>
+
+    </div>
+
+  </div>
+`;
+
+
+    const cantidadInput = li.querySelector(".cantidad");
+    const prodInput = li.querySelector(".precioProducto");
+    const grabInput = li.querySelector(".precioGrabado");
+    const subtotalDiv = li.querySelector(".subtotal-box b");
+
+
+    function actualizar() {
+      p.cantidad = Number(cantidadInput.value) || 1;
+      p.precioProducto = Number(prodInput.value) || 0;
+      p.precioGrabado = Number(grabInput.value) || 0;
+
+      const total = p.cantidad * (p.precioProducto + p.precioGrabado);
+      subtotalDiv.textContent = `$${total.toFixed(2)}`;
+
+      calcularTotal();
+    }
+
+    cantidadInput.oninput = actualizar;
+    prodInput.oninput = actualizar;
+    grabInput.oninput = actualizar;
+
+    li.querySelector(".btn-eliminar-producto").onclick = () => {
+      productos.splice(i, 1);
+      renderProductos();
+      calcularTotal();
+    };
+
+    listaProductosEl.appendChild(li);
+  });
+}
+
+
+function calcularTotal() {
+  let totalGeneral = 0;
+
+  productos.forEach(p => {
+    totalGeneral += p.cantidad * (p.precioProducto + p.precioGrabado);
+  });
+
+  precioTotalInput.value = totalGeneral.toFixed(2);
+}
+
+function actualizar() {
+  p.cantidad = Number(cantidadInput.value) || 1;
+  p.precioProducto = Number(prodInput.value) || 0;
+  p.precioGrabado = Number(grabInput.value) || 0;
+
+  const total = p.cantidad * (p.precioProducto + p.precioGrabado);
+  subtotalDiv.textContent = `$${total.toFixed(2)}`;
+
+  calcularTotal();
+}
 
 // ===============================
 // GUARDAR VENTA
@@ -148,6 +298,7 @@ async function cargarVentas() {
   snap.forEach(d => {
     const v = d.data();
     const fecha = v.fecha?.toDate();
+
     if (!fecha) return;
 
     if (
@@ -161,12 +312,7 @@ async function cargarVentas() {
       fecha.getFullYear() === ahora.getFullYear()
     ) mes++;
 
-    if (v.pagado) {
-      pintarHistorial(v);
-    } else {
-      const li = pintarVenta(d.id, v);
-      listaVentas.appendChild(li); // ← ESTO ES LO QUE FALTABA
-    }
+    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
   });
 
   totalHoyEl.textContent = hoy;
@@ -175,14 +321,19 @@ async function cargarVentas() {
 
 // ===============================
 // PINTAR VENTA
-// ===============================
+// Referencia al UL
+const listaVentas = document.getElementById("listaVentas");
+
+// PINTAR VENTA
 function pintarVenta(id, v) {
   const li = document.createElement("li");
 
   li.innerHTML = `
     <strong>${v.cliente}</strong><br>
     ${v.producto}<br>
-    <b>Total: $${v.precio}</b>
+    Producto: $${v.precioProducto}<br>
+    Grabado: $${v.precioGrabado}<br>
+    <b>Total: $${v.total}</b>
 
     <div class="acciones">
       <button class="btn-pagado">Pagado</button>
@@ -205,6 +356,7 @@ function pintarVenta(id, v) {
   return li;
 }
 
+
 // ===============================
 // PINTAR HISTORIAL
 // ===============================
@@ -219,7 +371,6 @@ function pintarHistorial(v) {
 
   listaHistorial.appendChild(li);
 }
-
 
 // ===============================
 // MENU
@@ -440,8 +591,6 @@ window.calcResult = function () {
     }
   });
 });
-
-
 
 
 
