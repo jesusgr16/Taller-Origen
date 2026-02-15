@@ -353,38 +353,60 @@ async function cargarVentas() {
 // PINTAR VENTA
 // ===============================
 function pintarVenta(id, v) {
-  const li = document.createElement("li");
-  li.classList.add("card-venta");
+  // Convertimos a array si solo existe un producto
+const productos = v.productos
+  ? v.productos
+  : [{
+      nombre: v.producto,
+      cantidad: v.cantidad,
+      precioProducto: v.precioProducto,
+      precioGrabado: v.precioGrabado
+    }];
 
-  li.innerHTML = `
-    <div class="venta-contenido">
+let productosHTML = "";
+
+productos.forEach(p => {
+  const totalProducto = p.cantidad * (p.precioProducto + p.precioGrabado);
+
+  productosHTML += `
+    <div class="producto-item">
       <div class="producto-nombre">
-        ${v.producto} x${v.cantidad}
+        ${p.nombre} x${p.cantidad}
       </div>
-      <div>Producto: $${v.precioProducto}</div>
-      <div>Grabado: $${v.precioGrabado}</div>
+      <div>Producto: $${p.precioProducto}</div>
+      <div>Grabado: $${p.precioGrabado}</div>
       <div class="producto-total">
-        Total: $${(
-          v.cantidad * (v.precioProducto + v.precioGrabado)
-        ).toFixed(2)}
-      </div>
-    </div>
-
-    <div class="acciones">
-      <button class="btn-pagado">Pagado</button>
-      <button class="btn-editar">Editar</button>
-
-      <div class="dropdown">
-        <button class="btn-acciones">Acciones</button>
-
-        <div class="menu-acciones">
-          <button class="pendiente">Pendiente</button>
-          <button class="realizado">Realizado</button>
-          <button class="eliminar">Eliminar</button>
-        </div>
+        Total: $${totalProducto.toFixed(2)}
       </div>
     </div>
   `;
+});
+
+li.innerHTML = `
+  <div class="venta-contenido">
+    <div class="cliente-nombre">${v.cliente}</div>
+
+    <div class="productos-container">
+      ${productosHTML}
+    </div>
+  </div>
+
+  <div class="acciones">
+    <button class="btn-pagado">Pagado</button>
+    <button class="btn-editar">Editar</button>
+
+    <div class="dropdown">
+      <button class="btn-acciones">Acciones</button>
+
+      <div class="menu-acciones">
+        <button class="pendiente">Pendiente</button>
+        <button class="realizado">Realizado</button>
+        <button class="eliminar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+`;
+
 
   // PAGADO
   li.querySelector(".btn-pagado").onclick = async () => {
@@ -672,6 +694,7 @@ li.querySelector(".btn-editar").onclick = () => {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
