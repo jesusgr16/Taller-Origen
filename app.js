@@ -307,8 +307,7 @@ async function cargarVentas() {
 
 // ===============================
 // PINTAR VENTA
-// ===============================
-function listaVentas.appendChild(pintarVenta(id, venta));
+function pintarVenta(id, v) {
   const li = document.createElement("li");
 
   li.innerHTML = `
@@ -319,9 +318,7 @@ function listaVentas.appendChild(pintarVenta(id, venta));
     <b>Total: $${v.total}</b>
 
     <div class="acciones">
-
       <button class="btn-pagado">Pagado</button>
-
       <button class="btn-editar">Editar</button>
 
       <div class="dropdown">
@@ -335,13 +332,15 @@ function listaVentas.appendChild(pintarVenta(id, venta));
           <button class="opcion eliminar">Eliminar</button>
         </div>
       </div>
-
     </div>
   `;
 
-  return li; // ← importante
+  return li;
 }
-
+/ Luego cuando cargas ventas
+for (let id in ventas) {
+   listaVentas.appendChild(pintarVenta(id, ventas[id]));
+}
 
 // ===============================
 // PINTAR HISTORIAL
@@ -577,6 +576,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
