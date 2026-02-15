@@ -133,69 +133,7 @@ function agregarProducto() {
 
 if (btnAddProducto) btnAddProducto.onclick = agregarProducto;
 if (btnAddProductoGrande) btnAddProductoGrande.onclick = agregarProducto;
-function renderProductos() {
-  listaProductosEl.innerHTML = "";
 
-  productos.forEach((p, i) => {
-    const li = document.createElement("li");
-    li.classList.add("producto-item");
-
-    li.innerHTML = `
-      <div class="fila-producto">
-        <span class="nombre">${p.nombre}</span>
-
-        <label>
-          Cant:
-          <input type="number" min="1" value="${p.cantidad}" class="cantidad">
-        </label>
-
-        <label>
-          Prod:
-          <input type="number" min="0" value="${p.precioProducto}" class="precioProducto">
-        </label>
-
-        <label>
-          Grab:
-          <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado">
-        </label>
-
-        <span class="total-individual">
-          $${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}
-        </span>
-
-        <button class="btn-eliminar-producto">🗑️</button>
-      </div>
-    `;
-
-    const cantidadInput = li.querySelector(".cantidad");
-    const prodInput = li.querySelector(".precioProducto");
-    const grabInput = li.querySelector(".precioGrabado");
-    const totalSpan = li.querySelector(".total-individual");
-
-    function actualizar() {
-      p.cantidad = Number(cantidadInput.value) || 1;
-      p.precioProducto = Number(prodInput.value) || 0;
-      p.precioGrabado = Number(grabInput.value) || 0;
-
-      const total = p.cantidad * (p.precioProducto + p.precioGrabado);
-      totalSpan.textContent = `$${total.toFixed(2)}`;
-
-      calcularTotal();
-    }
-
-    cantidadInput.oninput = actualizar;
-    prodInput.oninput = actualizar;
-    grabInput.oninput = actualizar;
-
-    li.querySelector(".btn-eliminar-producto").onclick = () => {
-      productos.splice(i, 1);
-      renderProductos();
-      calcularTotal();
-    };
-
-    listaProductosEl.appendChild(li);
-  });
-}
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
@@ -594,6 +532,7 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
 
 
 
