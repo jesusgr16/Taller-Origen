@@ -140,32 +140,45 @@ function renderProductos() {
     const li = document.createElement("li");
     li.classList.add("producto-item");
 
-    li.innerHTML = `
-      <div class="producto-nombre">${p.nombre}</div>
+   li.innerHTML = `
+  <div class="producto-card">
 
-      <div class="producto-detalles">
-        <label class="campo">
-          Cantidades:
-          <input type="number" min="1" value="${p.cantidad}" class="cantidad input-estandar" />
-        </label>
+    <div class="producto-nombre-centro">
+      ${p.nombre}
+    </div>
 
-        <label class="campo">
-          Precio del prodructo:
-          <input type="number" min="0" value="${p.precioProducto}" class="precioProducto input-estandar" />
-        </label>
+    <div class="producto-fila">
 
-        <label class="campo">
-          Precio del grabado:
-          <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado input-estandar" />
-        </label>
-
-        <button class="btn-eliminar-producto boton-icono" title="Eliminar producto">🗑️</button>
+      <div class="campo">
+        <span>Cantidad</span>
+        <input type="number" min="1" value="${p.cantidad}" class="cantidad input-suave" />
       </div>
 
-      <div class="producto-subtotal">
-        Subtotal: <b>$${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}</b>
+      <div class="campo">
+        <span>Precio producto</span>
+        <input type="number" min="0" value="${p.precioProducto}" class="precioProducto input-suave" />
       </div>
-    `;
+
+      <div class="campo">
+        <span>Precio grabado</span>
+        <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado input-suave" />
+      </div>
+
+      <div class="campo subtotal-box">
+        <span>Subtotal</span>
+        <b>$${(p.cantidad * (p.precioProducto + p.precioGrabado)).toFixed(2)}</b>
+      </div>
+
+      <div class="campo eliminar-box">
+        <span>Eliminar</span>
+        <button class="btn-eliminar-producto btn-suave">🗑️</button>
+      </div>
+
+    </div>
+
+  </div>
+`;
+
 
     const cantidadInput = li.querySelector(".cantidad");
     const prodInput = li.querySelector(".precioProducto");
@@ -532,6 +545,7 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
 
 
 
