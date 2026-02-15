@@ -144,22 +144,22 @@ function renderProductos() {
       <div class="producto-nombre">${p.nombre}</div>
 
       <div class="producto-detalles">
-        <div class="campo">
-          <label for="cantidad-${i}">Cant:</label>
-          <input id="cantidad-${i}" type="number" min="1" value="${p.cantidad}" class="cantidad">
-        </div>
+        <label class="campo">
+          Cantidades:
+          <input type="number" min="1" value="${p.cantidad}" class="cantidad input-estandar" />
+        </label>
 
-        <div class="campo">
-          <label for="prod-${i}">Prod:</label>
-          <input id="prod-${i}" type="number" min="0" value="${p.precioProducto}" class="precioProducto">
-        </div>
+        <label class="campo">
+          Precio del prodructo:
+          <input type="number" min="0" value="${p.precioProducto}" class="precioProducto input-estandar" />
+        </label>
 
-        <div class="campo">
-          <label for="grab-${i}">Grab:</label>
-          <input id="grab-${i}" type="number" min="0" value="${p.precioGrabado}" class="precioGrabado">
-        </div>
+        <label class="campo">
+          Precio del grabado:
+          <input type="number" min="0" value="${p.precioGrabado}" class="precioGrabado input-estandar" />
+        </label>
 
-        <button class="btn-eliminar-producto" title="Eliminar producto">🗑️</button>
+        <button class="btn-eliminar-producto boton-icono" title="Eliminar producto">🗑️</button>
       </div>
 
       <div class="producto-subtotal">
@@ -532,6 +532,7 @@ window.calcResult = function () {
     calcDisplayEl().value = "Error";
   }
 };
+
 
 
 
