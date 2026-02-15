@@ -66,7 +66,38 @@ const listaHistorial = $("listaHistorial");
 const clienteInput = $("cliente");
 const productoInput = $("producto");
 const precioTotalInput = $("precioTotal");
-const btnGuardar = $("btnGuardar");
+btnGuardar.onclick = async () => {
+
+  const nuevaVenta = {
+    cliente: clienteInput.value,
+    producto: productoInput.value,
+    cantidad: Number(cantidadInput.value),
+    precioProducto: Number(precioProductoInput.value),
+    precioGrabado: Number(precioGrabadoInput.value),
+    fecha: new Date()
+  };
+
+  if (ventaEditandoId) {
+    // 🔥 ACTUALIZAR
+    await updateDoc(
+      doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
+      nuevaVenta
+    );
+
+    ventaEditandoId = null;
+
+  } else {
+    // 🔥 CREAR NUEVA
+    await addDoc(
+      collection(db, `usuarios/${userId}/ventas`),
+      nuevaVenta
+    );
+  }
+
+  limpiarCampos();
+  cargarVentas();
+};
+
 
 const totalHoyEl = $("totalHoy");
 const totalMesEl = $("totalMes");
@@ -319,23 +350,25 @@ async function cargarVentas() {
   }
 
   // ===============================
-  // PINTAR VENTA
-  // ===============================
-  function pintarVenta(id, v) {
+// PINTAR VENTA
+// ===============================
+function pintarVenta(id, v) {
   const li = document.createElement("li");
+  li.classList.add("card-venta");
 
-    info.innerHTML = `
-  <div class="producto-nombre">
-    ${producto.nombre} x${producto.cantidad}
-  </div>
-  <div>Producto: $${producto.precioProducto}</div>
-  <div>Grabado: $${producto.precioGrabado}</div>
-  <div class="producto-total">
-    Total: $${(producto.cantidad * (producto.precioProducto + producto.precioGrabado)).toFixed(2)}
-  </div>
-`;
-
-
+  li.innerHTML = `
+    <div class="venta-contenido">
+      <div class="producto-nombre">
+        ${v.producto} x${v.cantidad}
+      </div>
+      <div>Producto: $${v.precioProducto}</div>
+      <div>Grabado: $${v.precioGrabado}</div>
+      <div class="producto-total">
+        Total: $${(
+          v.cantidad * (v.precioProducto + v.precioGrabado)
+        ).toFixed(2)}
+      </div>
+    </div>
 
     <div class="acciones">
       <button class="btn-pagado">Pagado</button>
@@ -345,9 +378,9 @@ async function cargarVentas() {
         <button class="btn-acciones">Acciones</button>
 
         <div class="menu-acciones">
-          <button class="opcion pendiente">Pendiente</button>
-          <button class="opcion realizado">Realizado</button>
-          <button class="opcion eliminar">Eliminar</button>
+          <button class="pendiente">Pendiente</button>
+          <button class="realizado">Realizado</button>
+          <button class="eliminar">Eliminar</button>
         </div>
       </div>
     </div>
@@ -360,12 +393,27 @@ async function cargarVentas() {
     });
     cargarVentas();
   };
+// EDITAR
+li.querySelector(".btn-editar").onclick = () => {
 
-  // EDITAR
-  li.querySelector(".btn-editar").onclick = () => {
-    clienteInput.value = v.cliente;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // Guardamos qué venta estamos editando
+  ventaEditandoId = id;
+
+  // Cambiar a vista ventas si estás en otra
+  document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
+  document.getElementById("vistaVentas").style.display = "block";
+
+  // Rellenar campos
+  clienteInput.value = v.cliente;
+  document.getElementById("producto").value = v.producto;
+  document.getElementById("precioProducto").value = v.precioProducto;
+  document.getElementById("precioGrabado").value = v.precioGrabado;
+  document.getElementById("cantidad").value = v.cantidad;
+
+  // Subir arriba suave
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 
   // PENDIENTE
   li.querySelector(".pendiente").onclick = async () => {
@@ -388,7 +436,7 @@ async function cargarVentas() {
     cargarVentas();
   };
 
-  // 👉 ACCIONES DROPDOWN CORRECTO
+  // DROPDOWN
   const btnAcciones = li.querySelector(".btn-acciones");
   const menu = li.querySelector(".menu-acciones");
 
@@ -403,6 +451,7 @@ async function cargarVentas() {
 
   return li;
 }
+
 
   // ===============================
   // PINTAR HISTORIAL
@@ -623,6 +672,7 @@ async function cargarVentas() {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
