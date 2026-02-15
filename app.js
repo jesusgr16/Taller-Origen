@@ -298,41 +298,48 @@ async function cargarVentas() {
       fecha.getFullYear() === ahora.getFullYear()
     ) mes++;
 
-    v.pagado ? pintarHistorial(v) : pintarVenta(d.id, v);
-  });
+    if (v.pagado) {
+  pintarHistorial(v);
+} else {
+  const li = pintarVenta(d.id, v);
+  listaVentas.appendChild(li);
+}
 
   totalHoyEl.textContent = hoy;
   totalMesEl.textContent = mes;
 }
 
-async function cargarVentas() {
+// ===============================
+// PINTAR VENTA
+// ===============================
+function pintarVenta(id, v) {
 
-  if (!userId) return;
+  const li = document.createElement("li");
 
-  listaVentas.innerHTML = "";
-  listaHistorial.innerHTML = "";
+  li.innerHTML = `
+    <strong>${v.cliente}</strong><br>
+    ${v.producto}<br>
+    <b>Total: $${v.precio}</b>
 
-  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
-  const q = query(ventasRef, orderBy("fecha", "asc"));
-  const snap = await getDocs(q);
+    <div class="acciones">
+      <button class="btn-pagado">Pagado</button>
+      <button class="btn-editar">Editar</button>
 
-  snap.forEach(docSnap => {
+      <div class="dropdown">
+        <button class="btn-acciones">
+          Acciones <span class="flecha">›</span>
+        </button>
 
-    const v = docSnap.data();
+        <div class="menu-acciones">
+          <button class="opcion pendiente">Pendiente</button>
+          <button class="opcion realizado">Realizado</button>
+          <button class="opcion eliminar">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  `;
 
-    if (v.pagado) {
-
-      pintarHistorial(v);
-
-    } else {
-
-      // 🔥 AQUI VA LO QUE ME PREGUNTASTE
-      const li = pintarVenta(docSnap.id, v);
-      listaVentas.appendChild(li);
-
-    }
-
-  });
+  return li;
 }
 
 
@@ -570,6 +577,7 @@ window.calcResult = function () {
     }
   });
 });
+
 
 
 
