@@ -2111,7 +2111,7 @@ body.dark .menu-acciones {
 /* Asegurar posición */
 .card-venta {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 20px;
 }
 
@@ -2470,6 +2470,7 @@ main {
 .menu-acciones.active {
   display: flex;
 }
+
 
 
 
