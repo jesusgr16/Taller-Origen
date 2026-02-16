@@ -1913,6 +1913,128 @@ body.dark-mode .btn-eliminar-producto {
   transform: scale(1.05) !important;
 }
 
+/* ===============================
+   CARD BASE
+================================ */
+
+.card-venta {
+  position: relative;
+  border-radius: 20px;
+  padding: 20px;
+  background: var(--card-bg, #f2f2f2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  overflow: visible !important; /* CLAVE */
+}
+
+/* ===============================
+   ESTADOS VISUALES
+================================ */
+
+/* BORDE ACTIVO */
+.card-venta.estado-realizado {
+  box-shadow: 0 0 0 3px #22c55e,
+              0 8px 20px rgba(0,0,0,0.15);
+}
+
+.card-venta.estado-pendiente {
+  box-shadow: 0 0 0 3px #facc15,
+              0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ESQUINA MODERNA */
+.card-venta.estado-realizado::after,
+.card-venta.estado-pendiente::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 70px;
+  height: 70px;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
+
+.card-venta.estado-realizado::after {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.card-venta.estado-pendiente::after {
+  background: linear-gradient(135deg, #eab308, #facc15);
+}
+
+/* ===============================
+   ACCIONES DROPDOWN
+================================ */
+
+.dropdown {
+  position: relative;
+}
+
+.menu-acciones {
+  position: absolute;
+  bottom: 60px; /* SUBE EL MENÚ */
+  right: 0;
+  background: #1f1f1f;
+  border-radius: 14px;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+  z-index: 9999; /* 🔥 SIEMPRE ENCIMA */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.menu-acciones.active {
+  display: flex;
+}
+
+/* ===============================
+   BOTONES COLORES
+================================ */
+
+.menu-acciones button {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s ease;
+}
+
+/* Amarillo */
+.menu-acciones .pendiente {
+  background: #facc15;
+  color: #000;
+}
+
+/* Verde */
+.menu-acciones .realizado {
+  background: #22c55e;
+}
+
+/* Rojo */
+.menu-acciones .eliminar {
+  background: #ef4444;
+}
+
+.menu-acciones button:hover {
+  transform: scale(1.05);
+}
+
+/* ===============================
+   MODO OSCURO SOPORTE
+================================ */
+
+body.dark .card-venta {
+  background: #1e1e1e;
+  color: white;
+}
+
+body.dark .menu-acciones {
+  background: #2a2a2a;
+}
+
 
 
 
