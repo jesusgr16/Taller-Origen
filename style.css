@@ -2442,6 +2442,36 @@ main {
   transform: scale(1.05);
 }
 
+.card-venta {
+  position: relative;
+  overflow: visible !important;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.menu-acciones {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 8px;
+  background: #1f1f1f;
+  border-radius: 14px;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 160px;
+  z-index: 999999;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.menu-acciones.active {
+  display: flex;
+}
+
+
 
 
 
