@@ -1820,32 +1820,6 @@ body.dark-mode .btn-eliminar-producto {
   transform: scale(1.05);
 }
 
-/* ===============================
-   ESQUINA MARCADA POR ESTADO
-================================ */
-
-.card-venta.estado-realizado::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-top: 40px solid #16a34a;
-  border-left: 40px solid transparent;
-}
-
-.card-venta.estado-pendiente::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-top: 40px solid #eab308;
-  border-left: 40px solid transparent;
-}
-
 
 /* ===============================
    DROPDOWN ACCIONES DEFINITIVO
@@ -2034,6 +2008,172 @@ body.dark .card-venta {
 body.dark .menu-acciones {
   background: #2a2a2a;
 }
+/* ===============================
+   PANEL MENÚ MODERNO
+================================ */
+
+.menu-lateral {
+  position: fixed;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%) translateX(-120%);
+  width: 240px;
+  background: #1e1e1e;
+  border-radius: 24px;
+  padding: 25px 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+  transition: 0.4s cubic-bezier(.8,-0.5,.2,1.4);
+  z-index: 9999;
+}
+
+/* Cuando está activo */
+.menu-lateral.activo {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Título */
+.menu-lateral h2 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 20px;
+  letter-spacing: 1px;
+}
+
+/* ===============================
+   BOTONES MODERNOS
+================================ */
+
+.menu-lateral button {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  border: none;
+  background: #2a2a2a;
+  color: white;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hover elegante */
+.menu-lateral button:hover {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  transform: translateX(5px);
+}
+
+/* Botón cerrar sesión diferente */
+.menu-lateral .cerrar {
+  margin-top: 15px;
+  background: #3a1f1f;
+}
+
+.menu-lateral .cerrar:hover {
+  background: #ef4444;
+}
+
+/* ===============================
+   BOTÓN ABRIR MENÚ
+================================ */
+
+.btn-menu {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: none;
+  background: #000;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  transition: 0.3s ease;
+  z-index: 10000;
+}
+
+.btn-menu:hover {
+  transform: scale(1.08);
+}
+/* IMPORTANTE: la card debe permitir overflow */
+.card-venta {
+  position: relative;
+  overflow: visible !important;
+}
+
+/* Contenedor dropdown */
+.dropdown {
+  position: relative;
+}
+
+/* MENÚ HACIA ARRIBA */
+.menu-acciones {
+  position: absolute;
+  bottom: 110%; /* 🔥 LO MANDA HACIA ARRIBA */
+  right: 0;
+  background: #1f1f1f;
+  border-radius: 14px;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+  z-index: 9999;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.35);
+  animation: subirMenu 0.2s ease;
+}
+
+.menu-acciones.active {
+  display: flex;
+}
+
+/* Animación suave */
+@keyframes subirMenu {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+/* Asegurar posición */
+.card-venta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+/* Línea superior base */
+.card-venta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 4px;
+  transition: width 0.3s ease;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+/* Cuando es REALIZADO */
+.card-venta.estado-realizado::before {
+  width: 100%;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+}
+
+/* Cuando es PENDIENTE */
+.card-venta.estado-pendiente::before {
+  width: 100%;
+  background: linear-gradient(90deg, #eab308, #facc15);
+}
+
 
 
 
