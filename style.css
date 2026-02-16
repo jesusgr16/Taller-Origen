@@ -1545,6 +1545,26 @@ li {
   font-weight: 800 !important;
 }
 
+/* ===============================
+   TITULO PRODUCTO CENTRADO
+================================ */
+
+.producto-card h3,
+.producto-card .titulo-producto {
+  text-align: center !important;
+  font-size: 28px !important;
+  font-weight: 900 !important;
+  margin-top: 0 !important;
+  margin-bottom: 20px !important;
+  letter-spacing: 2px;
+   text-transform: uppercase;
+
+}
+
+body > div {
+  padding: 15px !important;
+  background: #f4f4f4 !important;
+}
 
 
 
