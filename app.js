@@ -277,7 +277,6 @@ function actualizar() {
   });
 }
 
-
 function calcularTotal() {
   if (!precioTotalInput) return;
 
@@ -289,8 +288,9 @@ function calcularTotal() {
     return acc + (cantidad * (precioProducto + precioGrabado));
   }, 0);
 
-  precioTotalInput.textContent = `Total: $${total.toFixed(2)}`;
+  precioTotalInput.value = total.toFixed(2); // 🔥 AQUÍ ESTÁ EL CAMBIO
 }
+
 
 
 function limpiarCampos() {
@@ -699,6 +699,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
