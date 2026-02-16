@@ -1,5 +1,4 @@
 
-
 /* =========================
    RESET GLOBAL
 ========================= */
@@ -1821,6 +1820,31 @@ body.dark-mode .btn-eliminar-producto {
   transform: scale(1.05);
 }
 
+/* ===============================
+   ESQUINA MARCADA POR ESTADO
+================================ */
+
+.card-venta.estado-realizado::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 40px solid #16a34a;
+  border-left: 40px solid transparent;
+}
+
+.card-venta.estado-pendiente::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 40px solid #eab308;
+  border-left: 40px solid transparent;
+}
 
 
 /* ===============================
@@ -1889,49 +1913,6 @@ body.dark-mode .btn-eliminar-producto {
   transform: scale(1.05) !important;
 }
 
-
-/* ===============================
-   ESQUINA PREMIUM ESTADO
-================================ */
-
-.card-venta {
-  position: relative;
-  overflow: visible;
-}
-
-/* Base */
-.card-venta::before {
-  content: "";
-  position: absolute;
-  top: 12px;
-  right: -35px;
-  width: 120px;
-  height: 28px;
-  transform: rotate(45deg);
-  text-align: center;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* REALIZADO */
-.card-venta.estado-realizado::before {
-  content: "✔ REALIZADO";
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-  color: white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-
-/* PENDIENTE */
-.card-venta.estado-pendiente::before {
-  content: "⏳ PENDIENTE";
-  background: linear-gradient(135deg, #eab308, #facc15);
-  color: black;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
 
 
 
