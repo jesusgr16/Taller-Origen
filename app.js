@@ -64,6 +64,7 @@ const listaVentas = $("listaVentas");
 const listaHistorial = $("listaHistorial");
 
 const clienteInput = $("cliente");
+const productoInput = $("producto");
 
 const listaProductosEl = $("listaProductos");
 const btnAddProducto = $("btnAddProducto");
@@ -693,6 +694,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
