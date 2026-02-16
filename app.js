@@ -68,7 +68,7 @@ const clienteInput = $("cliente");
 const listaProductosEl = $("listaProductos");
 const btnAddProducto = $("btnAddProducto");
 const btnAddProductoGrande = $("btnAddProductoGrande");
-
+const precioTotalInput = $("precioTotal");
 const btnGuardar = $("btnGuardar"); // 🔥 AHORA SÍ DECLARADO ANTES DE USARLO
 
 const totalHoyEl = $("totalHoy");
@@ -283,8 +283,16 @@ function calcularTotal() {
     totalGeneral += p.cantidad * (p.precioProducto + p.precioGrabado);
   });
 
-  precioTotalInput.value = totalGeneral.toFixed(2);
+  console.log("Total actual:", totalGeneral);
 }
+
+function limpiarCampos() {
+  clienteInput.value = "";
+  productos = [];
+  renderProductos();
+  ventaEditandoId = null;
+}
+
 
 
 // ===============================
@@ -683,6 +691,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
