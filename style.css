@@ -1587,6 +1587,105 @@ li {
   box-sizing: border-box;
 }
 
+/* ===============================
+   MODO OSCURO - PRODUCTOS
+================================ */
+
+/* Cards de productos */
+body.dark-mode .producto-card {
+  background: #1e1e1e !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Contenedor general del producto */
+body.dark-mode .producto-item {
+  background: transparent !important;
+}
+
+/* Subtotal */
+body.dark-mode .subtotal-box {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+}
+
+/* Inputs dentro del producto */
+body.dark-mode .producto-card input {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+/* Botón eliminar */
+body.dark-mode .btn-eliminar-producto {
+  background: #2a2a2a !important;
+  color: #ffffff !important;
+  border: 1px solid #555 !important;
+}
+
+/* ===============================
+   DROPDOWN ACCIONES ESTILOS PRO
+================================ */
+
+.menu-acciones {
+  display: none;
+  position: absolute;
+  background: #1f1f1f;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  z-index: 1000;
+}
+
+.menu-acciones.active {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Botones base */
+.menu-acciones button {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  transition: 0.2s ease;
+}
+
+/* Colores individuales */
+.menu-acciones .realizado {
+  background: #16a34a; /* verde */
+}
+
+.menu-acciones .pendiente {
+  background: #eab308; /* amarillo */
+  color: #000;
+}
+
+.menu-acciones .eliminar {
+  background: #dc2626; /* rojo */
+}
+
+/* Hover efecto */
+.menu-acciones button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* ===============================
+   RESALTADO DE TARJETA POR ESTADO
+================================ */
+
+.card-venta.estado-realizado {
+  border-left: 6px solid #16a34a;
+}
+
+.card-venta.estado-pendiente {
+  border-left: 6px solid #eab308;
+}
+
 
 
 
