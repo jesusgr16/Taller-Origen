@@ -293,12 +293,6 @@ function limpiarCampos() {
   ventaEditandoId = null;
 }
 
-function limpiarCampos() {
-  clienteInput.value = "";
-  productos = [];
-  renderProductos();
-  ventaEditandoId = null;
-}
 
 
 
@@ -698,6 +692,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
