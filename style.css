@@ -1687,6 +1687,67 @@ body.dark-mode .btn-eliminar-producto {
 }
 
 
+/* ===============================
+   FIX DROPDOWN ACCIONES
+================================ */
+
+/* Contenedor relativo */
+.dropdown {
+  position: relative;
+}
+
+/* Menú oculto por defecto */
+.menu-acciones {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  min-width: 140px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  z-index: 9999;
+}
+
+/* Mostrar cuando esté activo */
+.menu-acciones.active {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Evita que la card lo corte */
+.card-venta {
+  position: relative;
+  overflow: visible;
+}
+
+/* Estilo básico botones */
+.menu-acciones button {
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* Colores */
+.menu-acciones .realizado {
+  background: #16a34a;
+  color: #fff;
+}
+
+.menu-acciones .pendiente {
+  background: #eab308;
+  color: #000;
+}
+
+.menu-acciones .eliminar {
+  background: #dc2626;
+  color: #fff;
+}
+
 
 
 
