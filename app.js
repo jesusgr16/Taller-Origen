@@ -41,7 +41,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 // ===============================
 // DOM
 // ===============================
@@ -65,21 +64,54 @@ const listaVentas = $("listaVentas");
 const listaHistorial = $("listaHistorial");
 
 const clienteInput = $("cliente");
-const productoInput = $("producto");
-const precioTotalInput = $("precioTotal");
+
+const listaProductosEl = $("listaProductos");
+const btnAddProducto = $("btnAddProducto");
+const btnAddProductoGrande = $("btnAddProductoGrande");
+
+const btnGuardar = $("btnGuardar"); // 🔥 AHORA SÍ DECLARADO ANTES DE USARLO
+
+const totalHoyEl = $("totalHoy");
+const totalMesEl = $("totalMes");
+
+// ===============================
+// VARIABLES GLOBALES
+// ===============================
+let userId = null;
+let productos = [];
+let grafica = null;
+let ventaEditandoId = null;
+
+
+// ===============================
+// GUARDAR VENTA
+// ===============================
 btnGuardar.onclick = async () => {
 
+  if (!clienteInput.value.trim()) {
+    alert("Ingresa el cliente");
+    return;
+  }
+
+  if (productos.length === 0) {
+    alert("Agrega al menos un producto");
+    return;
+  }
+
+  const totalGeneral = productos.reduce((acc, p) => {
+    return acc + (p.cantidad * (p.precioProducto + p.precioGrabado));
+  }, 0);
+
   const nuevaVenta = {
-    cliente: clienteInput.value,
-    producto: productoInput.value,
-    cantidad: Number(cantidadInput.value),
-    precioProducto: Number(precioProductoInput.value),
-    precioGrabado: Number(precioGrabadoInput.value),
-    fecha: new Date()
+    cliente: clienteInput.value.trim(),
+    productos: productos,
+    precio: totalGeneral,
+    fecha: new Date(),
+    pagado: false
   };
 
   if (ventaEditandoId) {
-    // 🔥 ACTUALIZAR
+
     await updateDoc(
       doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
       nuevaVenta
@@ -88,7 +120,7 @@ btnGuardar.onclick = async () => {
     ventaEditandoId = null;
 
   } else {
-    // 🔥 CREAR NUEVA
+
     await addDoc(
       collection(db, `usuarios/${userId}/ventas`),
       nuevaVenta
@@ -96,23 +128,10 @@ btnGuardar.onclick = async () => {
   }
 
   limpiarCampos();
+  productos = [];
+  renderProductos();
   cargarVentas();
 };
-
-
-const totalHoyEl = $("totalHoy");
-const totalMesEl = $("totalMes");
-
-const listaProductosEl = $("listaProductos");
-const btnAddProducto = $("btnAddProducto");
-const btnAddProductoGrande = $("btnAddProductoGrande");
-const btnGuardar = $("btnGuardar");
-
-
-let userId = null;
-let productos = [];
-let grafica = null;
-let ventaEditandoId = null;
 
 
 // ===============================
@@ -266,60 +285,6 @@ function calcularTotal() {
 
   precioTotalInput.value = totalGeneral.toFixed(2);
 }
-
-
-// ===============================
-// GUARDAR VENTA
-// ===============================
-btnGuardar.onclick = async () => {
-
-  if (!auth.currentUser) return;
-
-  if (!clienteInput.value.trim()) {
-    alert("Ingresa el cliente");
-    return;
-  }
-
-  if (productos.length === 0) {
-    alert("Agrega al menos un producto");
-    return;
-  }
-
-  const totalGeneral = productos.reduce((acc, p) => {
-    return acc + (p.cantidad * (p.precioProducto + p.precioGrabado));
-  }, 0);
-
-  const nuevaVenta = {
-    cliente: clienteInput.value.trim(),
-    productos: productos,
-    precio: totalGeneral,
-    fecha: new Date(),
-    pagado: false
-  };
-
-  if (ventaEditandoId) {
-
-    await updateDoc(
-      doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
-      nuevaVenta
-    );
-
-    ventaEditandoId = null;
-
-  } else {
-
-    await addDoc(
-      collection(db, `usuarios/${userId}/ventas`),
-      nuevaVenta
-    );
-  }
-
-  limpiarCampos();
-  productos = [];
-  renderProductos();
-  cargarVentas();
-};
-
 
 // ===============================
 // CARGAR VENTAS
@@ -717,6 +682,7 @@ function pintarVenta(id, v) {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
