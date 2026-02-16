@@ -1,5 +1,6 @@
 
 
+
 // ===============================
 // FIREBASE IMPORTS
 // ===============================
@@ -363,7 +364,7 @@ function pintarVenta(id, v) {
   const li = document.createElement("li");
   li.classList.add("card-venta");
 
-  // 🔹 Convertimos a array si solo hay un producto
+  // ====== productos
   const productos = v.productos
     ? v.productos
     : [{
@@ -374,12 +375,13 @@ function pintarVenta(id, v) {
       }];
 
   let productosHTML = "";
-  let totalGeneral = 0; // 🔥 total de todos los productos
+  let totalGeneral = 0;
 
   productos.forEach(p => {
-    const totalProducto = p.cantidad * (p.precioProducto + p.precioGrabado);
+    const totalProducto =
+      p.cantidad * (p.precioProducto + p.precioGrabado);
 
-    totalGeneral += totalProducto; // 🔥 acumulamos total
+    totalGeneral += totalProducto;
 
     productosHTML += `
       <div class="producto-item">
@@ -426,15 +428,10 @@ function pintarVenta(id, v) {
     </div>
   `;
 
-  return li;
-}
-
-
   // ===============================
-  // EVENTOS
+  // EVENTOS (DENTRO DE LA FUNCIÓN)
   // ===============================
 
-  // PAGADO
   li.querySelector(".btn-pagado").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
       pagado: true
@@ -444,50 +441,38 @@ function pintarVenta(id, v) {
 
   li.querySelector(".btn-editar").onclick = () => {
 
-  ventaEditandoId = id;
+    ventaEditandoId = id;
 
-  // Mostrar vista ventas
-  document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
-  document.getElementById("vistaVentas").style.display = "block";
+    document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
+    document.getElementById("vistaVentas").style.display = "block";
 
-  // Cargar cliente
-  clienteInput.value = v.cliente || "";
+    clienteInput.value = v.cliente || "";
+    productos = v.productos ? [...v.productos] : [];
 
-  // 🔥 Cargar productos completos
-  productos = v.productos ? [...v.productos] : [];
+    renderProductos();
+    calcularTotal();
 
-  // Volver a dibujar tarjetas
-  renderProductos();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-  // Recalcular total
-  calcularTotal();
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
-;
-
-  // PENDIENTE
   li.querySelector(".pendiente").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
       estado: "pendiente"
     });
   };
 
-  // REALIZADO
   li.querySelector(".realizado").onclick = async () => {
     await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
       estado: "realizado"
     });
   };
 
-  // ELIMINAR
   li.querySelector(".eliminar").onclick = async () => {
     if (!confirm("¿Eliminar esta venta?")) return;
     await deleteDoc(doc(db, `usuarios/${userId}/ventas/${id}`));
     cargarVentas();
   };
 
-  // DROPDOWN
   const btnAcciones = li.querySelector(".btn-acciones");
   const menu = li.querySelector(".menu-acciones");
 
@@ -500,8 +485,9 @@ function pintarVenta(id, v) {
     menu.classList.remove("active");
   });
 
-  return li;
+  return li; // ✅ SOLO UNA VEZ Y AL FINAL
 }
+
 
 
   // ===============================
