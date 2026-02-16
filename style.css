@@ -1769,6 +1769,83 @@ body.dark-mode .btn-eliminar-producto {
 }
 
 
+/* ===============================
+   FIX Z-INDEX DROPDOWN
+================================ */
+
+.card-venta {
+  position: relative;
+  overflow: visible !important;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.menu-acciones {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  z-index: 99999;
+}
+/* ===============================
+   COLORES BOTONES ACCIONES
+================================ */
+
+.menu-acciones .realizado {
+  background: #16a34a;
+  color: white;
+}
+
+.menu-acciones .pendiente {
+  background: #eab308;
+  color: black;
+}
+
+.menu-acciones .eliminar {
+  background: #dc2626;
+  color: white;
+}
+
+.menu-acciones button {
+  border: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.menu-acciones button:hover {
+  transform: scale(1.05);
+}
+
+/* ===============================
+   ESQUINA MARCADA POR ESTADO
+================================ */
+
+.card-venta.estado-realizado::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 40px solid #16a34a;
+  border-left: 40px solid transparent;
+}
+
+.card-venta.estado-pendiente::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 40px solid #eab308;
+  border-left: 40px solid transparent;
+}
+
 
 
 
