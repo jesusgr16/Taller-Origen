@@ -109,6 +109,8 @@ const btnAddProductoGrande = $("btnAddProductoGrande");
 let userId = null;
 let productos = [];
 let grafica = null;
+let ventaEditandoId = null;
+
 
 // ===============================
 // AUTH STATE
@@ -262,16 +264,6 @@ function calcularTotal() {
   precioTotalInput.value = totalGeneral.toFixed(2);
 }
 
-function actualizar() {
-  p.cantidad = Number(cantidadInput.value) || 1;
-  p.precioProducto = Number(prodInput.value) || 0;
-  p.precioGrabado = Number(grabInput.value) || 0;
-
-  const total = p.cantidad * (p.precioProducto + p.precioGrabado);
-  subtotalDiv.textContent = `$${total.toFixed(2)}`;
-
-  calcularTotal();
-}
 
 // ===============================
 // GUARDAR VENTA
@@ -285,13 +277,32 @@ btnGuardar.onclick = async () => {
 
   const total = Number(precioTotalInput.value) || 0;
 
-  await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-    cliente,
-    productos, // 🔥 guardamos el ARRAY REAL
-    precio: total,
-    pagado: false,
-    fecha: Timestamp.now()
-  });
+  if (ventaEditandoId) {
+
+    // 🔥 ACTUALIZAR
+    await updateDoc(
+      doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
+      {
+        cliente,
+        productos,
+        precio: total,
+        pagado: false
+      }
+    );
+
+    ventaEditandoId = null;
+
+  } else {
+
+    // 🔥 CREAR NUEVA
+    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
+      cliente,
+      productos,
+      precio: total,
+      pagado: false,
+      fecha: Timestamp.now()
+    });
+  }
 
   clienteInput.value = "";
   precioTotalInput.value = "";
@@ -299,6 +310,7 @@ btnGuardar.onclick = async () => {
   renderProductos();
   cargarVentas();
 };
+;
 
 // ===============================
 // CARGAR VENTAS
@@ -345,6 +357,7 @@ async function cargarVentas() {
     totalHoyEl.textContent = hoy;
     totalMesEl.textContent = mes;
   }
+
 function pintarVenta(id, v) {
 
   const li = document.createElement("li");
@@ -361,9 +374,12 @@ function pintarVenta(id, v) {
       }];
 
   let productosHTML = "";
+  let totalGeneral = 0; // 🔥 total de todos los productos
 
   productos.forEach(p => {
     const totalProducto = p.cantidad * (p.precioProducto + p.precioGrabado);
+
+    totalGeneral += totalProducto; // 🔥 acumulamos total
 
     productosHTML += `
       <div class="producto-item">
@@ -373,7 +389,7 @@ function pintarVenta(id, v) {
         <div>Producto: $${p.precioProducto}</div>
         <div>Grabado: $${p.precioGrabado}</div>
         <div class="producto-total">
-          Total: $${totalProducto.toFixed(2)}
+          Sub total: $${totalProducto.toFixed(2)}
         </div>
       </div>
     `;
@@ -381,7 +397,13 @@ function pintarVenta(id, v) {
 
   li.innerHTML = `
     <div class="venta-contenido">
-      <div class="cliente-nombre">${v.cliente || ""}</div>
+
+      <div class="venta-header">
+        <div class="cliente-nombre">${v.cliente || ""}</div>
+        <div class="venta-total-general">
+          Total: $${totalGeneral.toFixed(2)}
+        </div>
+      </div>
 
       <div class="productos-container">
         ${productosHTML}
@@ -404,6 +426,10 @@ function pintarVenta(id, v) {
     </div>
   `;
 
+  return li;
+}
+
+
   // ===============================
   // EVENTOS
   // ===============================
@@ -416,23 +442,29 @@ function pintarVenta(id, v) {
     cargarVentas();
   };
 
-  // EDITAR (por ahora solo primer producto)
   li.querySelector(".btn-editar").onclick = () => {
-    ventaEditandoId = id;
 
-    document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
-    document.getElementById("vistaVentas").style.display = "block";
+  ventaEditandoId = id;
 
-    const primerProducto = productos[0];
+  // Mostrar vista ventas
+  document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
+  document.getElementById("vistaVentas").style.display = "block";
 
-    clienteInput.value = v.cliente || "";
-    document.getElementById("producto").value = primerProducto.nombre || "";
-    document.getElementById("precioProducto").value = primerProducto.precioProducto || "";
-    document.getElementById("precioGrabado").value = primerProducto.precioGrabado || "";
-    document.getElementById("cantidad").value = primerProducto.cantidad || "";
+  // Cargar cliente
+  clienteInput.value = v.cliente || "";
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // 🔥 Cargar productos completos
+  productos = v.productos ? [...v.productos] : [];
+
+  // Volver a dibujar tarjetas
+  renderProductos();
+
+  // Recalcular total
+  calcularTotal();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+;
 
   // PENDIENTE
   li.querySelector(".pendiente").onclick = async () => {
@@ -691,6 +723,7 @@ function pintarVenta(id, v) {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
