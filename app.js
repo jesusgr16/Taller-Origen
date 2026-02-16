@@ -353,6 +353,15 @@ function pintarVenta(id, v) {
 
   const li = document.createElement("li");
   li.classList.add("card-venta");
+  // Aplicar estado guardado al cargar
+if (v.estado === "realizado") {
+  li.classList.add("estado-realizado");
+}
+
+if (v.estado === "pendiente") {
+  li.classList.add("estado-pendiente");
+}
+
   
 // ====== productos
 const productosVenta = v.productos
@@ -445,17 +454,32 @@ const productosVenta = v.productos
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  li.querySelector(".pendiente").onclick = async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-      estado: "pendiente"
-    });
-  };
+li.querySelector(".pendiente").onclick = async (e) => {
+  e.stopPropagation();
 
-  li.querySelector(".realizado").onclick = async () => {
-    await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
-      estado: "realizado"
-    });
-  };
+  await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+    estado: "pendiente"
+  });
+
+  li.classList.remove("estado-realizado");
+  li.classList.add("estado-pendiente");
+
+  menu.classList.remove("active");
+};
+
+li.querySelector(".realizado").onclick = async (e) => {
+  e.stopPropagation();
+
+  await updateDoc(doc(db, `usuarios/${userId}/ventas/${id}`), {
+    estado: "realizado"
+  });
+
+  li.classList.remove("estado-pendiente");
+  li.classList.add("estado-realizado");
+
+  menu.classList.remove("active");
+};
+
 
   li.querySelector(".eliminar").onclick = async () => {
     if (!confirm("¿Eliminar esta venta?")) return;
@@ -699,6 +723,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
