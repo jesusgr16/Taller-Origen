@@ -1900,40 +1900,6 @@ body.dark-mode .btn-eliminar-producto {
   overflow: visible !important; /* CLAVE */
 }
 
-/* ===============================
-   ESTADOS VISUALES
-================================ */
-
-/* BORDE ACTIVO */
-.card-venta.estado-realizado {
-  box-shadow: 0 0 0 3px #22c55e,
-              0 8px 20px rgba(0,0,0,0.15);
-}
-
-.card-venta.estado-pendiente {
-  box-shadow: 0 0 0 3px #facc15,
-              0 8px 20px rgba(0,0,0,0.15);
-}
-
-/* ESQUINA MODERNA */
-.card-venta.estado-realizado::after,
-.card-venta.estado-pendiente::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 70px;
-  height: 70px;
-  clip-path: polygon(100% 0, 0 0, 100% 100%);
-}
-
-.card-venta.estado-realizado::after {
-  background: linear-gradient(135deg, #16a34a, #22c55e);
-}
-
-.card-venta.estado-pendiente::after {
-  background: linear-gradient(135deg, #eab308, #facc15);
-}
 
 /* ===============================
    ACCIONES DROPDOWN
@@ -2174,7 +2140,230 @@ body.dark .menu-acciones {
   background: linear-gradient(90deg, #eab308, #facc15);
 }
 
+/* =================================================
+   RESET TOTAL DE INDICADORES ANTERIORES
+================================================= */
 
+/* Elimina cualquier triángulo anterior */
+.card-venta::after {
+  content: none !important;
+}
+
+/* =================================================
+   CARD BASE CORREGIDA
+================================================= */
+
+.card-venta {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden; /* CLAVE para que la línea encaje */
+  background: #f2f2f2;
+}
+
+/* =================================================
+   LÍNEA SUPERIOR PERFECTAMENTE AJUSTADA
+================================================= */
+
+.card-venta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 5px;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Verde */
+.card-venta.estado-realizado::before {
+  width: 100%;
+  background: #22c55e;
+}
+
+/* Amarillo */
+.card-venta.estado-pendiente::before {
+  width: 100%;
+  background: #facc15;
+}
+
+/* =================================================
+   DROPDOWN DEFINITIVO
+================================================= */
+
+.dropdown {
+  position: relative;
+}
+
+.menu-acciones {
+  position: absolute;
+  bottom: 120%; /* SALE HACIA ARRIBA */
+  right: 0;
+  background: #1f1f1f;
+  border-radius: 14px;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+  z-index: 99999; /* MÁS ALTO */
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+.menu-acciones.active {
+  display: flex;
+}
+
+/* Botones internos */
+.menu-acciones button {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* Amarillo */
+.menu-acciones .pendiente {
+  background: #facc15;
+  color: #000;
+}
+
+/* Verde */
+.menu-acciones .realizado {
+  background: #22c55e;
+  color: white;
+}
+
+/* Rojo */
+.menu-acciones .eliminar {
+  background: #ef4444;
+  color: white;
+}
+
+/* Hover */
+.menu-acciones button:hover {
+  transform: scale(1.05);
+}
+
+/* =================================================
+   ASEGURAR QUE NADA LO CORTE
+================================================= */
+
+.lista-ventas,
+.ventas-container,
+main {
+  overflow: visible !important;
+}
+/* ========================================
+   OVERLAY OSCURO
+======================================== */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
+  z-index: 9998;
+}
+
+.menu-overlay.activo {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ========================================
+   MENÚ LATERAL COMPACTO
+======================================== */
+
+.menu-lateral {
+  position: fixed;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%) translateX(-120%);
+  width: 230px;
+  background: #111;
+  border-radius: 24px;
+  padding: 25px 18px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  transition: 0.4s cubic-bezier(.8,-0.5,.2,1.4);
+  z-index: 9999;
+}
+
+/* Activo */
+.menu-lateral.activo {
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Título */
+.menu-lateral h2 {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+/* ========================================
+   BOTONES ESTILO APP
+======================================== */
+
+.menu-lateral button {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  border: none;
+  background: #1e1e1e;
+  color: #e5e5e5;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+/* Hover moderno */
+.menu-lateral button:hover {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  transform: translateX(6px);
+  color: white;
+}
+
+/* Botón cerrar sesión */
+.menu-lateral .cerrar {
+  margin-top: 15px;
+  background: #2a1515;
+}
+
+.menu-lateral .cerrar:hover {
+  background: #ef4444;
+}
+
+/* ========================================
+   BOTÓN MENÚ FLOTANTE
+======================================== */
+
+.btn-menu {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  padding: 12px 20px;
+  border-radius: 50px;
+  border: none;
+  background: #000;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: 0.3s ease;
+  z-index: 10000;
+}
+
+.btn-menu:hover {
+  transform: scale(1.08);
+}
 
 
 
