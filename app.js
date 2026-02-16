@@ -279,14 +279,19 @@ function actualizar() {
 
 
 function calcularTotal() {
-  let totalGeneral = 0;
+  if (!precioTotalInput) return;
 
-  productos.forEach(p => {
-    totalGeneral += p.cantidad * (p.precioProducto + p.precioGrabado);
-  });
+  const total = productos.reduce((acc, p) => {
+    const cantidad = Number(p.cantidad) || 0;
+    const precioProducto = Number(p.precioProducto) || 0;
+    const precioGrabado = Number(p.precioGrabado) || 0;
 
-  console.log("Total actual:", totalGeneral);
+    return acc + (cantidad * (precioProducto + precioGrabado));
+  }, 0);
+
+  precioTotalInput.textContent = `Total: $${total.toFixed(2)}`;
 }
+
 
 function limpiarCampos() {
   clienteInput.value = "";
@@ -694,6 +699,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
