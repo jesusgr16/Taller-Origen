@@ -284,13 +284,9 @@ btnGuardar.onclick = async () => {
 
   const total = Number(precioTotalInput.value) || 0;
 
-  const productoTexto = productos.map(p =>
-    `${p.nombre} x${p.cantidad} (Prod:$${p.precioProducto} Grab:$${p.precioGrabado})`
-  ).join(", ");
-
   await addDoc(collection(db, `usuarios/${userId}/ventas`), {
     cliente,
-    producto: productoTexto,
+    productos, // 🔥 guardamos el ARRAY REAL
     precio: total,
     pagado: false,
     fecha: Timestamp.now()
@@ -694,6 +690,7 @@ function pintarVenta(id, v) {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
