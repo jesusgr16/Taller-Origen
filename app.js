@@ -293,6 +293,13 @@ function limpiarCampos() {
   ventaEditandoId = null;
 }
 
+function limpiarCampos() {
+  clienteInput.value = "";
+  productos = [];
+  renderProductos();
+  ventaEditandoId = null;
+}
+
 
 
 // ===============================
@@ -359,7 +366,7 @@ const productosVenta = v.productos
   let productosHTML = "";
   let totalGeneral = 0;
 
-  productos.forEach(p => {
+ productosVenta.forEach(p => {
     const totalProducto =
       p.cantidad * (p.precioProducto + p.precioGrabado);
 
@@ -691,6 +698,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
