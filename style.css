@@ -2731,6 +2731,71 @@ main {
 }
 
 
+/* ===============================
+   FIX DEFINITIVO MENU ACCIONES
+================================ */
+
+/* Evitar que se corte el menú */
+#listaVentas,
+#listaHistorial,
+#listaVentas li,
+#listaHistorial li,
+.card-venta,
+.venta-contenido {
+  overflow: visible !important;
+}
+
+/* CONTENEDOR REAL DEL MENÚ */
+.dropdown {
+  position: relative; /* 🔑 CLAVE */
+}
+
+/* MENÚ */
+.menu-acciones {
+  position: absolute;
+  top: calc(100% + 6px); /* 👇 SIEMPRE HACIA ABAJO */
+  right: 0;
+
+  min-width: 170px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 6px 0;
+
+  box-shadow: 0 12px 28px rgba(0,0,0,.2);
+  z-index: 99999;
+
+  display: none;
+
+  /* 🔥 QUITA LA LÍNEA NEGRA */
+  border: none !important;
+  outline: none !important;
+}
+
+/* Estado activo */
+.menu-acciones.active {
+  display: block;
+}
+
+/* Eliminar pseudo elementos */
+.menu-acciones::before,
+.menu-acciones::after {
+  display: none !important;
+}
+
+/* Botones */
+.menu-acciones button {
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-acciones button:hover {
+  background: rgba(0,0,0,.06);
+}
+
 
 
 
