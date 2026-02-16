@@ -279,7 +279,7 @@ function actualizar() {
 function calcularTotal() {
   let totalGeneral = 0;
 
-  productos.forEach(p => {
+productosVenta.forEach(p => {
     totalGeneral += p.cantidad * (p.precioProducto + p.precioGrabado);
   });
 
@@ -336,16 +336,16 @@ function pintarVenta(id, v) {
 
   const li = document.createElement("li");
   li.classList.add("card-venta");
-
-  // ====== productos
-  const productos = v.productos
-    ? v.productos
-    : [{
-        nombre: v.producto,
-        cantidad: v.cantidad,
-        precioProducto: v.precioProducto,
-        precioGrabado: v.precioGrabado
-      }];
+  
+// ====== productos
+const productosVenta = v.productos
+  ? v.productos
+  : [{
+      nombre: v.producto,
+      cantidad: v.cantidad,
+      precioProducto: v.precioProducto,
+      precioGrabado: v.precioGrabado
+    }];
 
   let productosHTML = "";
   let totalGeneral = 0;
@@ -682,6 +682,7 @@ function pintarVenta(id, v) {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
