@@ -190,6 +190,7 @@ function agregarProducto() {
 
 if (btnAddProducto) btnAddProducto.onclick = agregarProducto;
 if (btnAddProductoGrande) btnAddProductoGrande.onclick = agregarProducto;
+
 function renderProductos() {
   listaProductosEl.innerHTML = "";
 
@@ -692,6 +693,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
