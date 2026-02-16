@@ -2797,6 +2797,57 @@ main {
   background: rgba(0,0,0,.06);
 }
 
+/* ===============================
+   DEBUG TOTAL MENU ACCIONES
+================================ */
+
+/* QUITAR OVERFLOW DE TODO LO QUE LO RODEA */
+.card-venta,
+.card-venta *,
+.acciones,
+.dropdown,
+.venta-contenido,
+#listaVentas,
+#listaVentas * {
+  overflow: visible !important;
+}
+
+/* ASEGURAR CONTEXTO CORRECTO */
+.dropdown {
+  position: relative !important;
+}
+
+/* FORZAR MENÚ HACIA ABAJO */
+.menu-acciones {
+  position: absolute !important;
+  top: 100% !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: 0 !important;
+
+  transform: none !important;
+
+  display: none;
+  z-index: 2147483647 !important;
+
+  border: none !important;
+  outline: none !important;
+}
+
+/* MOSTRAR SOLO CUANDO ESTÁ ACTIVO */
+.menu-acciones.active {
+  display: block !important;
+}
+
+/* MATAR LINEA NEGRA */
+.menu-acciones::before,
+.menu-acciones::after {
+  content: none !important;
+}
+
+
+
+
 
 
 
