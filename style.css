@@ -1821,31 +1821,6 @@ body.dark-mode .btn-eliminar-producto {
   transform: scale(1.05);
 }
 
-/* ===============================
-   ESQUINA MARCADA POR ESTADO
-================================ */
-
-.card-venta.estado-realizado::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-top: 40px solid #16a34a;
-  border-left: 40px solid transparent;
-}
-
-.card-venta.estado-pendiente::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-top: 40px solid #eab308;
-  border-left: 40px solid transparent;
-}
 
 
 /* ===============================
@@ -1957,6 +1932,7 @@ body.dark-mode .btn-eliminar-producto {
   color: black;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
+
 
 
 
