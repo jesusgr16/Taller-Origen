@@ -1559,6 +1559,35 @@ li {
 }
 
 
+.venta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.venta-total-general {
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.producto-total {
+  font-weight: 700;
+}
+.login-container {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 25px;
+  border-radius: 25px;
+}
+
+.login-container input,
+.login-container button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
 
 
 
