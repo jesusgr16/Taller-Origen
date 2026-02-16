@@ -1847,6 +1847,72 @@ body.dark-mode .btn-eliminar-producto {
 }
 
 
+/* ===============================
+   DROPDOWN ACCIONES DEFINITIVO
+================================ */
+
+/* La tarjeta nunca debe cortar el menú */
+.card-venta {
+  position: relative !important;
+  overflow: visible !important;
+  z-index: 1;
+}
+
+/* Contenedor del botón */
+.dropdown {
+  position: relative !important;
+}
+
+/* Menú oculto */
+.menu-acciones {
+  display: none !important;
+  position: absolute !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  min-width: 150px !important;
+  background: #1f1f1f !important;
+  padding: 10px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6) !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  z-index: 999999 !important;
+}
+
+/* Mostrar menú */
+.menu-acciones.active {
+  display: flex !important;
+}
+
+/* BOTONES BASE */
+.menu-acciones button {
+  border: none !important;
+  padding: 8px 10px !important;
+  border-radius: 8px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  color: white !important;
+  transition: 0.2s ease !important;
+}
+
+/* Colores */
+.menu-acciones .realizado {
+  background: #16a34a !important;
+}
+
+.menu-acciones .pendiente {
+  background: #eab308 !important;
+  color: black !important;
+}
+
+.menu-acciones .eliminar {
+  background: #dc2626 !important;
+}
+
+.menu-acciones button:hover {
+  transform: scale(1.05) !important;
+}
+
 
 
 
