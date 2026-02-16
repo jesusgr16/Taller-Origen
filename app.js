@@ -223,18 +223,19 @@ function renderProductos() {
 
 
 function actualizar() {
-  p.cantidad = Number(cantidadInput.value) || 1;
-  p.precioProducto = Number(prodInput.value) || 0;
-  p.precioGrabado = Number(grabInput.value) || 0;
+  productos[i].cantidad = Number(cantidadInput.value) || 1;
+  productos[i].precioProducto = Number(prodInput.value) || 0;
+  productos[i].precioGrabado = Number(grabInput.value) || 0;
 
-  const total = p.cantidad * (p.precioProducto + p.precioGrabado);
+  const total =
+    productos[i].cantidad *
+    (productos[i].precioProducto + productos[i].precioGrabado);
 
-  if (subtotalDiv) {
-    subtotalDiv.textContent = `$${total.toFixed(2)}`;
-  }
+  subtotalDiv.textContent = `$${total.toFixed(2)}`;
 
-      calcularTotal();
-    }
+  calcularTotal();
+}
+
 
     cantidadInput.oninput = actualizar;
     prodInput.oninput = actualizar;
@@ -690,6 +691,7 @@ function pintarVenta(id, v) {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
