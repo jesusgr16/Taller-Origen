@@ -489,15 +489,21 @@ li.querySelector(".realizado").onclick = async (e) => {
 
   const btnAcciones = li.querySelector(".btn-acciones");
   const menu = li.querySelector(".menu-acciones");
+  
+btnAcciones.onclick = (e) => {
+  e.stopPropagation();
 
-  btnAcciones.onclick = (e) => {
-    e.stopPropagation();
-    menu.classList.toggle("active");
-  };
-
-  document.addEventListener("click", () => {
-    menu.classList.remove("active");
+  // Cerrar otros menús abiertos
+  document.querySelectorAll(".menu-acciones").forEach(m => {
+    if (m !== menu) m.classList.remove("active");
   });
+
+  menu.classList.toggle("active");
+};
+
+menu.onclick = (e) => {
+  e.stopPropagation();
+};
 
   return li; // ✅ SOLO UNA VEZ Y AL FINAL
 }
@@ -724,9 +730,11 @@ li.querySelector(".realizado").onclick = async (e) => {
     }
   };
 
-
-
-
+document.addEventListener("click", () => {
+  document.querySelectorAll(".menu-acciones").forEach(m => {
+    m.classList.remove("active");
+  });
+});
 
 
 
