@@ -106,6 +106,8 @@ const totalMesEl = $("totalMes");
 const listaProductosEl = $("listaProductos");
 const btnAddProducto = $("btnAddProducto");
 const btnAddProductoGrande = $("btnAddProductoGrande");
+const btnGuardar = $("btnGuardar");
+
 
 let userId = null;
 let productos = [];
@@ -270,48 +272,54 @@ function calcularTotal() {
 // GUARDAR VENTA
 // ===============================
 btnGuardar.onclick = async () => {
-  if (!auth.currentUser) return alert("Sesión no lista");
 
-  const cliente = clienteInput.value.trim();
-  if (!cliente) return alert("Ingresa el cliente");
-  if (productos.length === 0) return alert("Agrega al menos un producto");
+  if (!auth.currentUser) return;
 
-  const total = Number(precioTotalInput.value) || 0;
+  if (!clienteInput.value.trim()) {
+    alert("Ingresa el cliente");
+    return;
+  }
+
+  if (productos.length === 0) {
+    alert("Agrega al menos un producto");
+    return;
+  }
+
+  const totalGeneral = productos.reduce((acc, p) => {
+    return acc + (p.cantidad * (p.precioProducto + p.precioGrabado));
+  }, 0);
+
+  const nuevaVenta = {
+    cliente: clienteInput.value.trim(),
+    productos: productos,
+    precio: totalGeneral,
+    fecha: new Date(),
+    pagado: false
+  };
 
   if (ventaEditandoId) {
 
-    // 🔥 ACTUALIZAR
     await updateDoc(
       doc(db, `usuarios/${userId}/ventas/${ventaEditandoId}`),
-      {
-        cliente,
-        productos,
-        precio: total,
-        pagado: false
-      }
+      nuevaVenta
     );
 
     ventaEditandoId = null;
 
   } else {
 
-    // 🔥 CREAR NUEVA
-    await addDoc(collection(db, `usuarios/${userId}/ventas`), {
-      cliente,
-      productos,
-      precio: total,
-      pagado: false,
-      fecha: Timestamp.now()
-    });
+    await addDoc(
+      collection(db, `usuarios/${userId}/ventas`),
+      nuevaVenta
+    );
   }
 
-  clienteInput.value = "";
-  precioTotalInput.value = "";
+  limpiarCampos();
   productos = [];
   renderProductos();
   cargarVentas();
 };
-;
+
 
 // ===============================
 // CARGAR VENTAS
@@ -709,6 +717,7 @@ function pintarVenta(id, v) {
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
