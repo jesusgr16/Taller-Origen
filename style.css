@@ -1748,6 +1748,27 @@ body.dark-mode .btn-eliminar-producto {
   color: #fff;
 }
 
+/* ===============================
+   FIX DROPDOWN CORTADO
+================================ */
+
+.card-venta {
+  overflow: visible !important;
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.menu-acciones {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  z-index: 9999;
+}
+
+
 
 
 
