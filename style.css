@@ -2275,42 +2275,63 @@ main {
   pointer-events: all;
 }
 
-/* ========================================
-   MENÚ LATERAL COMPACTO
-======================================== */
+/* =====================================
+   OVERLAY (FONDO OSCURO)
+===================================== */
 
-.menu-lateral {
+#menuOverlay {
   position: fixed;
-  top: 50%;
-  left: 20px;
-  transform: translateY(-50%) translateX(-120%);
-  width: 230px;
-  background: #111;
-  border-radius: 24px;
-  padding: 25px 18px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-  transition: 0.4s cubic-bezier(.8,-0.5,.2,1.4);
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s ease;
   z-index: 9999;
 }
 
 /* Activo */
-.menu-lateral.activo {
-  transform: translateY(-50%) translateX(0);
+#menuOverlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* =====================================
+   CONTENEDOR DEL MENÚ
+===================================== */
+
+#menuOverlay .menu {
+  width: 240px;
+  margin-left: 20px;
+  background: #111;
+  border-radius: 24px;
+  padding: 25px 18px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  transform: translateX(-120%);
+  transition: 0.4s cubic-bezier(.8,-0.5,.2,1.4);
+}
+
+/* Cuando se abre */
+#menuOverlay.active .menu {
+  transform: translateX(0);
 }
 
 /* Título */
-.menu-lateral h2 {
+#menuOverlay h2 {
   color: white;
   font-size: 18px;
   margin-bottom: 18px;
   font-weight: 600;
 }
 
-/* ========================================
-   BOTONES ESTILO APP
-======================================== */
+/* =====================================
+   BOTONES
+===================================== */
 
-.menu-lateral button {
+.menu-item {
   width: 100%;
   padding: 10px 14px;
   margin-bottom: 10px;
@@ -2325,44 +2346,100 @@ main {
 }
 
 /* Hover moderno */
-.menu-lateral button:hover {
+.menu-item:hover {
   background: linear-gradient(135deg, #3b82f6, #6366f1);
   transform: translateX(6px);
   color: white;
 }
 
 /* Botón cerrar sesión */
-.menu-lateral .cerrar {
+.menu-item.cerrar {
   margin-top: 15px;
   background: #2a1515;
 }
 
-.menu-lateral .cerrar:hover {
+.menu-item.cerrar:hover {
   background: #ef4444;
 }
+/* =========================================
+   1️⃣ EVITAR QUE LO CORTEN CONTENEDORES
+========================================= */
 
-/* ========================================
-   BOTÓN MENÚ FLOTANTE
-======================================== */
-
-.btn-menu {
-  position: fixed;
-  bottom: 25px;
-  left: 25px;
-  padding: 12px 20px;
-  border-radius: 50px;
-  border: none;
-  background: #000;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  transition: 0.3s ease;
-  z-index: 10000;
+.card-venta,
+.venta-contenido,
+.lista-ventas,
+main {
+  overflow: visible !important;
 }
 
-.btn-menu:hover {
-  transform: scale(1.08);
+/* =========================================
+   2️⃣ CONTENEDOR DROPDOWN
+========================================= */
+
+.dropdown {
+  position: relative !important;
+}
+
+/* =========================================
+   3️⃣ MENÚ SIEMPRE HACIA ARRIBA
+========================================= */
+
+.menu-acciones {
+  position: absolute !important;
+  bottom: 100% !important;   /* 🔥 OBLIGA A SALIR ARRIBA */
+  right: 0 !important;
+
+  margin-bottom: 10px;       /* separación del botón */
+  
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+
+  background: #1f1f1f;
+  padding: 10px;
+  border-radius: 14px;
+  min-width: 160px;
+
+  z-index: 999999 !important;  /* MÁS ALTO QUE TODO */
+  box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+}
+
+/* Mostrar */
+.menu-acciones.active {
+  display: flex !important;
+}
+
+/* =========================================
+   4️⃣ BOTONES
+========================================= */
+
+.menu-acciones button {
+  border: none;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* Colores */
+.menu-acciones .pendiente {
+  background: #facc15;
+  color: #000;
+}
+
+.menu-acciones .realizado {
+  background: #22c55e;
+  color: white;
+}
+
+.menu-acciones .eliminar {
+  background: #ef4444;
+  color: white;
+}
+
+.menu-acciones button:hover {
+  transform: scale(1.05);
 }
 
 
