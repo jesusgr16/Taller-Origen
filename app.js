@@ -279,12 +279,13 @@ function actualizar() {
 function calcularTotal() {
   let totalGeneral = 0;
 
-productosVenta.forEach(p => {
+  productos.forEach(p => {
     totalGeneral += p.cantidad * (p.precioProducto + p.precioGrabado);
   });
 
   precioTotalInput.value = totalGeneral.toFixed(2);
 }
+
 
 // ===============================
 // CARGAR VENTAS
@@ -682,6 +683,7 @@ const productosVenta = v.productos
       calcDisplayEl().value = "Error";
     }
   };
+
 
 
 
