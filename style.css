@@ -1546,25 +1546,21 @@ li {
 }
 
 /* ===============================
-   TITULO PRODUCTO CENTRADO
+   FORZAR TITULO PRODUCTO
 ================================ */
 
-.producto-card h3,
-.producto-card .titulo-producto {
+.producto-card > *:first-child {
   text-align: center !important;
-  font-size: 28px !important;
+  font-size: 32px !important;   /* 🔥 grande */
   font-weight: 900 !important;
-  margin-top: 0 !important;
-  margin-bottom: 20px !important;
-  letter-spacing: 2px;
-   text-transform: uppercase;
-
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  margin: 0 0 25px 0 !important;
 }
 
-body > div {
-  padding: 15px !important;
-  background: #f4f4f4 !important;
-}
+
+
+
 
 
 
