@@ -2884,3 +2884,64 @@ main {
 .nota-overlay.active {
   display: flex;
 }
+
+.nota-carta textarea {
+  width: 100%;
+  min-height: 220px;     /* 🔥 más alto */
+  padding: 14px;
+  font-size: 16px;       /* texto más grande */
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  resize: vertical;      /* permite agrandar manualmente */
+  outline: none;
+  margin-top: 12px;
+  box-sizing: border-box;
+}
+
+.nota-carta textarea:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.nota-carta {
+  width: 90%;
+  max-width: 500px;  /* más ancho */
+  padding: 25px;
+}
+
+/* CONTENEDOR DE ACCIONES */
+.acciones-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;               /* 🔥 juntos */
+  align-items: stretch;
+}
+
+/* BOTONES PEQUEÑOS */
+.acciones-columna .accion {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* NOTA CON INDICADOR */
+.btn-nota.tiene-nota {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+/* ESTADO MENU POSICIÓN */
+.dropdown {
+  position: relative;
+}
+
+.dropdown .estado-menu {
+  right: 0;
+  bottom: 110%;
+}
+
+
