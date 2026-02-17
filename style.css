@@ -2944,4 +2944,35 @@ main {
   bottom: 110%;
 }
 
+/* ===== FORZAR BOTONES 2x2 ===== */
+.card-venta .acciones {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+  margin-top: 20px !important;
+  padding-top: 10px !important;
+  width: 100% !important;
+}
+
+/* FORZAR BOTONES */
+.card-venta .acciones button,
+.card-venta .acciones .btn-estado {
+  width: 100% !important;
+  padding: 10px 0 !important;
+  font-size: 14px !important;
+  border-radius: 999px !important;
+  border: 1px solid #000 !important;
+  background: #fff !important;
+}
+
+/* El dropdown ocupa su celda normal */
+.card-venta .dropdown {
+  width: 100% !important;
+}
+
+/* Separar del subtotal */
+.producto-total {
+  margin-bottom: 15px !important;
+}
+
 
