@@ -726,28 +726,97 @@ function pintarHistorial(v) {
       titulo.textContent = `Total del mes: $${totalMes}`;
     }
 
-    if (grafica) grafica.destroy();
+   if (grafica) grafica.destroy();
 
-    grafica = new Chart(canvas, {
-      type: "line",
-      data: {
-        labels: dias.map(d => `Día ${d}`),
-        datasets: [{
-          label: "Ventas pagadas",
-          data: totales,
-          tension: 0.35,
-          borderWidth: 3,
-          pointRadius: 5
-        }]
+const ctx = canvas.getContext("2d");
+
+// 🎨 Degradado profesional
+const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+gradient.addColorStop(0, "rgba(37, 99, 235, 0.4)");
+gradient.addColorStop(1, "rgba(37, 99, 235, 0.05)");
+
+grafica = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: dias.map(d => `Día ${d}`),
+    datasets: [{
+      label: "Ventas pagadas",
+      data: totales,
+      borderColor: "#2563eb",
+      backgroundColor: gradient,
+      fill: true,
+      tension: 0.4,
+      borderWidth: 3,
+      pointBackgroundColor: "#2563eb",
+      pointBorderColor: "#ffffff",
+      pointBorderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 7,
+      pointHoverBackgroundColor: "#1d4ed8"
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+
+    interaction: {
+      mode: "index",
+      intersect: false
+    },
+
+    plugins: {
+      legend: {
+        display: false
       },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true }
+      tooltip: {
+        backgroundColor: "#111827",
+        titleColor: "#ffffff",
+        bodyColor: "#e5e7eb",
+        borderColor: "#2563eb",
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 10,
+        displayColors: false,
+        callbacks: {
+          label: function(context) {
+            return ` $${context.raw.toLocaleString()}`;
+          }
         }
       }
-    });
+    },
+
+    scales: {
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: "#6b7280",
+          font: {
+            size: 12
+          }
+        }
+      },
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: "rgba(0,0,0,0.05)"
+        },
+        ticks: {
+          color: "#6b7280",
+          callback: function(value) {
+            return "$" + value.toLocaleString();
+          }
+        }
+      }
+    },
+
+    animation: {
+      duration: 1200,
+      easing: "easeOutQuart"
+    }
   }
+});
 
   // ===============================
   // 🧮 CALCULADORA INTERNA
@@ -860,6 +929,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
