@@ -81,6 +81,9 @@ const totalMesEl = $("totalMes");
 let userId = null;
 let productos = [];
 let grafica = null;
+let ventaEditandoId = null;
+let ventaNotaActual = null;
+
 
 
 
@@ -742,39 +745,6 @@ document.querySelectorAll(".estado-menu").forEach(m => {
   m.classList.remove("active");
 });
 
-// ===============================
-// NOTAS CON FIREBASE
-// ===============================
-
-
-
-window.abrirNota = function (id, notaActual) {
-  ventaNotaActual = id;
-  document.getElementById("notaTexto").value = notaActual;
-  document.getElementById("modalNota").classList.add("active");
-};
-
-document.getElementById("btnCancelarNota").onclick = () => {
-  document.getElementById("modalNota").classList.remove("active");
-};
-
-document.getElementById("btnGuardarNota").onclick = async () => {
-  const texto = document.getElementById("notaTexto").value;
-
-  if (!ventaNotaActual) return;
-
-  await updateDoc(
-    doc(db, `usuarios/${userId}/ventas/${ventaNotaActual}`),
-    { nota: texto }
-  );
-
-  document.getElementById("modalNota").classList.remove("active");
-  cargarVentas();
-};
-
-document.querySelectorAll(".estado-menu").forEach(m => {
-  m.classList.remove("active");
-});
 
 
 // ===============================
@@ -796,7 +766,6 @@ document.body.insertAdjacentHTML("beforeend", `
     </div>
   </div>
 `);
-let ventaNotaActual = null;
 
 const modalNota = document.getElementById("modalNota");
 const notaTexto = document.getElementById("notaTexto");
@@ -824,6 +793,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
