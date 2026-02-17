@@ -2808,5 +2808,23 @@ main {
   color: #991b1b;
 }
 
+/* BOTON DE NOTA */
+.btn-nota {
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid #6366f1;
+  background: transparent;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-nota:hover {
+  background: rgba(99,102,241,.1);
+}
+
+.nota-indicador {
+  margin-left: 6px;
+}
+
 
 
