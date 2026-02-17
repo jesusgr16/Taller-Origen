@@ -487,23 +487,20 @@ li.querySelector(".realizado").onclick = async (e) => {
     cargarVentas();
   };
 
-  const btnAcciones = li.querySelector(".btn-acciones");
-  const menu = li.querySelector(".menu-acciones");
-  
-btnAcciones.onclick = (e) => {
+const btnEstado = li.querySelector(".btn-estado");
+const menu = li.querySelector(".estado-menu");
+
+btnEstado.onclick = (e) => {
   e.stopPropagation();
 
-  // Cerrar otros menús abiertos
-  document.querySelectorAll(".menu-acciones").forEach(m => {
+  document.querySelectorAll(".estado-menu").forEach(m => {
     if (m !== menu) m.classList.remove("active");
   });
 
   menu.classList.toggle("active");
 };
 
-menu.onclick = (e) => {
-  e.stopPropagation();
-};
+menu.onclick = (e) => e.stopPropagation();
 
   return li; // ✅ SOLO UNA VEZ Y AL FINAL
 }
@@ -735,6 +732,7 @@ document.addEventListener("click", () => {
     m.classList.remove("active");
   });
 });
+
 
 
 
