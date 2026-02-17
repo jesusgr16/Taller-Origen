@@ -2863,106 +2863,129 @@ main {
   border-color: #f59e0b;
 }
 
-
-
-
-
-/* MODAL NOTA */
-.nota-overlay {
+/* ===== MODAL FONDO ===== */
+.modal-nota {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.45);
-
-  display: none;              /* 🔥 OCULTO POR DEFECTO */
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
   align-items: center;
   justify-content: center;
-
-  z-index: 99999;
+  backdrop-filter: blur(4px);
+  z-index: 999;
 }
 
-/* CUANDO SE ABRE */
-.nota-overlay.active {
-  display: flex;
-}
-
-.nota-carta textarea {
-  width: 100%;
-  min-height: 220px;     /* 🔥 más alto */
-  padding: 14px;
-  font-size: 16px;       /* texto más grande */
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  resize: vertical;      /* permite agrandar manualmente */
-  outline: none;
-  margin-top: 12px;
-  box-sizing: border-box;
-}
-
-.nota-carta textarea:focus {
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
-}
-
-.nota-carta {
+/* ===== CAJA PRINCIPAL ===== */
+.modal-nota-contenido {
   width: 90%;
-  max-width: 500px;  /* más ancho */
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 22px;
   padding: 25px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  animation: aparecer 0.2s ease;
 }
 
-/* CONTENEDOR DE ACCIONES */
-.acciones-columna {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;               /* 🔥 juntos */
-  align-items: stretch;
+/* Animación suave */
+@keyframes aparecer {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-/* BOTONES PEQUEÑOS */
-.acciones-columna .accion {
-  padding: 8px 14px;
-  font-size: 14px;
-  border-radius: 999px;
-  border: 1px solid #000;
+/* ===== TÍTULO ===== */
+.modal-nota-contenido h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+/* ===== TEXTAREA ===== */
+.modal-nota-contenido textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 15px;
+  font-size: 15px;
+  border-radius: 16px;
+  border: 1.5px solid #ddd;
+  resize: none;
+  outline: none;
+  transition: all 0.2s ease;
+  background: #f9f9f9;
+}
+
+.modal-nota-contenido textarea:focus {
+  border-color: #000;
   background: #fff;
+}
+
+/* ===== BOTONES ===== */
+.modal-nota-botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* Botón cancelar */
+.btn-cancelar {
+  background: transparent;
+  border: 1.5px solid #ccc;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 14px;
   cursor: pointer;
-  text-align: center;
+  transition: 0.2s;
 }
 
-/* NOTA CON INDICADOR */
-.btn-nota.tiene-nota {
-  border-color: #f59e0b;
-  color: #f59e0b;
+.btn-cancelar:hover {
+  background: #f2f2f2;
 }
 
-/* ESTADO MENU POSICIÓN */
-.dropdown {
-  position: relative;
+/* Botón guardar */
+.btn-guardar {
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 22px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.dropdown .estado-menu {
-  right: 0;
-  bottom: 110%;
+.btn-guardar:hover {
+  opacity: 0.85;
 }
+
+
 
 /* ===== FORZAR BOTONES 2x2 ===== */
 .card-venta .acciones {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 12px !important;
-  margin-top: 20px !important;
-  padding-top: 10px !important;
+  gap: 10px !important; /* menos separación */
+  margin-top: 25px !important; /* más abajo del subtotal */
   width: 100% !important;
+  max-width: 320px; /* evita que se estiren demasiado */
 }
 
 /* FORZAR BOTONES */
 .card-venta .acciones button,
 .card-venta .acciones .btn-estado {
   width: 100% !important;
-  padding: 10px 0 !important;
-  font-size: 14px !important;
-  border-radius: 999px !important;
-  border: 1px solid #000 !important;
+  padding: 7px 0 !important; /* más pequeños */
+  font-size: 13px !important; /* texto más compacto */
+  border-radius: 14px !important; /* menos redondeados */
+  border: 1.5px solid #000 !important;
   background: #fff !important;
+  transition: all 0.2s ease;
+}
+
+/* Hover más moderno */
+.card-venta .acciones button:hover,
+.card-venta .acciones .btn-estado:hover {
+  background: #000 !important;
+  color: #fff !important;
 }
 
 /* El dropdown ocupa su celda normal */
@@ -2972,7 +2995,29 @@ main {
 
 /* Separar del subtotal */
 .producto-total {
-  margin-bottom: 15px !important;
+  margin-bottom: 20px !important;
+}
+/* ===== MODO OSCURO PRODUCTO ===== */
+body.dark .card-venta .producto,
+body.dark .card-venta .producto-info,
+body.dark .card-venta .producto-detalle {
+  background: #111 !important;
+  color: #fff !important;
+  border: 1px solid #222 !important;
 }
 
+/* Si tu caja usa otro nombre, esto lo fuerza igual */
+body.dark .card-venta div {
+  background-color: inherit;
+}
 
+/* Subtotal en modo oscuro */
+body.dark .producto-total {
+  color: #fff !important;
+}
+
+/* Texto secundario */
+body.dark .card-venta p,
+body.dark .card-venta span {
+  color: #ccc !important;
+}
