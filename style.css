@@ -3412,5 +3412,28 @@ body.dark .metrica-box span {
 body.dark .metrica-box h4 {
   color: #9ca3af;
 }
+/* ===== MENU FIJO PROFESIONAL ===== */
+.menu-lateral {
+  position: fixed !important;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100vh;
+  background: #111827;
+  transition: 0.3s ease;
+  z-index: 2000; /* más alto que todo */
+}
+
+.menu-lateral.activo {
+  left: 0;
+}
+
+.btn-menu {
+  position: fixed !important;
+  top: 20px;
+  left: 20px;
+  z-index: 2100;
+}
+
 
 
