@@ -2950,7 +2950,7 @@ main {
   grid-template-columns: 1fr 1fr !important;
   gap: 14px !important;
 
-  margin-top: 60px !important;   /* MUCHO más abajo */
+  margin-top: 70px !important;   /* MUCHO más abajo */
   width: 75% !important;         /* Más elegante */
   margin-left: auto !important;
   margin-right: auto !important; /* Centrado */
@@ -2980,7 +2980,7 @@ main {
 
 /* Más separación del subtotal */
 .producto-total {
-  margin-bottom: 35px !important;
+  margin-bottom: 40px !important;
 }
 
 /* ===== MODO OSCURO PRODUCTO ===== */
@@ -3008,8 +3008,3 @@ body.dark .card-venta span {
   color: #ccc !important;
 }
 
-/* Bajar SOLO la primera fila (Pagado y Editar) */
-.card-venta .acciones button:nth-child(1),
-.card-venta .acciones button:nth-child(2) {
-  margin-top: 20px !important;
-}
