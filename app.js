@@ -569,7 +569,9 @@ function pintarHistorial(v) {
       <h3>Total: $${totalGeneral.toFixed(2)}</h3>
     </div>
 
-    ${productosHTML}
+<div class="productos-container">
+  ${productosHTML}
+</div>
 
     <div class="historial-botones">
       <button class="btn-deshacer">Deshacer</button>
@@ -858,6 +860,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
