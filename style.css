@@ -2862,3 +2862,25 @@ main {
   background: #fef3c7;
   border-color: #f59e0b;
 }
+
+
+
+
+
+/* MODAL NOTA */
+.nota-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+
+  display: none;              /* 🔥 OCULTO POR DEFECTO */
+  align-items: center;
+  justify-content: center;
+
+  z-index: 99999;
+}
+
+/* CUANDO SE ABRE */
+.nota-overlay.active {
+  display: flex;
+}
