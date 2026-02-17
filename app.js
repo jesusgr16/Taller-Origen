@@ -415,15 +415,15 @@ const productosVenta = v.productos
       <button class="btn-pagado">Pagado</button>
       <button class="btn-editar">Editar</button>
 
-      <div class="dropdown">
-        <button class="btn-acciones">Acciones</button>
+<div class="dropdown">
+  <button class="btn-estado">Estado</button>
 
-        <div class="menu-acciones">
-          <button class="pendiente">Pendiente</button>
-          <button class="realizado">Realizado</button>
-          <button class="eliminar">Eliminar</button>
-        </div>
-      </div>
+  <div class="estado-menu">
+    <button class="pendiente">Pendiente</button>
+    <button class="realizado">Realizado</button>
+    <button class="eliminar">Eliminar</button>
+  </div>
+</div>
     </div>
   `;
 
@@ -727,13 +727,9 @@ menu.onclick = (e) => e.stopPropagation();
     }
   };
 
-document.addEventListener("click", () => {
-  document.querySelectorAll(".menu-acciones").forEach(m => {
-    m.classList.remove("active");
-  });
+document.querySelectorAll(".estado-menu").forEach(m => {
+  m.classList.remove("active");
 });
-
-
 
 
 
