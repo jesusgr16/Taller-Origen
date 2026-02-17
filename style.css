@@ -2863,188 +2863,124 @@ main {
   border-color: #f59e0b;
 }
 
-/* ===== MODAL FONDO ===== */
-.modal-nota {
+
+
+
+
+/* MODAL NOTA */
+.nota-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  display: flex;
+  background: rgba(0,0,0,.45);
+
+  display: none;              /* 🔥 OCULTO POR DEFECTO */
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(4px);
-  z-index: 999;
+
+  z-index: 99999;
 }
 
-/* ===== CAJA PRINCIPAL ===== */
-.modal-nota-contenido {
-  width: 90%;
-  max-width: 480px;
-  background: #ffffff;
-  border-radius: 22px;
-  padding: 25px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-  animation: aparecer 0.2s ease;
-}
-
-/* Animación suave */
-@keyframes aparecer {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* ===== TÍTULO ===== */
-.modal-nota-contenido h3 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 18px;
-}
-
-/* ===== TEXTAREA ===== */
-.modal-nota-contenido textarea {
-  width: 100%;
-  min-height: 140px;
-  padding: 15px;
-  font-size: 15px;
-  border-radius: 16px;
-  border: 1.5px solid #ddd;
-  resize: none;
-  outline: none;
-  transition: all 0.2s ease;
-  background: #f9f9f9;
-}
-
-.modal-nota-contenido textarea:focus {
-  border-color: #000;
-  background: #fff;
-}
-
-/* ===== BOTONES ===== */
-.modal-nota-botones {
+/* CUANDO SE ABRE */
+.nota-overlay.active {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 18px;
 }
 
-/* Botón cancelar */
-.btn-cancelar {
-  background: transparent;
-  border: 1.5px solid #ccc;
-  border-radius: 999px;
-  padding: 8px 18px;
+.nota-carta textarea {
+  width: 100%;
+  min-height: 220px;     /* 🔥 más alto */
+  padding: 14px;
+  font-size: 16px;       /* texto más grande */
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  resize: vertical;      /* permite agrandar manualmente */
+  outline: none;
+  margin-top: 12px;
+  box-sizing: border-box;
+}
+
+.nota-carta textarea:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.nota-carta {
+  width: 90%;
+  max-width: 500px;  /* más ancho */
+  padding: 25px;
+}
+
+/* CONTENEDOR DE ACCIONES */
+.acciones-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;               /* 🔥 juntos */
+  align-items: stretch;
+}
+
+/* BOTONES PEQUEÑOS */
+.acciones-columna .accion {
+  padding: 8px 14px;
   font-size: 14px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.btn-cancelar:hover {
-  background: #f2f2f2;
-}
-
-/* Botón guardar */
-.btn-guardar {
-  background: #000;
-  color: #fff;
-  border: none;
   border-radius: 999px;
-  padding: 8px 22px;
-  font-size: 14px;
+  border: 1px solid #000;
+  background: #fff;
   cursor: pointer;
-  transition: 0.2s;
+  text-align: center;
 }
 
-.btn-guardar:hover {
-  opacity: 0.85;
+/* NOTA CON INDICADOR */
+.btn-nota.tiene-nota {
+  border-color: #f59e0b;
+  color: #f59e0b;
 }
 
+/* ESTADO MENU POSICIÓN */
+.dropdown {
+  position: relative;
+}
 
-
-/* ===== FORZAR BOTONES 2x2 ===== */
+.dropdown .estado-menu {
+  right: 0;
+  bottom: 110%;
+}
+/* ===== CONTENEDOR BOTONES 2x2 ===== */
 .card-venta .acciones {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 10px !important; /* menos separación */
-  margin-top: 25px !important; /* más abajo del subtotal */
-  width: 100% !important;
-  max-width: 320px; /* evita que se estiren demasiado */
+  gap: 10px !important;
+
+  margin-top: 35px !important;   /* MÁS separados del subtotal */
+  width: 80% !important;         /* Más angosto */
+  margin-left: auto !important;  
+  margin-right: auto !important; /* Centrado horizontal */
 }
 
-/* FORZAR BOTONES */
+/* ===== BOTONES MÁS PEQUEÑOS ===== */
 .card-venta .acciones button,
 .card-venta .acciones .btn-estado {
   width: 100% !important;
-  padding: 7px 0 !important; /* más pequeños */
-  font-size: 13px !important; /* texto más compacto */
-  border-radius: 14px !important; /* menos redondeados */
-  border: 1.5px solid #000 !important;
+  padding: 8px 0 !important;     /* Más pequeños */
+  font-size: 13px !important;
+  border-radius: 999px !important;
+  border: 1px solid #000 !important;
   background: #fff !important;
   transition: all 0.2s ease;
 }
 
-/* Hover más moderno */
+/* Hover más profesional */
 .card-venta .acciones button:hover,
 .card-venta .acciones .btn-estado:hover {
-  background: #000 !important;
-  color: #fff !important;
+  transform: translateY(-2px);
 }
 
-/* El dropdown ocupa su celda normal */
+/* Dropdown ocupa su celda */
 .card-venta .dropdown {
   width: 100% !important;
 }
 
-/* Separar del subtotal */
+/* Separación del subtotal */
 .producto-total {
-  margin-bottom: 20px !important;
-}
-/* ===== MODO OSCURO PRODUCTO ===== */
-body.dark .card-venta .producto,
-body.dark .card-venta .producto-info,
-body.dark .card-venta .producto-detalle {
-  background: #111 !important;
-  color: #fff !important;
-  border: 1px solid #222 !important;
+  margin-bottom: 25px !important; /* Más espacio */
 }
 
-/* Si tu caja usa otro nombre, esto lo fuerza igual */
-body.dark .card-venta div {
-  background-color: inherit;
-}
 
-/* Subtotal en modo oscuro */
-body.dark .producto-total {
-  color: #fff !important;
-}
-
-/* Texto secundario */
-body.dark .card-venta p,
-body.dark .card-venta span {
-  color: #ccc !important;
-}
-
-/* ===== CONTENEDOR NOTA ===== */
-.nota-contenedor {
-  display: none;
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 12px;
-  background: #f5f5f5;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-/* Modo oscuro */
-body.dark .nota-contenedor {
-  background: #1a1a1a;
-  color: #fff;
-  border: 1px solid #333;
-}
-
-/* ===== BOTONES ===== */
-.botones-venta {
-  margin-top: 25px;   /* los baja más */
-  display: flex;
-  justify-content: center;  /* los centra */
-  gap: 15px;
-  flex-wrap: wrap;
-}
