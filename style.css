@@ -2828,3 +2828,37 @@ main {
 
 
 
+.acciones {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+/* Todos los botones iguales */
+.acciones button {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: #fff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Para que el dropdown no rompa el grid */
+.dropdown {
+  position: relative;
+}
+
+
+
+
+.btn-nota {
+  position: relative;
+}
+
+.btn-nota.tiene-nota {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
