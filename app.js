@@ -462,10 +462,16 @@ const productosVenta = v.productos
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
+const btnNota = li.querySelector(".btn-nota");
 
-li.querySelector(".btn-nota").onclick = () => {
+if (v.nota) {
+  btnNota.classList.add("tiene-nota");
+}
+
+btnNota.onclick = () => {
   abrirNota(id, v.nota || "");
 };
+
 
 
 li.querySelector(".pendiente").onclick = async (e) => {
@@ -793,6 +799,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
