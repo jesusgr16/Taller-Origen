@@ -2943,44 +2943,65 @@ main {
   right: 0;
   bottom: 110%;
 }
+
 /* ===== CONTENEDOR BOTONES 2x2 ===== */
 .card-venta .acciones {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 10px !important;
+  gap: 14px !important;
 
-  margin-top: 35px !important;   /* MÁS separados del subtotal */
-  width: 80% !important;         /* Más angosto */
-  margin-left: auto !important;  
-  margin-right: auto !important; /* Centrado horizontal */
+  margin-top: 60px !important;   /* MUCHO más abajo */
+  width: 75% !important;         /* Más elegante */
+  margin-left: auto !important;
+  margin-right: auto !important; /* Centrado */
 }
 
-/* ===== BOTONES MÁS PEQUEÑOS ===== */
+/* ===== BOTONES MÁS PRO ===== */
 .card-venta .acciones button,
 .card-venta .acciones .btn-estado {
   width: 100% !important;
-  padding: 8px 0 !important;     /* Más pequeños */
+  padding: 9px 0 !important;
   font-size: 13px !important;
+  font-weight: 500 !important;
   border-radius: 999px !important;
-  border: 1px solid #000 !important;
-  background: #fff !important;
-  transition: all 0.2s ease;
+  border: 1px solid #ccc !important;
+  background: #f9f9f9 !important;
+  transition: all 0.25s ease !important;
 }
 
-/* Hover más profesional */
+/* Hover elegante */
 .card-venta .acciones button:hover,
 .card-venta .acciones .btn-estado:hover {
+  background: #111 !important;
+  color: #fff !important;
+  border-color: #111 !important;
   transform: translateY(-2px);
 }
 
-/* Dropdown ocupa su celda */
-.card-venta .dropdown {
-  width: 100% !important;
+/* Más separación del subtotal */
+.producto-total {
+  margin-bottom: 35px !important;
 }
 
-/* Separación del subtotal */
-.producto-total {
-  margin-bottom: 25px !important; /* Más espacio */
+/* ===== ARREGLAR CAJA PRODUCTO EN DARK MODE ===== */
+body.dark .card-venta .producto,
+body.dark .card-venta .producto-info,
+body.dark .card-venta .producto-detalle,
+body.dark .card-venta .producto-contenedor {
+  background: #1e1e1e !important;   /* Negro suave */
+  color: #ffffff !important;       /* Texto blanco */
+  border: 1px solid #2a2a2a !important;
+}
+
+/* Subtotal en blanco */
+body.dark .card-venta .producto-total {
+  color: #ffffff !important;
+}
+
+/* Texto secundario más suave */
+body.dark .card-venta p,
+body.dark .card-venta span {
+  color: #d0d0d0 !important;
 }
 
 
