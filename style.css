@@ -3008,3 +3008,73 @@ body.dark .card-venta span {
   color: #ccc !important;
 }
 
+
+/* ===== CARD HISTORIAL ===== */
+.card-historial {
+  background: #f4f4f4;
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+}
+
+/* Header */
+.header-historial {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Productos */
+.producto-historial {
+  background: #fff;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+
+.producto-historial h4 {
+  margin-bottom: 5px;
+}
+
+.producto-historial h5 {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* Botones */
+.acciones-historial {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.btn-deshacer,
+.btn-eliminar {
+  padding: 8px 20px;
+  border-radius: 999px;
+  border: 1px solid #000;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-eliminar:hover {
+  background: #111;
+  color: #fff;
+}
+
+.btn-deshacer:hover {
+  background: #666;
+  color: #fff;
+}
+
+body.dark .card-historial {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+body.dark .producto-historial {
+  background: #222;
+}
+
