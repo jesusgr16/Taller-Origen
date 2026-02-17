@@ -2983,25 +2983,33 @@ main {
   margin-bottom: 35px !important;
 }
 
-/* ===== ARREGLAR CAJA PRODUCTO EN DARK MODE ===== */
+/* ===== MODO OSCURO PRODUCTO ===== */
 body.dark .card-venta .producto,
 body.dark .card-venta .producto-info,
-body.dark .card-venta .producto-detalle,
-body.dark .card-venta .producto-contenedor {
-  background: #1e1e1e !important;   /* Negro suave */
-  color: #ffffff !important;       /* Texto blanco */
-  border: 1px solid #2a2a2a !important;
+body.dark .card-venta .producto-detalle {
+  background: #111 !important;
+  color: #fff !important;
+  border: 1px solid #222 !important;
 }
 
-/* Subtotal en blanco */
-body.dark .card-venta .producto-total {
-  color: #ffffff !important;
+/* Si tu caja usa otro nombre, esto lo fuerza igual */
+body.dark .card-venta div {
+  background-color: inherit;
 }
 
-/* Texto secundario más suave */
+/* Subtotal en modo oscuro */
+body.dark .producto-total {
+  color: #fff !important;
+}
+
+/* Texto secundario */
 body.dark .card-venta p,
 body.dark .card-venta span {
-  color: #d0d0d0 !important;
+  color: #ccc !important;
 }
 
-
+/* Bajar SOLO la primera fila (Pagado y Editar) */
+.card-venta .acciones button:nth-child(1),
+.card-venta .acciones button:nth-child(2) {
+  margin-top: 20px !important;
+}
