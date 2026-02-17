@@ -606,13 +606,13 @@ function pintarHistorial(v) {
   // ===============================
   // MENU
   // ===============================
-  btnMenu.onclick = () => menuOverlay.classList.add("active");
+ btnMenu.onclick = () => menuOverlay.classList.add("activo");
 
-  menuOverlay.onclick = e => {
-    if (e.target === menuOverlay) {
-      menuOverlay.classList.remove("active");
-    }
-  };
+menuOverlay.onclick = e => {
+  if (e.target === menuOverlay) {
+    menuOverlay.classList.remove("activo");
+  }
+};
 
   document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
     btn.onclick = () => {
@@ -867,19 +867,6 @@ function pintarHistorial(v) {
     }
   };
 
-  window.calcResult = function () {
-    try {
-      calcDisplayEl().value = eval(calcDisplayEl().value);
-    } catch {
-      calcDisplayEl().value = "Error";
-    }
-  };
-
-document.querySelectorAll(".estado-menu").forEach(m => {
-  m.classList.remove("active");
-});
-
-
 
 // ===============================
 // MODAL NOTA (SE CREA UNA VEZ)
@@ -927,6 +914,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
