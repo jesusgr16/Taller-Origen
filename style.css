@@ -3008,50 +3008,47 @@ body.dark .card-venta span {
   color: #ccc !important;
 }
 
+/* CONTENEDOR HORIZONTAL */
+.historial-horizontal {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 15px 5px;
+  scroll-behavior: smooth;
+}
 
-/* ===== CARD HISTORIAL ===== */
+/* TARJETAS */
 .card-historial {
+  min-width: 300px;
+  flex: 0 0 auto;
   background: #f4f4f4;
   padding: 20px;
   border-radius: 20px;
-  margin-bottom: 25px;
+  transition: 0.3s ease;
 }
 
-/* Header */
-.header-historial {
+.card-historial:hover {
+  transform: translateY(-4px);
+}
+
+/* HEADER */
+.historial-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-/* Productos */
-.producto-historial {
-  background: #fff;
-  padding: 15px;
-  border-radius: 15px;
   margin-bottom: 15px;
 }
 
-.producto-historial h4 {
-  margin-bottom: 5px;
-}
-
-.producto-historial h5 {
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-/* Botones */
-.acciones-historial {
+/* BOTONES */
+.historial-botones {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 12px;
   margin-top: 20px;
 }
 
 .btn-deshacer,
 .btn-eliminar {
-  padding: 8px 20px;
+  padding: 7px 18px;
   border-radius: 999px;
   border: 1px solid #000;
   background: #fff;
@@ -3067,14 +3064,6 @@ body.dark .card-venta span {
 .btn-deshacer:hover {
   background: #666;
   color: #fff;
-}
-
-body.dark .card-historial {
-  background: #1a1a1a;
-  color: #fff;
-}
-
-body.dark .producto-historial {
-  background: #222;
+  border-color: #666;
 }
 
