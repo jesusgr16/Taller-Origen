@@ -400,7 +400,11 @@ const productosVenta = v.productos
     <div class="venta-contenido">
 
       <div class="venta-header">
-        <div class="cliente-nombre">${v.cliente || ""}</div>
+        <div class="cliente-nombre">
+  ${v.cliente || ""}
+  ${v.nota ? '<span class="nota-indicador">📝</span>' : ''}
+</div>
+
         <div class="venta-total-general">
           Total: $${totalGeneral.toFixed(2)}
         </div>
@@ -414,6 +418,8 @@ const productosVenta = v.productos
     <div class="acciones">
       <button class="btn-pagado">Pagado</button>
       <button class="btn-editar">Editar</button>
+      <button class="btn-nota">Nota</button>
+
 
 <div class="dropdown">
   <button class="btn-estado">Estado</button>
@@ -439,6 +445,11 @@ const productosVenta = v.productos
   };
 
   li.querySelector(".btn-editar").onclick = () => {
+    
+    li.querySelector(".btn-nota").onclick = () => {
+  abrirNota(id, v.nota || "");
+};
+
 
     ventaEditandoId = id;
 
@@ -731,23 +742,34 @@ document.querySelectorAll(".estado-menu").forEach(m => {
   m.classList.remove("active");
 });
 
+// ===============================
+// NOTAS CON FIREBASE
+// ===============================
 
+let ventaNotaActual = null;
 
+window.abrirNota = function (id, notaActual) {
+  ventaNotaActual = id;
+  document.getElementById("notaTexto").value = notaActual;
+  document.getElementById("modalNota").classList.add("active");
+};
 
+document.getElementById("btnCancelarNota").onclick = () => {
+  document.getElementById("modalNota").classList.remove("active");
+};
 
+document.getElementById("btnGuardarNota").onclick = async () => {
+  const texto = document.getElementById("notaTexto").value;
 
+  if (!ventaNotaActual) return;
 
+  await updateDoc(
+    doc(db, `usuarios/${userId}/ventas/${ventaNotaActual}`),
+    { nota: texto }
+  );
 
-
-
-
-
-
-
-
-
-
-
-
+  document.getElementById("modalNota").classList.remove("active");
+  cargarVentas();
+};
 
 
