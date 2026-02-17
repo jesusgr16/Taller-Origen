@@ -3184,4 +3184,94 @@ body.dark .btn-eliminar {
 }
 
 
+/* ===============================
+   CONTENEDOR PRINCIPAL HISTORIAL
+   FUERZA VERTICAL
+================================= */
+#listaHistorial {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 25px !important;
+  overflow: visible !important;
+  width: 100%;
+}
+
+/* ===============================
+   CADA CLIENTE (CARD)
+================================= */
+.card-historial {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  background: #f4f4f4;
+  border-radius: 25px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* ===============================
+   HEADER
+================================= */
+.historial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* ===============================
+   SOLO PRODUCTOS HORIZONTALES
+================================= */
+.productos-container {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 15px;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 10px;
+}
+
+/* TARJETAS DE PRODUCTO */
+.producto-historial {
+  min-width: 240px;
+  flex: 0 0 auto;
+  background: white;
+  padding: 15px;
+  border-radius: 18px;
+  scroll-snap-align: start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* ===============================
+   BOTONES ABAJO
+================================= */
+.historial-botones {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.historial-botones button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ===============================
+   MODO OSCURO
+================================= */
+body.dark .card-historial {
+  background: #1f1f1f !important;
+  color: white !important;
+}
+
+body.dark .producto-historial {
+  background: #2a2a2a !important;
+  color: white !important;
+}
+
 
