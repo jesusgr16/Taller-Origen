@@ -3275,4 +3275,142 @@ body.dark .producto-historial {
   color: white !important;
 }
 
+/* ===============================
+   CONTENEDOR GENERAL DE LA VISTA
+================================= */
+#vistaGrafica {
+  padding: 30px;
+}
+
+/* ===============================
+   CARD PRINCIPAL DE LA GRÁFICA
+================================= */
+.grafica-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 25px 30px;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.05),
+    0 2px 5px rgba(0, 0, 0, 0.03);
+  transition: 0.3s ease;
+}
+
+.grafica-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.08),
+    0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ===============================
+   TITULO
+================================= */
+.grafica-card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #111827;
+  letter-spacing: -0.5px;
+}
+
+/* ===============================
+   SELECTOR DE MES
+================================= */
+#selectorMes {
+  appearance: none;
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#selectorMes:hover {
+  background: #f3f4f6;
+}
+
+#selectorMes:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ===============================
+   CONTENEDOR CANVAS
+================================= */
+.grafica-container {
+  position: relative;
+  height: 350px;
+  margin-top: 20px;
+}
+
+/* ===============================
+   MINI METRICAS ARRIBA
+================================= */
+.metricas {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.metrica-box {
+  flex: 1;
+  background: #f9fafb;
+  border-radius: 18px;
+  padding: 15px 20px;
+  box-shadow: inset 0 0 0 1px #f1f1f1;
+}
+
+.metrica-box h4 {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  margin-bottom: 5px;
+}
+
+.metrica-box span {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ===============================
+   MODO OSCURO PROFESIONAL
+================================= */
+body.dark .grafica-card {
+  background: #1f1f1f;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark .grafica-card h2 {
+  color: #f3f4f6;
+}
+
+body.dark #selectorMes {
+  background: #2a2a2a;
+  border: 1px solid #333;
+  color: white;
+}
+
+body.dark #selectorMes:hover {
+  background: #333;
+}
+
+body.dark .metrica-box {
+  background: #2a2a2a;
+  box-shadow: inset 0 0 0 1px #333;
+}
+
+body.dark .metrica-box span {
+  color: #ffffff;
+}
+
+body.dark .metrica-box h4 {
+  color: #9ca3af;
+}
+
 
