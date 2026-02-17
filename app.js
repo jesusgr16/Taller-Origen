@@ -1,6 +1,7 @@
 
 
 
+
 // ===============================
 // FIREBASE IMPORTS
 // ===============================
@@ -606,13 +607,13 @@ function pintarHistorial(v) {
   // ===============================
   // MENU
   // ===============================
- btnMenu.onclick = () => menuOverlay.classList.add("activo");
+  btnMenu.onclick = () => menuOverlay.classList.add("active");
 
-menuOverlay.onclick = e => {
-  if (e.target === menuOverlay) {
-    menuOverlay.classList.remove("activo");
-  }
-};
+  menuOverlay.onclick = e => {
+    if (e.target === menuOverlay) {
+      menuOverlay.classList.remove("active");
+    }
+  };
 
   document.querySelectorAll(".menu-item[data-vista]").forEach(btn => {
     btn.onclick = () => {
@@ -654,167 +655,100 @@ menuOverlay.onclick = e => {
   // ===============================
   // GRAFICA LINEAL - SOLO PAGADAS + SELECTOR DE MES
   // ===============================
- async function cargarGraficaMensual(mesSeleccionado = null) {
-  if (!userId) return;
+  async function cargarGraficaMensual(mesSeleccionado = null) {
+    if (!userId) return;
 
-  const canvas = document.getElementById("graficaVentas");
-  const selector = document.getElementById("selectorMes");
-  if (!canvas || !selector) return;
+    const canvas = document.getElementById("graficaVentas");
+    const selector = document.getElementById("selectorMes");
+    if (!canvas || !selector) return;
 
-  // Llenar selector solo una vez
-  if (selector.options.length === 0) {
-    const meses = [
-      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
+    // Llenar selector solo una vez
+    if (selector.options.length === 0) {
+      const meses = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      ];
 
-    meses.forEach((m, i) => {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = m;
-      selector.appendChild(opt);
+      meses.forEach((m, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = m;
+        selector.appendChild(opt);
+      });
+
+      selector.value = new Date().getMonth();
+
+      selector.onchange = () => {
+        cargarGraficaMensual(Number(selector.value));
+      };
+    }
+
+    const mes = mesSeleccionado !== null
+      ? mesSeleccionado
+      : Number(selector.value);
+
+    const añoActual = new Date().getFullYear();
+    const ventasPorDia = {};
+    let totalMes = 0;
+
+    const ventasRef = collection(db, `usuarios/${userId}/ventas`);
+    const snap = await getDocs(ventasRef);
+
+    snap.forEach(d => {
+      const v = d.data();
+
+      // 🔒 SOLO VENTAS PAGADAS
+      if (!v.pagado) return;
+
+      const fecha = v.fecha?.toDate ? v.fecha.toDate() : null;
+      if (!fecha) return;
+
+      if (
+        fecha.getMonth() === mes &&
+        fecha.getFullYear() === añoActual
+      ) {
+        const dia = fecha.getDate();
+        const precio = Number(v.precio) || 0;
+
+        ventasPorDia[dia] = (ventasPorDia[dia] || 0) + precio;
+        totalMes += precio;
+      }
     });
 
-    selector.value = new Date().getMonth();
+    const dias = Object.keys(ventasPorDia)
+      .map(Number)
+      .sort((a, b) => a - b);
 
-    selector.onchange = () => {
-      cargarGraficaMensual(Number(selector.value));
-    };
-  }
+    const totales = dias.map(d => ventasPorDia[d]);
 
-  const mes = mesSeleccionado !== null
-    ? mesSeleccionado
-    : Number(selector.value);
-
-  const añoActual = new Date().getFullYear();
-  const ventasPorDia = {};
-  let totalMes = 0;
-
-  const ventasRef = collection(db, `usuarios/${userId}/ventas`);
-  const snap = await getDocs(ventasRef);
-
-  snap.forEach(d => {
-    const v = d.data();
-
-    if (!v.pagado) return;
-
-    const fecha = v.fecha?.toDate ? v.fecha.toDate() : null;
-    if (!fecha) return;
-
-    if (
-      fecha.getMonth() === mes &&
-      fecha.getFullYear() === añoActual
-    ) {
-      const dia = fecha.getDate();
-      const precio = Number(v.precio) || 0;
-
-      ventasPorDia[dia] = (ventasPorDia[dia] || 0) + precio;
-      totalMes += precio;
+    // Mostrar total arriba
+    const titulo = document.querySelector("#vistaGrafica h2");
+    if (titulo) {
+      titulo.textContent = `Total del mes: $${totalMes}`;
     }
-  });
 
-  const dias = Object.keys(ventasPorDia)
-    .map(Number)
-    .sort((a, b) => a - b);
+    if (grafica) grafica.destroy();
 
-  const totales = dias.map(d => ventasPorDia[d]);
-
-  // Mostrar total arriba
-  const titulo = document.querySelector("#vistaGrafica h2");
-  if (titulo) {
-    titulo.textContent = `Total del mes: $${totalMes.toLocaleString()}`;
-  }
-
-  if (grafica) grafica.destroy();
-
-  const ctx = canvas.getContext("2d");
-
-  // Degradado profesional
-  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient.addColorStop(0, "rgba(37, 99, 235, 0.4)");
-  gradient.addColorStop(1, "rgba(37, 99, 235, 0.05)");
-
-  grafica = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: dias.map(d => `Día ${d}`),
-      datasets: [{
-        label: "Ventas pagadas",
-        data: totales,
-        borderColor: "#2563eb",
-        backgroundColor: gradient,
-        fill: true,
-        tension: 0.4,
-        borderWidth: 3,
-        pointBackgroundColor: "#2563eb",
-        pointBorderColor: "#ffffff",
-        pointBorderWidth: 2,
-        pointRadius: 4,
-        pointHoverRadius: 7,
-        pointHoverBackgroundColor: "#1d4ed8"
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: "index",
-        intersect: false
+    grafica = new Chart(canvas, {
+      type: "line",
+      data: {
+        labels: dias.map(d => `Día ${d}`),
+        datasets: [{
+          label: "Ventas pagadas",
+          data: totales,
+          tension: 0.35,
+          borderWidth: 3,
+          pointRadius: 5
+        }]
       },
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: "#111827",
-          titleColor: "#ffffff",
-          bodyColor: "#e5e7eb",
-          borderColor: "#2563eb",
-          borderWidth: 1,
-          padding: 12,
-          cornerRadius: 10,
-          displayColors: false,
-          callbacks: {
-            label: function(context) {
-              return ` $${context.raw.toLocaleString()}`;
-            }
-          }
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
         }
-      },
-      scales: {
-        x: {
-          grid: {
-            display: false
-          },
-          ticks: {
-            color: "#6b7280",
-            font: {
-              size: 12
-            }
-          }
-        },
-        y: {
-          beginAtZero: true,
-          grid: {
-            color: "rgba(0,0,0,0.05)"
-          },
-          ticks: {
-            color: "#6b7280",
-            callback: function(value) {
-              return "$" + value.toLocaleString();
-            }
-          }
-        }
-      },
-      animation: {
-        duration: 1200,
-        easing: "easeOutQuart"
       }
-    }
-  });
-
-} // 🔥 ESTA LLAVE CIERRA LA FUNCIÓN (IMPORTANTE)
-
+    });
+  }
 
   // ===============================
   // 🧮 CALCULADORA INTERNA
@@ -867,6 +801,19 @@ menuOverlay.onclick = e => {
     }
   };
 
+  window.calcResult = function () {
+    try {
+      calcDisplayEl().value = eval(calcDisplayEl().value);
+    } catch {
+      calcDisplayEl().value = "Error";
+    }
+  };
+
+document.querySelectorAll(".estado-menu").forEach(m => {
+  m.classList.remove("active");
+});
+
+
 
 // ===============================
 // MODAL NOTA (SE CREA UNA VEZ)
@@ -914,9 +861,6 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
-
-
-
 
 
 
