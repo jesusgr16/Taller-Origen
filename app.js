@@ -309,6 +309,9 @@ function limpiarCampos() {
 // ===============================
 // CARGAR VENTAS
 // ===============================
+// ===============================
+// CARGAR VENTAS
+// ===============================
 async function cargarVentas() {
   if (!userId) return;
 
@@ -320,7 +323,7 @@ async function cargarVentas() {
   const ahora = new Date();
 
   const ventasRef = collection(db, `usuarios/${userId}/ventas`);
- const q = query(ventasRef, orderBy("fecha", "desc"));
+  const q = query(ventasRef, orderBy("fecha", "desc"));
   const snap = await getDocs(q);
 
   snap.forEach(d => {
@@ -329,30 +332,34 @@ async function cargarVentas() {
 
     if (!fecha) return;
 
+    // CONTADORES
     if (
       fecha.getDate() === ahora.getDate() &&
       fecha.getMonth() === ahora.getMonth() &&
       fecha.getFullYear() === ahora.getFullYear()
-    ) hoy++;
+    ) {
+      hoy++;
+    }
 
     if (
       fecha.getMonth() === ahora.getMonth() &&
       fecha.getFullYear() === ahora.getFullYear()
-    ) mes++;
+    ) {
+      mes++;
+    }
 
-  if (v.pagado) {
-  pintarHistorial({ ...v, id: d.id });
-}
-
+    // 🔥 AQUÍ ESTÁ LA PARTE IMPORTANTE
+    if (v.pagado) {
+      pintarHistorial({ ...v, id: d.id });
     } else {
       const li = pintarVenta(d.id, v);
       listaVentas.appendChild(li);
     }
-    });
+  });
 
-    totalHoyEl.textContent = hoy;
-    totalMesEl.textContent = mes;
-  }
+  totalHoyEl.textContent = hoy;
+  totalMesEl.textContent = mes;
+}
 
 function pintarVenta(id, v) {
 
@@ -851,6 +858,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
