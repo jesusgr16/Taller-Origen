@@ -340,8 +340,10 @@ async function cargarVentas() {
       fecha.getFullYear() === ahora.getFullYear()
     ) mes++;
 
-    if (v.pagado) {
-      pintarHistorial(v);
+  if (v.pagado) {
+  pintarHistorial({ ...v, id: d.id });
+}
+
     } else {
       const li = pintarVenta(d.id, v);
       listaVentas.appendChild(li);
@@ -526,95 +528,70 @@ menu.onclick = (e) => e.stopPropagation();
 }
 
 
-
-// ===============================
-// VARIABLES
-// ===============================
-const listaHistorial = document.getElementById("listaHistorial");
-
-// ===============================
-// GUARDAR EN LOCALSTORAGE
-// ===============================
-function guardarVentas() {
-  localStorage.setItem("ventas", JSON.stringify(ventas));
-}
-
-// ===============================
-// CARGAR VENTAS
-// ===============================
-let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
-
-// ===============================
-// RENDER HISTORIAL
-// ===============================
-function renderizarHistorial() {
-  listaHistorial.innerHTML = "";
-
-  ventas.forEach((v, index) => {
-    if (v.estado === "realizado" || v.estado === "pagado") {
-      pintarHistorial(v, index);
-    }
-  });
-}
-
-// ===============================
-// PINTAR CADA TARJETA
-// ===============================
-function pintarHistorial(v, index) {
+function pintarHistorial(v) {
 
   const card = document.createElement("div");
   card.classList.add("card-historial");
 
+  // 🔹 Calcular total correctamente
+  let totalGeneral = 0;
+
+  const productosVenta = v.productos || [];
+
+  let productosHTML = "";
+
+  productosVenta.forEach(p => {
+    const totalProducto =
+      p.cantidad * (p.precioProducto + p.precioGrabado);
+
+    totalGeneral += totalProducto;
+
+    productosHTML += `
+      <div class="producto-historial">
+        <strong>${p.nombre} x${p.cantidad}</strong>
+        <div>Producto: $${p.precioProducto}</div>
+        <div>Grabado: $${p.precioGrabado}</div>
+        <div><b>Subtotal: $${totalProducto.toFixed(2)}</b></div>
+      </div>
+    `;
+  });
+
   card.innerHTML = `
     <div class="historial-header">
       <h3>${v.cliente}</h3>
-      <h3>Total: $${v.precio}</h3>
+      <h3>Total: $${totalGeneral.toFixed(2)}</h3>
     </div>
 
-    <div class="historial-producto">
-      ${v.producto}
-    </div>
+    ${productosHTML}
 
     <div class="historial-botones">
-      <button onclick="deshacerVenta(${index})" class="btn-deshacer">
-        Deshacer
-      </button>
-
-      <button onclick="eliminarVenta(${index})" class="btn-eliminar">
-        Eliminar
-      </button>
+      <button class="btn-deshacer">Deshacer</button>
+      <button class="btn-eliminar">Eliminar</button>
     </div>
   `;
 
+  // 🔹 DESHACER (quitar pagado)
+  card.querySelector(".btn-deshacer").onclick = async () => {
+    await updateDoc(
+      doc(db, `usuarios/${userId}/ventas/${v.id}`),
+      { pagado: false }
+    );
+    cargarVentas();
+  };
+
+  // 🔹 ELIMINAR
+  card.querySelector(".btn-eliminar").onclick = async () => {
+    if (!confirm("¿Eliminar esta venta?")) return;
+
+    await deleteDoc(
+      doc(db, `usuarios/${userId}/ventas/${v.id}`)
+    );
+
+    cargarVentas();
+  };
+
   listaHistorial.appendChild(card);
 }
-
-// ===============================
-// DESHACER (volver a pendiente)
-// ===============================
-function deshacerVenta(index) {
-  ventas[index].estado = "pendiente";
-  guardarVentas();
-  renderizarHistorial();
-}
-
-// ===============================
-// ELIMINAR VENTA
-// ===============================
-function eliminarVenta(index) {
-  if (confirm("¿Seguro que deseas eliminar esta venta?")) {
-    ventas.splice(index, 1);
-    guardarVentas();
-    renderizarHistorial();
-  }
-}
-
-// ===============================
-// INICIAR HISTORIAL AL CARGAR
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  renderizarHistorial();
-});
 
 
   // ===============================
@@ -874,6 +851,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
