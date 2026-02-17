@@ -3021,3 +3021,30 @@ body.dark .card-venta p,
 body.dark .card-venta span {
   color: #ccc !important;
 }
+
+/* ===== CONTENEDOR NOTA ===== */
+.nota-contenedor {
+  display: none;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #f5f5f5;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+/* Modo oscuro */
+body.dark .nota-contenedor {
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+/* ===== BOTONES ===== */
+.botones-venta {
+  margin-top: 25px;   /* los baja más */
+  display: flex;
+  justify-content: center;  /* los centra */
+  gap: 15px;
+  flex-wrap: wrap;
+}
