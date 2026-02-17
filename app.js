@@ -445,25 +445,25 @@ const productosVenta = v.productos
   };
 
   li.querySelector(".btn-editar").onclick = () => {
-  };
-    li.querySelector(".btn-nota").onclick = () => {
+
+  ventaEditandoId = id;
+
+  document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
+  document.getElementById("vistaVentas").style.display = "block";
+
+  clienteInput.value = v.cliente || "";
+  productos = v.productos ? [...v.productos] : [];
+
+  renderProductos();
+  calcularTotal();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+li.querySelector(".btn-nota").onclick = () => {
   abrirNota(id, v.nota || "");
 };
 
-
-    ventaEditandoId = id;
-
-    document.querySelectorAll(".vista").forEach(v => v.style.display = "none");
-    document.getElementById("vistaVentas").style.display = "block";
-
-    clienteInput.value = v.cliente || "";
-    productos = v.productos ? [...v.productos] : [];
-
-    renderProductos();
-    calcularTotal();
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
 li.querySelector(".pendiente").onclick = async (e) => {
   e.stopPropagation();
@@ -824,5 +824,6 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
