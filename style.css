@@ -2797,3 +2797,49 @@ main {
   background: rgba(0,0,0,.06);
 }
 
+.estado-dropdown {
+  position: relative;
+}
+
+.btn-estado {
+  border-radius: 20px;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.estado-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+
+  background: white;
+  border-radius: 12px;
+  padding: 6px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,.15);
+
+  display: none;
+  z-index: 9999; /* 🔥 SIEMPRE ENCIMA */
+}
+
+.estado-menu.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.estado-menu button {
+  border: none;
+  background: transparent;
+  padding: 10px 14px;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.estado-menu button:hover {
+  background: #f2f2f2;
+}
+
