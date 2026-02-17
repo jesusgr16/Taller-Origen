@@ -2730,16 +2730,12 @@ main {
 .menu.show {
   display: flex;
 }
-
-/* Contenedor */
 .dropdown {
   position: relative;
-  display: inline-block;
 }
 
-/* Botón Estado */
 .btn-estado {
-  padding: 6px 16px;
+  padding: 8px 18px;
   border-radius: 999px;
   border: 1px solid #000;
   background: white;
@@ -2747,15 +2743,43 @@ main {
   font-weight: 500;
 }
 
-/* MENÚ */
+/* MENÚ FLOTANTE REAL */
 .estado-menu {
   position: absolute;
-  bottom: 110%;          /* 👈 LO HACE SUBIR */
+  bottom: 120%;
   right: 0;
-  min-width: 160px;
 
-  background: #fff;
-  border-radius: 16px;
-  padding: 8px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 10px;
 
-  bo
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,.15),
+    0 5px 15px rgba(0,0,0,.08);
+
+  backdrop-filter: blur(10px);
+
+  display: none;
+  z-index: 10000;
+}
+
+/* Mostrar */
+.estado-menu.active {
+  display: block;
+}
+
+/* Botones internos */
+.estado-menu button {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 14px;
+  font-weight: 500;
+}
+
+.estado-menu button:hover {
+  background: #f3f3f3;
+}
