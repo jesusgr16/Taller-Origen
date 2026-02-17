@@ -2730,56 +2730,63 @@ main {
 .menu.show {
   display: flex;
 }
-.dropdown {
-  position: relative;
-}
 
-.btn-estado {
-  padding: 8px 18px;
-  border-radius: 999px;
-  border: 1px solid #000;
-  background: white;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-/* MENÚ FLOTANTE REAL */
+/* MENU ESTADO */
+/* Contenedor del menú (YA NO SE VE) */
 .estado-menu {
   position: absolute;
   bottom: 120%;
   right: 0;
 
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 10px;
-
-  box-shadow: 
-    0 20px 40px rgba(0,0,0,.15),
-    0 5px 15px rgba(0,0,0,.08);
-
-  backdrop-filter: blur(10px);
-
   display: none;
+  flex-direction: column;
+  gap: 12px;
+
+  background: transparent;   /* 👈 CLAVE */
+  padding: 0;                /* 👈 QUITAMOS CAJA */
+  box-shadow: none;          /* 👈 SIN CUADRO */
   z-index: 10000;
 }
 
-/* Mostrar */
+/* Mostrar menú */
 .estado-menu.active {
-  display: block;
+  display: flex;
 }
 
-/* Botones internos */
+/* BOTONES */
 .estado-menu button {
-  width: 100%;
-  padding: 12px 16px;
-  border: none;
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 14px;
+  min-width: 150px;
+  padding: 12px 18px;
+
+  border-radius: 999px;
+  border: 1px solid #000;
+
+  background: rgba(255, 255, 255, 0.9); /* 👈 flotante */
+  backdrop-filter: blur(8px);
+
   font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.15),
+    0 4px 10px rgba(0,0,0,.08);
+
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 
+/* Hover bonito */
 .estado-menu button:hover {
-  background: #f3f3f3;
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 30px rgba(0,0,0,.18),
+    0 6px 15px rgba(0,0,0,.12);
 }
+
+/* Eliminar en rojo */
+.estado-menu button.eliminar {
+  border-color: #e11d48;
+  color: #e11d48;
+}
+
+
