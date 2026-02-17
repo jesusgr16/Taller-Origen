@@ -527,55 +527,95 @@ menu.onclick = (e) => e.stopPropagation();
 
 
 
-  // ===============================
-  // PINTAR HISTORIAL
-  // ===============================
-  function pintarHistorial(id, venta) {
+// ===============================
+// VARIABLES
+// ===============================
+const listaHistorial = document.getElementById("listaHistorial");
 
-  const div = document.createElement("div");
-  div.classList.add("card-historial");
+// ===============================
+// GUARDAR EN LOCALSTORAGE
+// ===============================
+function guardarVentas() {
+  localStorage.setItem("ventas", JSON.stringify(ventas));
+}
 
-  let productosHTML = venta.productos.map(p => `
-    <div class="producto-historial">
-      <h4>${p.nombre} x${p.cantidad}</h4>
-      <p>Producto: $${p.precio}</p>
-      <p>Grabado: $${p.grabado}</p>
-      <h5>Sub total: $${p.subtotal}</h5>
+// ===============================
+// CARGAR VENTAS
+// ===============================
+let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
+
+// ===============================
+// RENDER HISTORIAL
+// ===============================
+function renderizarHistorial() {
+  listaHistorial.innerHTML = "";
+
+  ventas.forEach((v, index) => {
+    if (v.estado === "realizado" || v.estado === "pagado") {
+      pintarHistorial(v, index);
+    }
+  });
+}
+
+// ===============================
+// PINTAR CADA TARJETA
+// ===============================
+function pintarHistorial(v, index) {
+
+  const card = document.createElement("div");
+  card.classList.add("card-historial");
+
+  card.innerHTML = `
+    <div class="historial-header">
+      <h3>${v.cliente}</h3>
+      <h3>Total: $${v.precio}</h3>
     </div>
-  `).join("");
 
-  div.innerHTML = `
-    <div class="header-historial">
-      <h3>${venta.cliente}</h3>
-      <h3>Total: $${venta.total}</h3>
+    <div class="historial-producto">
+      ${v.producto}
     </div>
 
-    ${productosHTML}
-
-    <div class="acciones-historial">
-      <button onclick="deshacerVenta(${id})" class="btn-deshacer">
+    <div class="historial-botones">
+      <button onclick="deshacerVenta(${index})" class="btn-deshacer">
         Deshacer
       </button>
 
-      <button onclick="eliminarVenta(${id})" class="btn-eliminar">
+      <button onclick="eliminarVenta(${index})" class="btn-eliminar">
         Eliminar
       </button>
     </div>
   `;
 
-  document.getElementById("historial").appendChild(div);
-}
-function deshacerVenta(id) {
-  ventas[id].estado = "pendiente";
-  guardarVentas();
-  renderizarTodo();
+  listaHistorial.appendChild(card);
 }
 
-function eliminarVenta(id) {
-  ventas.splice(id, 1);
+// ===============================
+// DESHACER (volver a pendiente)
+// ===============================
+function deshacerVenta(index) {
+  ventas[index].estado = "pendiente";
   guardarVentas();
-  renderizarTodo();
+  renderizarHistorial();
 }
+
+// ===============================
+// ELIMINAR VENTA
+// ===============================
+function eliminarVenta(index) {
+  if (confirm("¿Seguro que deseas eliminar esta venta?")) {
+    ventas.splice(index, 1);
+    guardarVentas();
+    renderizarHistorial();
+  }
+}
+
+// ===============================
+// INICIAR HISTORIAL AL CARGAR
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  renderizarHistorial();
+});
+
 
   // ===============================
   // MENU
@@ -834,6 +874,7 @@ btnGuardarNota.onclick = async () => {
   modalNota.classList.remove("active");
   cargarVentas();
 };
+
 
 
 
