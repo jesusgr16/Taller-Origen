@@ -81,7 +81,7 @@ const totalMesEl = $("totalMes");
 let userId = null;
 let productos = [];
 let grafica = null;
-let ventaEditandoId = null;
+
 
 
 // ===============================
@@ -445,7 +445,7 @@ const productosVenta = v.productos
   };
 
   li.querySelector(".btn-editar").onclick = () => {
-    
+  };
     li.querySelector(".btn-nota").onclick = () => {
   abrirNota(id, v.nota || "");
 };
@@ -746,7 +746,7 @@ document.querySelectorAll(".estado-menu").forEach(m => {
 // NOTAS CON FIREBASE
 // ===============================
 
-let ventaNotaActual = null;
+
 
 window.abrirNota = function (id, notaActual) {
   ventaNotaActual = id;
@@ -769,6 +769,59 @@ document.getElementById("btnGuardarNota").onclick = async () => {
   );
 
   document.getElementById("modalNota").classList.remove("active");
+  cargarVentas();
+};
+
+document.querySelectorAll(".estado-menu").forEach(m => {
+  m.classList.remove("active");
+});
+
+
+// ===============================
+// MODAL NOTA (SE CREA UNA VEZ)
+// ===============================
+
+document.body.insertAdjacentHTML("beforeend", `
+  <div id="modalNota" class="nota-overlay">
+    <div class="nota-carta">
+      <h3>Nota del pedido</h3>
+
+      <textarea id="notaTexto"
+        placeholder="Escribe cualquier nota..."></textarea>
+
+      <div class="nota-actions">
+        <button id="btnCancelarNota">Cancelar</button>
+        <button id="btnGuardarNota" class="guardar">Guardar</button>
+      </div>
+    </div>
+  </div>
+`);
+let ventaNotaActual = null;
+
+const modalNota = document.getElementById("modalNota");
+const notaTexto = document.getElementById("notaTexto");
+const btnCancelarNota = document.getElementById("btnCancelarNota");
+const btnGuardarNota = document.getElementById("btnGuardarNota");
+
+window.abrirNota = function (id, notaActual) {
+  ventaNotaActual = id;
+  notaTexto.value = notaActual || "";
+  modalNota.classList.add("active");
+};
+
+btnCancelarNota.onclick = () => {
+  modalNota.classList.remove("active");
+};
+
+btnGuardarNota.onclick = async () => {
+  if (!ventaNotaActual) return;
+
+  await updateDoc(
+    doc(db, `usuarios/${userId}/ventas/${ventaNotaActual}`),
+    { nota: notaTexto.value }
+  );
+
+  modalNota.classList.remove("active");
   cargarVentas();
 };
 
